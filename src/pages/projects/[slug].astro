@@ -7,9 +7,7 @@ export async function getStaticPaths() {
     { eager: true }
   );
 
-  const episodes = Object.values(episodeFiles).map(
-    (file) => file.default
-  );
+  const episodes = Object.values(episodeFiles).map((file: any) => file.default);
 
   return episodes.map((episode) => ({
     params: {
