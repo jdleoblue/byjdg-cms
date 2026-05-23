@@ -1,16 +1,16 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const episodeFiles = import.meta.glob(
-  "../../content/episodes/*.json",
-  { eager: true }
-);
-
-const episodes = Object.values(episodeFiles).map(
-  (file) => file.default
-);
-
 export async function getStaticPaths() {
+  const episodeFiles = import.meta.glob(
+    "../../content/episodes/*.json",
+    { eager: true }
+  );
+
+  const episodes = Object.values(episodeFiles).map(
+    (file) => file.default
+  );
+
   return episodes.map((episode) => ({
     params: {
       slug: episode.slug
@@ -74,7 +74,6 @@ const { episode } = Astro.props;
   }
 
   @media (max-width: 768px) {
-
     .content {
       padding: 50px 6vw;
     }
@@ -82,6 +81,5 @@ const { episode } = Astro.props;
     h1 {
       font-size: 3rem;
     }
-
   }
 </style>
