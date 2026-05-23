@@ -1,0 +1,279 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+---
+
+<AdminLayout title="New Episode | ByJDG CMS">
+  <main class="admin-main">
+    <div class="admin-top">
+      <div>
+        <p class="eyebrow">Content Studio</p>
+        <h1>New Episode</h1>
+      </div>
+
+      <a class="preview" href="/admin">← Back to Episodes</a>
+    </div>
+
+    <div class="admin-grid">
+      <section class="panel editor">
+        <h2>Episode Details</h2>
+
+        <label>
+          Episode
+          <input id="episode" placeholder="Episode 3" />
+        </label>
+
+        <label>
+          Title
+          <input id="title" placeholder="Miles & Meaning" />
+        </label>
+
+        <label>
+          Slug
+          <input
+            id="slug"
+            placeholder="miles-and-meaning"
+            readonly
+            />
+        </label>
+
+        <label>
+          Description
+          <textarea id="description" placeholder="A short description for the episode."></textarea>
+        </label>
+
+        <label>
+          YouTube Link
+          <input id="youtube" placeholder="https://youtube.com/..." />
+        </label>
+
+        <label>
+          Image Path
+          <input id="image" placeholder="/images/episode-3.jpg" />
+        </label>
+
+        <label>
+          Content
+          <textarea id="content" class="large" placeholder="Write the episode page content here."></textarea>
+        </label>
+      </section>
+
+      <aside class="side-panels">
+        <section class="panel">
+          <h2>Create</h2>
+
+          <p class="helper" id="createMessage">
+            Fill out the episode details, then create the JSON file.
+          </p>
+
+          <button class="publish" id="createEpisodeBtn" type="button">
+            Create Episode
+          </button>
+        </section>
+      </aside>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  const button = document.getElementById("createEpisodeBtn");
+  const message = document.getElementById("createMessage");
+
+  const titleInput = document.getElementById("title");
+  const slugInput = document.getElementById("slug");
+
+  titleInput?.addEventListener("input", () => {
+    slugInput.value = titleInput.value
+      .toLowerCase()
+      .trim()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+  });
+
+  button?.addEventListener("click", async () => {
+    const episode = document.getElementById("episode")?.value;
+    const title = document.getElementById("title")?.value;
+    const slug = document.getElementById("slug")?.value;
+    const description = document.getElementById("description")?.value;
+    const youtube = document.getElementById("youtube")?.value;
+    const image = document.getElementById("image")?.value;
+    const content = document.getElementById("content")?.value;
+
+    if (!title) {
+      message.textContent = "Please enter a title first.";
+      return;
+    }
+
+    if (!slug) {
+      message.textContent = "The slug could not be created.";
+      return;
+    }
+
+    message.textContent = "Creating episode...";
+
+    const response = await fetch("/api/create-episode.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        episode,
+        title,
+        slug,
+        description,
+        youtube,
+        image,
+        content,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      message.textContent = "Episode created successfully.";
+      window.location.href = `/admin/?episode=${result.slug}`;
+    } else {
+      message.textContent = result.error || "Something went wrong.";
+    }
+  });
+</script>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  .admin-main {
+    min-width: 0;
+  }
+
+  .admin-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    color: #b7b0a7;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 2.8rem;
+    margin: 0;
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .panel {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.035);
+    padding: 24px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .panel h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 22px;
+  }
+
+  .editor,
+  .side-panels {
+    display: grid;
+    gap: 18px;
+  }
+
+  label {
+    display: grid;
+    gap: 8px;
+    color: #b7b0a7;
+    font-size: 0.85rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #f5f1ea;
+    padding: 14px;
+    font: inherit;
+    border-radius: 8px;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  textarea.large {
+    min-height: 210px;
+  }
+
+  button,
+  .preview {
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+    color: #f5f1ea;
+    cursor: pointer;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  button {
+    width: 100%;
+    display: block;
+    padding: 14px 18px;
+  }
+
+  .publish {
+    background: #d6b36a;
+    color: #050505;
+    border-color: #d6b36a;
+  }
+
+  .preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 20px;
+    min-width: 150px;
+  }
+
+  .helper {
+    color: #b7b0a7;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .admin-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

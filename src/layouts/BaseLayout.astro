@@ -1,0 +1,42 @@
+---
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ByJDG</title>
+
+    <style>
+      :root {
+        --bg: #050505;
+        --text: #f5f1ea;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      main {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <Nav />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+
+  </body>
+</html>

@@ -1,17 +1,166 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FilmCard from "../components/FilmCard.astro";
+import siteSettings from "../content/settings/site.json";
 
+const episodeFiles = import.meta.glob("../content/episodes/*.json", {
+  eager: true,
+});
+
+const episodes = Object.values(episodeFiles)
+  .map((file) => file.default)
+  .filter((episode) => episode.status === "Published");
+
+const allEpisodes = episodes.reverse();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={siteSettings.siteTitle} description={siteSettings.siteDescription}>
+  <section
+    class="hero"
+    style={`--hero-image: url('${siteSettings.heroImage}')`}
+  >
+    <div class="content">
+      <div class="eyebrow">{siteSettings.heroEyebrow}</div>
+      <h1>{siteSettings.heroTitle}</h1>
+      <p>{siteSettings.heroSubtitle}</p>
+
+      <a class="hero-button" href={`/projects/${allEpisodes[0]?.slug}`}>
+        <span>▶</span>
+        Watch Latest Film
+      </a>
+    </div>
+  </section>
+
+  <section class="films">
+    <div class="section-header">
+      <h2>{siteSettings.filmsTitle}</h2>
+      <p>{siteSettings.filmsDescription}</p>
+    </div>
+
+    <div class="film-grid">
+      {allEpisodes.map((episode) => (
+        <FilmCard episode={episode} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 140px 7vw 80px;
+    background:
+      linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.48) 42%, rgba(0,0,0,0.18) 100%),
+      linear-gradient(to top, #050505 0%, rgba(5,5,5,0.2) 38%, rgba(5,5,5,0.05) 100%),
+      var(--hero-image) center/cover no-repeat;
+  }
+
+  .content {
+    max-width: 620px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+    margin-top: 0;
+    margin-bottom: 28px;
+  }
+
+  .hero p {
+    font-size: clamp(0.85rem, 1.4vw, 1rem);
+    letter-spacing: 0.48em;
+    text-transform: uppercase;
+    color: #f5f1ea;
+  }
+
+  .hero .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.44em;
+    text-transform: uppercase;
+    color: #b7b0a7;
+    margin-bottom: 8px;
+  }
+
+  .hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 42px;
+    padding: 18px 34px;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f5f1ea !important;
+    text-decoration: none !important;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+
+  .hero-button:visited {
+    color: #f5f1ea !important;
+  }
+
+  .hero-button:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .films {
+    padding: 90px 7vw;
+  }
+
+  .section-header {
+    max-width: 720px;
+    margin-bottom: 34px;
+  }
+
+  .section-header h2 {
+    font-size: 0.9rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .section-header p {
+    color: #b7b0a7;
+    line-height: 1.7;
+  }
+
+  .film-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  @media (max-width: 850px) {
+    .hero {
+      min-height: 70vh;
+      padding: 100px 6vw 60px;
+    }
+
+    .films {
+      padding: 70px 6vw;
+    }
+
+    .film-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-button {
+      width: 100%;
+      max-width: 320px;
+    }
+  }
+</style>

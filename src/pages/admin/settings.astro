@@ -1,0 +1,417 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import siteSettings from "../../content/settings/site.json";
+---
+
+<AdminLayout title="Site Settings | ByJDG CMS">
+  <main class="admin-main">
+    <div class="admin-top">
+      <div>
+        <p class="eyebrow">CMS Settings</p>
+        <h1>Site Settings</h1>
+      </div>
+
+      <a class="preview" href="/">Preview Site →</a>
+    </div>
+
+    <div class="settings-grid">
+      <section class="panel editor">
+        <h2>Homepage Hero</h2>
+
+        <label>
+          Hero Eyebrow
+          <input id="heroEyebrow" value={siteSettings.heroEyebrow} />
+        </label>
+
+        <label>
+          Hero Title
+          <input id="heroTitle" value={siteSettings.heroTitle} />
+        </label>
+
+        <label>
+          Hero Subtitle
+          <input id="heroSubtitle" value={siteSettings.heroSubtitle} />
+        </label>
+
+        <label>
+          Hero Image
+          <input id="heroImage" value={siteSettings.heroImage} />
+        </label>
+
+        <div class="hero-preview-wrap">
+          <img
+            id="heroImagePreview"
+            class="hero-image-preview"
+            src={siteSettings.heroImage}
+            alt="Hero image preview"
+          />
+        </div>
+
+        <button class="secondary" id="loadImagesBtn" type="button">
+          Select Hero Image
+        </button>
+
+        <div class="image-library" id="imageLibrary"></div>
+      </section>
+
+      <section class="panel editor">
+        <h2>Recent Films Section</h2>
+
+        <label>
+          Section Title
+          <input id="filmsTitle" value={siteSettings.filmsTitle} />
+        </label>
+
+        <label>
+          Section Description
+          <textarea id="filmsDescription">{siteSettings.filmsDescription}</textarea>
+        </label>
+      </section>
+
+      <section class="panel editor">
+        <h2>Footer & Social Links</h2>
+
+        <label>
+          Footer Brand
+          <input id="footerBrand" value={siteSettings.footerBrand} />
+        </label>
+
+        <label>
+          Footer Text
+          <input id="footerText" value={siteSettings.footerText} />
+        </label>
+
+        <label>
+          YouTube URL
+          <input id="youtubeUrl" value={siteSettings.youtubeUrl} />
+        </label>
+
+        <label>
+          Instagram URL
+          <input id="instagramUrl" value={siteSettings.instagramUrl} />
+        </label>
+
+        <label>
+          Email Address
+          <input id="emailAddress" value={siteSettings.emailAddress} />
+        </label>
+      </section>
+
+      <section class="panel editor">
+        <h2>SEO</h2>
+
+        <label>
+          Site Title
+          <input id="siteTitle" value={siteSettings.siteTitle} />
+        </label>
+
+        <label>
+          Site Description
+          <textarea id="siteDescription">{siteSettings.siteDescription}</textarea>
+        </label>
+      </section>
+
+      <aside class="side-panels">
+        <section class="panel sticky-panel">
+          <h2>Save</h2>
+
+          <p class="helper">
+            These settings control homepage text, hero content, footer links, and SEO.
+          </p>
+
+          <button class="publish" id="saveSettingsBtn" type="button">
+            Save Settings
+          </button>
+        </section>
+      </aside>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  const saveButton = document.getElementById("saveSettingsBtn");
+  const loadImagesButton = document.getElementById("loadImagesBtn");
+
+  const imageLibrary = document.getElementById("imageLibrary");
+  const heroImageInput = document.getElementById("heroImage");
+  const heroImagePreview = document.getElementById("heroImagePreview");
+
+  saveButton?.addEventListener("click", async () => {
+    const data = {
+      heroEyebrow: document.getElementById("heroEyebrow")?.value,
+      heroTitle: document.getElementById("heroTitle")?.value,
+      heroSubtitle: document.getElementById("heroSubtitle")?.value,
+      heroImage: document.getElementById("heroImage")?.value,
+
+      filmsTitle: document.getElementById("filmsTitle")?.value,
+      filmsDescription: document.getElementById("filmsDescription")?.value,
+
+      footerBrand: document.getElementById("footerBrand")?.value,
+      footerText: document.getElementById("footerText")?.value,
+      youtubeUrl: document.getElementById("youtubeUrl")?.value,
+      instagramUrl: document.getElementById("instagramUrl")?.value,
+      emailAddress: document.getElementById("emailAddress")?.value,
+
+      siteTitle: document.getElementById("siteTitle")?.value,
+      siteDescription: document.getElementById("siteDescription")?.value,
+    };
+
+    const response = await fetch("/api/update-site-settings.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert("Site settings updated.");
+    } else {
+      alert(result.error || "Could not update site settings.");
+    }
+  });
+
+  loadImagesButton?.addEventListener("click", async () => {
+    const response = await fetch("/api/list-images.json");
+    const result = await response.json();
+
+    imageLibrary.innerHTML = "";
+
+    result.images.forEach((imagePath) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "image-option";
+
+      button.innerHTML = `
+        <img src="${imagePath}" alt="">
+        <span>${imagePath}</span>
+      `;
+
+      button.addEventListener("click", () => {
+        heroImageInput.value = imagePath;
+        heroImagePreview.src = imagePath;
+        imageLibrary.innerHTML = "";
+      });
+
+      imageLibrary.appendChild(button);
+    });
+  });
+</script>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  .admin-main {
+    min-width: 0;
+  }
+
+  .admin-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    color: #b7b0a7;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 2.8rem;
+    margin: 0;
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .editor {
+    grid-column: 1;
+  }
+
+  .side-panels {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    display: grid;
+    gap: 18px;
+  }
+
+  .panel {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.035);
+    padding: 24px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .sticky-panel {
+    position: sticky;
+    top: 24px;
+  }
+
+  .panel h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 22px;
+  }
+
+  .editor {
+    display: grid;
+    gap: 18px;
+  }
+
+  label {
+    display: grid;
+    gap: 8px;
+    color: #b7b0a7;
+    font-size: 0.85rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #f5f1ea;
+    padding: 14px;
+    font: inherit;
+    border-radius: 8px;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  .hero-preview-wrap {
+    margin-top: -4px;
+  }
+
+  .hero-image-preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: block;
+  }
+
+  .publish,
+  .preview,
+  .secondary {
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.05);
+    color: #f5f1ea;
+    cursor: pointer;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .publish,
+  .secondary {
+    width: 100%;
+    display: block;
+    padding: 14px 18px;
+  }
+
+  .publish {
+    background: #d6b36a;
+    color: #050505;
+    border-color: #d6b36a;
+  }
+
+  .secondary {
+    margin-top: 10px;
+  }
+
+  .preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 20px;
+    min-width: 150px;
+  }
+
+  .helper {
+    color: #b7b0a7;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .image-library {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  :global(.image-option) {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: #f5f1ea;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  :global(.image-option img) {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+  }
+
+  :global(.image-option span) {
+    display: block;
+    padding: 8px;
+    font-size: 0.68rem;
+    color: #b7b0a7;
+    word-break: break-all;
+  }
+
+  @media (max-width: 900px) {
+    .settings-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .editor,
+    .side-panels {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .sticky-panel {
+      position: static;
+    }
+
+    .admin-top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .image-library {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

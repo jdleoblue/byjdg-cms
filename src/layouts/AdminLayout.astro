@@ -1,0 +1,107 @@
+---
+const { title = "ByJDG Admin" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+
+  <body>
+    <main class="admin-shell">
+      <aside class="admin-sidebar">
+        <div class="admin-brand">
+          <span>ByJDG</span>
+          <small>CMS</small>
+        </div>
+
+        <nav>
+          <a href="/admin">Episodes</a>
+          <a href="/admin/new">+ New Episode</a>
+          <a href="/admin/settings">Site Settings</a>
+          <a href="/admin/media">Media Library</a>
+          <a href="/admin/projects">Projects</a>
+          <a href="/admin/gear">Gear</a>
+          <a href="/">View Site</a>
+        </nav>
+      </aside>
+
+      <section class="admin-content">
+        <slot />
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #0b0b0b;
+    color: #f5f1e8;
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  .admin-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+  }
+
+  .admin-sidebar {
+    border-right: 1px solid rgba(255,255,255,0.08);
+    padding: 28px;
+    background: #111;
+  }
+
+  .admin-brand {
+    margin-bottom: 40px;
+  }
+
+  .admin-brand span {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 28px;
+    letter-spacing: 0.08em;
+  }
+
+  .admin-brand small {
+    color: #9c8f7a;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  nav {
+    display: grid;
+    gap: 10px;
+  }
+
+  nav a {
+    color: #d8d0c2;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  nav a:hover {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+  }
+
+  .admin-content {
+    padding: 40px;
+  }
+
+  @media (max-width: 800px) {
+    .admin-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+      border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+  }
+</style>
