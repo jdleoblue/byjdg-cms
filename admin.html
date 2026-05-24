@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ByJDG Local CMS</title>
+<title>ByJDG Website Studio</title>
 <style>
   :root { --bg:#050505; --panel:#111; --panel2:#171717; --text:#f5f1ea; --muted:#b7b0a7; --line:rgba(255,255,255,.14); --accent:#d6b36a; }
   * { box-sizing:border-box; }
@@ -106,8 +106,8 @@
 <body>
 <div class="shell">
   <aside>
-    <div class="brand">ByJDG</div>
-    <div class="muted">Local CMS test. This edits the test copy of index.html in this folder only.</div>
+    <div class="brand">ByJDG Website Studio</div>
+    <div class="muted">Create. Publish. Repeat.</div>
 
     <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰ Menu</button>
 
@@ -120,7 +120,7 @@
   </aside>
 
   <main>
-    <h1>Local Website Editor</h1>
+    <h1>Website Studio</h1>
     <p class="muted" id="sourcePath">Loading source file...</p>
 
     <section id="hero" class="active">
@@ -227,7 +227,8 @@ function showTab(id, btn) {
 async function loadContent() {
   const res = await fetch('/api/content');
   data = await res.json();
-  byId('sourcePath').textContent = `Editing: ${data.filePath}`;
+  byId('sourcePath').textContent =
+  'Website Connected • Ready to Publish';
 
   ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
     const parts = path.split('.');

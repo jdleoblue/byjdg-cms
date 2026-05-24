@@ -16,7 +16,7 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 800,
     autoHideMenuBar: true,
-    title: 'ByJDG CMS'
+    title: 'ByJDG Website Studio'
   });
 
   setTimeout(() => {
