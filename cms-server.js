@@ -2,11 +2,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { exec } = require('child_process');
 
 const PORT = 4321;
 const ROOT = __dirname;
 const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
 const IMAGES_DIR = path.join(path.dirname(INDEX_PATH), 'images');
+const BACKUPS_DIR = path.join(ROOT, 'backups');
 
 function readIndex() {
   return fs.readFileSync(INDEX_PATH, 'utf8');
@@ -40,10 +42,8 @@ function extractAttr(tag = '', attr = 'href') {
 
 function parseContent(html) {
   const heroBg = matchOne(html, /\.hero\s*\{[\s\S]*?url\(['"]?([^'")]+)['"]?\) center\/cover no-repeat;/i, 'images/hero-image.jpg');
-
   const heroBlock = matchOne(html, /<section class="hero">([\s\S]*?)<\/section>/i, '');
   const heroButton = heroBlock.match(/<a class="button"([^>]*)>[\s\S]*?<span class="play">[\s\S]*?<\/span>\s*([^<]+)\s*<\/a>/i);
-
   const latestHeader = matchOne(html, /<h2 class="section-title">([\s\S]*?)<\/h2>/i, 'Latest Films');
   const latestLinkTag = html.match(/<a class="small-link" href="([^"]*)"[^>]*>\s*([^<]*View All Episodes[^<]*)\s*<\/a>/i);
 
@@ -131,7 +131,12 @@ function footerLinkHtml(link) {
 
 function updateHtml(data) {
   let html = readIndex();
-  const backupPath = INDEX_PATH.replace(/\.html$/i, '') + `.backup-${Date.now()}.html`;
+
+  if (!fs.existsSync(BACKUPS_DIR)) {
+    fs.mkdirSync(BACKUPS_DIR, { recursive: true });
+  }
+
+  const backupPath = path.join(BACKUPS_DIR, `index.backup-${Date.now()}.html`);
   fs.copyFileSync(INDEX_PATH, backupPath);
 
   html = html.replace(/url\(['"]?images\/hero-image\.jpg['"]?\) center\/cover no-repeat;/i, `url('${data.hero.image}') center/cover no-repeat;`);
@@ -164,6 +169,44 @@ function updateHtml(data) {
 
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
   return { ok: true, backupPath, filePath: INDEX_PATH };
+}
+
+function publishToGit() {
+  return new Promise((resolve) => {
+    exec(
+      'git add . && git commit -m "Website update from CMS" && git push',
+      { cwd: ROOT },
+      (error, stdout, stderr) => {
+        const output = `${stdout || ''}\n${stderr || ''}`.trim();
+
+        if (
+          output.includes('nothing to commit') ||
+          output.includes('working tree clean')
+        ) {
+          resolve({
+            ok: true,
+            message: 'No new changes to publish.',
+            output
+          });
+          return;
+        }
+
+        if (error) {
+          resolve({
+            ok: false,
+            error: output || error.message
+          });
+          return;
+        }
+
+        resolve({
+          ok: true,
+          message: 'Website published successfully.',
+          output
+        });
+      }
+    );
+  });
 }
 
 function send(res, status, body, type = 'application/json') {
@@ -200,6 +243,12 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/save') {
       const data = JSON.parse(await readBody(req));
       send(res, 200, updateHtml(data));
+      return;
+    }
+
+    if (req.method === 'POST' && req.url === '/api/publish') {
+      const result = await publishToGit();
+      send(res, result.ok ? 200 : 500, result);
       return;
     }
 

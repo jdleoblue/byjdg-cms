@@ -195,6 +195,7 @@
     <div class="toolbar">
       <button class="primary" onclick="saveHtml()">Generate HTML</button>
       <button class="secondary" onclick="previewSite()">Preview Site</button>
+      <button class="secondary" onclick="publishSite()">Publish Website</button>
       <button class="secondary" onclick="loadContent()">Reload From index.html</button>
       <div class="status" id="status"></div>
     </div>
@@ -295,6 +296,26 @@ async function saveHtml() {
 
 function previewSite() {
   window.open('/preview', '_blank');
+}
+
+async function publishSite() {
+  byId('status').textContent = 'Publishing to GitHub...';
+
+  try {
+    const res = await fetch('/api/publish', {
+      method: 'POST'
+    });
+
+    const result = await res.json();
+
+    if (result.ok) {
+      byId('status').textContent = 'Website published successfully.';
+    } else {
+      byId('status').textContent = 'Publish failed: ' + result.error;
+    }
+  } catch (err) {
+    byId('status').textContent = 'Publish failed.';
+  }
 }
 
 async function uploadImage(event, fieldId) {
