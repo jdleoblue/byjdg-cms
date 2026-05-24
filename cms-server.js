@@ -8,7 +8,7 @@ const PORT = 4321;
 const ROOT = __dirname;
 const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
 const IMAGES_DIR = path.join(path.dirname(INDEX_PATH), 'images');
-const BACKUPS_DIR = path.join(ROOT, 'backups');
+const BACKUPS_DIR = path.join(path.dirname(INDEX_PATH), 'backups');
 
 function readIndex() {
   return fs.readFileSync(INDEX_PATH, 'utf8');

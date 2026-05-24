@@ -5,9 +5,21 @@ const path = require('path');
 let serverProcess;
 
 function createWindow() {
+  const websiteIndexPath = path.join(
+    app.getPath('documents'),
+    'byjdg-cms-test',
+    'index.html'
+  );
 
   serverProcess = fork(
-    path.join(__dirname, 'cms-server.js')
+    path.join(__dirname, 'cms-server.js'),
+    [],
+    {
+      env: {
+        ...process.env,
+        BYJDG_INDEX_PATH: websiteIndexPath
+      }
+    }
   );
 
   const win = new BrowserWindow({
@@ -27,7 +39,6 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
-
   if (serverProcess) {
     serverProcess.kill();
   }
@@ -38,7 +49,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
-
   if (serverProcess) {
     serverProcess.kill();
   }
