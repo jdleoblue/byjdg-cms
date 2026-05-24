@@ -7,8 +7,9 @@ const { exec } = require('child_process');
 const PORT = 4321;
 const ROOT = __dirname;
 const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
-const IMAGES_DIR = path.join(path.dirname(INDEX_PATH), 'images');
-const BACKUPS_DIR = path.join(path.dirname(INDEX_PATH), 'backups');
+const WEBSITE_DIR = path.dirname(INDEX_PATH);
+const IMAGES_DIR = path.join(WEBSITE_DIR, 'images');
+const BACKUPS_DIR = path.join(WEBSITE_DIR, 'backups');
 
 function readIndex() {
   return fs.readFileSync(INDEX_PATH, 'utf8');
@@ -175,7 +176,7 @@ function publishToGit() {
   return new Promise((resolve) => {
     exec(
       'git add . && git commit -m "Website update from CMS" && git push',
-      { cwd: ROOT },
+      { cwd: WEBSITE_DIR },
       (error, stdout, stderr) => {
         const output = `${stdout || ''}\n${stderr || ''}`.trim();
 
@@ -266,7 +267,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && req.url.startsWith('/images/')) {
-      const imgPath = path.join(path.dirname(INDEX_PATH), req.url);
+      const imgPath = path.join(WEBSITE_DIR, req.url);
       if (!fs.existsSync(imgPath)) return send(res, 404, 'Not found', 'text/plain');
       const ext = path.extname(imgPath).toLowerCase();
       const types = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
