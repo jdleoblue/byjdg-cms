@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { exec } = require('child_process');
+const { app, BrowserWindow } = require('electron');
 
 const PORT = 4321;
 const ROOT = __dirname;
@@ -346,4 +347,35 @@ server.listen(PORT, () => {
   console.log(`ByJDG Local CMS running at http://localhost:${PORT}`);
   console.log(`Editing BETA source file: ${INDEX_PATH}`);
   console.log(`Live source file: ${LIVE_INDEX_PATH}`);
+});
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1300,
+    height: 900,
+    title: 'ByJDG Website Studio',
+    backgroundColor: '#050505',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  setTimeout(() => {
+  win.loadURL(`http://localhost:${PORT}`);
+}, 500);
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
