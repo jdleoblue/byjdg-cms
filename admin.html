@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ByJDG Website Studio</title>
 <style>
-  :root { --bg:#050505; --panel:#111; --panel2:#171717; --text:#f5f1ea; --muted:#b7b0a7; --line:rgba(255,255,255,.14); --accent:#d6b36a; }
+  :root { --bg:#050505; --panel:#111; --panel2:#171717; --text:#f5f1ea; --muted:#b7b0a7; --line:rgba(255,255,255,.14); --accent:#d6b36a; --beta:#2563eb; --live:#d6b36a; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
   .shell { display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
@@ -13,10 +13,13 @@
   .brand { font-family:Georgia,serif; font-size:2rem; margin-bottom:6px; }
   .muted { color:var(--muted); font-size:.85rem; line-height:1.5; }
   nav { display:grid; gap:10px; margin-top:30px; }
-  nav button, .primary, .secondary, .danger, .mobile-menu-toggle { border:1px solid var(--line); background:transparent; color:var(--text); padding:12px 14px; text-align:left; cursor:pointer; letter-spacing:.12em; text-transform:uppercase; font-size:.72rem; }
+  nav button, .primary, .secondary, .danger, .mobile-menu-toggle, .beta-btn, .live-btn { border:1px solid var(--line); background:transparent; color:var(--text); padding:12px 14px; text-align:left; cursor:pointer; letter-spacing:.12em; text-transform:uppercase; font-size:.72rem; }
   nav button.active, .primary { background:var(--text); color:#050505; }
   .danger { color:#ffb2b2; }
   .mobile-menu-toggle { display:none; width:100%; margin-top:18px; }
+  .beta-btn { background:var(--beta); color:white; border-color:transparent; }
+  .live-btn { background:var(--live); color:#050505; border-color:transparent; font-weight:700; }
+  .publish-label { display:block; font-size:.62rem; opacity:.75; letter-spacing:.08em; margin-top:4px; text-transform:none; }
   main { padding:34px 5vw 80px; }
   section { display:none; max-width:980px; }
   section.active { display:block; }
@@ -29,77 +32,26 @@
   .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .buttons { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
   .episode-card { background:var(--panel2); border:1px solid var(--line); padding:18px; margin:14px 0; }
-  .toolbar { position:sticky; bottom:0; background:rgba(5,5,5,.88); backdrop-filter:blur(12px); border-top:1px solid var(--line); padding:16px 0; margin-top:40px; }
-  .status { color:var(--accent); margin-top:12px; min-height:22px; }
+  .toolbar { position:sticky; bottom:0; background:rgba(5,5,5,.88); backdrop-filter:blur(12px); border-top:1px solid var(--line); padding:16px 0; margin-top:40px; display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+  .status { color:var(--accent); margin-top:12px; min-height:22px; width:100%; }
   img.preview { width:160px; height:90px; object-fit:cover; border:1px solid var(--line); margin-top:10px; }
 
   @media (max-width:800px) {
     .shell { display:block; }
-
-    aside {
-      height:auto;
-      position:sticky;
-      top:0;
-      z-index:50;
-      padding:18px;
-      border-right:none;
-      border-bottom:1px solid var(--line);
-      background:rgba(7,7,7,.96);
-      backdrop-filter:blur(14px);
-    }
-
+    aside { height:auto; position:sticky; top:0; z-index:50; padding:18px; border-right:none; border-bottom:1px solid var(--line); background:rgba(7,7,7,.96); backdrop-filter:blur(14px); }
     .brand { font-size:1.8rem; }
     aside .muted { display:none; }
-
-    .mobile-menu-toggle {
-      display:block;
-    }
-
-    nav {
-      display:none;
-      margin-top:10px;
-      gap:8px;
-    }
-
-    nav.open {
-      display:grid;
-    }
-
-    nav button {
-      width:100%;
-      padding:13px 14px;
-      font-size:.68rem;
-    }
-
-    main {
-      padding:28px 18px 120px;
-    }
-
+    .mobile-menu-toggle { display:block; }
+    nav { display:none; margin-top:10px; gap:8px; }
+    nav.open { display:grid; }
+    nav button { width:100%; padding:13px 14px; font-size:.68rem; }
+    main { padding:28px 18px 160px; }
     h1 { font-size:2.7rem; }
     h2 { font-size:2rem; }
     .row { grid-template-columns:1fr; }
-
-    .toolbar {
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:60;
-      padding:12px 14px;
-    }
-
-    .toolbar .primary,
-    .toolbar .secondary {
-      text-align:center;
-      padding:12px 10px;
-      font-size:.62rem;
-    }
-
-    img.preview {
-      width:100%;
-      height:auto;
-      max-height:180px;
-    }
+    .toolbar { position:fixed; left:0; right:0; bottom:0; z-index:60; padding:12px 14px; }
+    .toolbar .primary, .toolbar .secondary, .toolbar .beta-btn, .toolbar .live-btn { text-align:center; padding:12px 10px; font-size:.62rem; flex:1; }
+    img.preview { width:100%; height:auto; max-height:180px; }
   }
 </style>
 </head>
@@ -193,10 +145,9 @@
     </section>
 
     <div class="toolbar">
-      <button class="primary" onclick="saveHtml()">Generate HTML</button>
-      <button class="secondary" onclick="previewSite()">Preview Site</button>
-      <button class="secondary" onclick="publishSite()">Publish Website</button>
-      <button class="secondary" onclick="loadContent()">Reload From index.html</button>
+      <button class="secondary" onclick="previewChanges()">Preview Changes</button>
+      <button class="beta-btn" onclick="publishBeta()">Publish to Beta <span class="publish-label">beta.byjdg.com</span></button>
+      <button class="live-btn" onclick="publishLive()">Publish to Live <span class="publish-label">byjdg.com</span></button>
       <div class="status" id="status"></div>
     </div>
   </main>
@@ -227,13 +178,13 @@ function showTab(id, btn) {
 async function loadContent() {
   const res = await fetch('/api/content');
   data = await res.json();
-  byId('sourcePath').textContent =
-  'Website Connected • Ready to Publish';
+  byId('sourcePath').textContent = 'Website Connected • Ready to Publish';
 
   ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
     const parts = path.split('.');
     setField(path, data[parts[0]][parts[1]]);
   });
+
   updatePreview('hero.image');
   renderEpisodes();
   renderGear();
@@ -257,6 +208,7 @@ function renderEpisodes() {
       <div class="buttons"><button class="danger" onclick="deleteEpisode(${i})">Delete Episode</button></div>
     </div>`).join('');
 }
+
 function updateEpisode(i, key, value) { data.episodes[i][key] = value; }
 function addEpisode() { data.episodes.push({ image:'images/new-episode.jpg', eyebrow:`Episode ${data.episodes.length + 1}`, title:'New Episode', text:'Episode description goes here.', href:'https://www.youtube.com/@by-jdg', cta:'Watch Film →' }); renderEpisodes(); }
 function deleteEpisode(i) { data.episodes.splice(i, 1); renderEpisodes(); }
@@ -289,34 +241,72 @@ function collectData() {
 }
 
 async function saveHtml() {
-  byId('status').textContent = 'Generating HTML...';
-  const res = await fetch('/api/save', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(collectData()) });
-  const result = await res.json();
-  byId('status').textContent = result.ok ? `HTML generated. Backup created.` : `Error: ${result.error}`;
+  const res = await fetch('/api/save', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(collectData())
+  });
+
+  return await res.json();
 }
 
-function previewSite() {
-  window.open('/preview', '_blank');
-}
+async function previewChanges() {
+  byId('status').textContent = 'Saving preview...';
 
-async function publishSite() {
-  byId('status').textContent = 'Publishing to GitHub...';
+  const result = await saveHtml();
 
-  try {
-    const res = await fetch('/api/publish', {
-      method: 'POST'
-    });
-
-    const result = await res.json();
-
-    if (result.ok) {
-      byId('status').textContent = 'Website published successfully.';
-    } else {
-      byId('status').textContent = 'Publish failed: ' + result.error;
-    }
-  } catch (err) {
-    byId('status').textContent = 'Publish failed.';
+  if (result.ok) {
+    byId('status').textContent = 'Preview ready.';
+    window.open('/preview', '_blank');
+  } else {
+    byId('status').textContent = 'Preview failed: ' + result.error;
   }
+}
+
+async function publishBeta() {
+  byId('status').textContent = 'Saving changes...';
+
+  const saveResult = await saveHtml();
+
+  if (!saveResult.ok) {
+    byId('status').textContent = 'Save failed: ' + saveResult.error;
+    return;
+  }
+
+  byId('status').textContent = 'Publishing to beta.byjdg.com...';
+
+  const res = await fetch('/api/publish-beta', { method: 'POST' });
+  const result = await res.json();
+
+  byId('status').textContent = result.ok
+    ? 'Published to beta.byjdg.com'
+    : 'Publish failed: ' + result.error;
+}
+
+async function publishLive() {
+  const confirmed = confirm(
+    'Publish to LIVE website?\n\nThis will update:\nbyjdg.com'
+  );
+
+  if (!confirmed) return;
+
+  byId('status').textContent = 'Saving changes...';
+
+  const saveResult = await saveHtml();
+
+  if (!saveResult.ok) {
+    byId('status').textContent = 'Save failed: ' + saveResult.error;
+    return;
+  }
+
+  byId('status').textContent = 'Publishing to byjdg.com...';
+
+  const res = await fetch('/api/publish-live', { method: 'POST' });
+  const result = await res.json();
+
+  byId('status').textContent = result.ok
+    ? 'Published to byjdg.com'
+    : 'Publish failed: ' + result.error;
 }
 
 async function uploadImage(event, fieldId) {
@@ -325,23 +315,47 @@ async function uploadImage(event, fieldId) {
   byId(fieldId).value = path;
   updatePreview(fieldId);
 }
+
 async function uploadEpisodeImage(event, i) {
   const path = await uploadFile(event.target.files[0]);
   if (!path) return;
   data.episodes[i].image = path;
   renderEpisodes();
 }
+
 async function uploadFile(file) {
   if (!file) return '';
   const base64 = await fileToBase64(file);
-  const res = await fetch('/api/upload', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ filename:file.name, base64 }) });
+  const res = await fetch('/api/upload', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ filename:file.name, base64 })
+  });
   const result = await res.json();
   return result.path;
 }
-function fileToBase64(file) { return new Promise(resolve => { const reader = new FileReader(); reader.onload = () => resolve(reader.result.split(',')[1]); reader.readAsDataURL(file); }); }
-function updatePreview(fieldId) { const img = byId('preview.' + fieldId); if (img) img.src = '/' + byId(fieldId).value; }
-function escapeHtml(s='') { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function escapeAttr(s='') { return escapeHtml(s).replace(/'/g, '&#39;'); }
+
+function fileToBase64(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.readAsDataURL(file);
+  });
+}
+
+function updatePreview(fieldId) {
+  const img = byId('preview.' + fieldId);
+  if (img) img.src = '/' + byId(fieldId).value;
+}
+
+function escapeHtml(s='') {
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function escapeAttr(s='') {
+  return escapeHtml(s).replace(/'/g, '&#39;');
+}
+
 loadContent();
 </script>
 </body>
