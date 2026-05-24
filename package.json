@@ -1,16 +1,35 @@
 {
-  "name": "byjdg-cms",
-  "productName": "ByJDG CMS",
+  "name": "byjdg-website-studio",
+  "productName": "ByJDG Website Studio",
   "version": "1.0.0",
-  "description": "Local CMS for ByJDG",
+  "description": "Desktop website studio for ByJDG",
   "main": "main.js",
   "author": "JDG",
   "license": "ISC",
   "type": "commonjs",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.byjdg.websitestudio",
+    "productName": "ByJDG Website Studio",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    },
+    "files": [
+      "admin.html",
+      "cms-server.js",
+      "index.html",
+      "main.js",
+      "package.json",
+      "images/**/*",
+      "backups/**/*"
+    ]
   },
   "devDependencies": {
-    "electron": "^42.2.0"
+    "electron": "^42.2.0",
+    "electron-builder": "^26.0.12"
   }
 }
