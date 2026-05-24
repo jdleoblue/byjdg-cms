@@ -55,10 +55,20 @@ function parseContent(html) {
     value: unescapeHtml(m[2].trim())
   }));
 
-  const footerLinks = [...html.matchAll(/<a href="([^"]*)"(?: target="_blank" rel="noopener")?>(YouTube|Instagram|Email|Privacy)<\/a>/gi)].map(m => ({
-    label: m[2],
-    href: m[1]
-  }));
+  const footerLinksBlock = matchOne(
+  html,
+  /<div class="footer-links">([\s\S]*?)<\/div>/i,
+  ''
+);
+
+  const footerLinks = [...footerLinksBlock.matchAll(/<a href="([^"]*)"(?: target="_blank" rel="noopener")?>(YouTube|Instagram|Email|Privacy)<\/a>/gi)]
+    .map(m => ({
+      label: m[2],
+      href: m[1]
+    }))
+    .filter((link, index, arr) =>
+      arr.findIndex(item => item.label === link.label) === index
+    );
 
   return {
     filePath: INDEX_PATH,
