@@ -8,8 +8,8 @@ const { app, BrowserWindow } = require('electron');
 const PORT = 4321;
 const ROOT = __dirname;
 
-const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
-const WEBSITE_DIR = path.dirname(INDEX_PATH);
+const WEBSITE_DIR = '/Users/jdg/Documents/byjdg-cms-test';
+const INDEX_PATH = path.join(WEBSITE_DIR, 'index.html');
 
 const LIVE_SITE_DIR = '/Users/jdg/Documents/GitHub/ByJDG/home';
 const LIVE_INDEX_PATH = path.join(LIVE_SITE_DIR, 'index.html');
