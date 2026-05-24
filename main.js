@@ -8,14 +8,17 @@ const { app, BrowserWindow } = require('electron');
 const PORT = 4321;
 const ROOT = __dirname;
 
-const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
+const INDEX_PATH =
+  process.env.BYJDG_INDEX_PATH ||
+  '/Users/jdg/Documents/GitHub/byjdg-cms/index.html';
+
 const WEBSITE_DIR = path.dirname(INDEX_PATH);
 
 const LIVE_SITE_DIR = '/Users/jdg/Documents/GitHub/ByJDG/home';
 const LIVE_INDEX_PATH = path.join(LIVE_SITE_DIR, 'index.html');
 
 const IMAGES_DIR = path.join(WEBSITE_DIR, 'images');
-const BACKUPS_DIR = path.join(WEBSITE_DIR, 'backups');
+const BACKUPS_DIR = path.join(app.getPath('userData'), 'backups');
 
 function readIndex() {
   return fs.readFileSync(INDEX_PATH, 'utf8');
