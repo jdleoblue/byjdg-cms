@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByJDG | Quiet Stories in Motion</title>
+  <meta name="description" content="ByJDG is a cinematic visual journal featuring quiet stories, short films, North Carolina landscapes, and reflective moments in motion." />
+
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-soft: #0b0b0b;
+      --text: #f5f1ea;
+      --muted: #b7b0a7;
+      --line: rgba(255, 255, 255, 0.14);
+      --panel: rgba(255, 255, 255, 0.045);
+      --accent: #d6b36a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 7vw;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      letter-spacing: -0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 0.72rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu-button {
+      display: none;
+    }
+
+    .menu-icon {
+      display: block;
+    }
+
+    .menu-icon::before {
+      content: '☰';
+    } 
+
+    body.menu-open .menu-icon::before {
+      content: '×';
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav-links a {
+      opacity: 0.82;
+      transition: opacity 0.2s ease;
+      line-height: 1;
+    }
+
+    .nav-links a:hover,
+    .nav-links .active {
+      opacity: 1;
+    }
+
+    .nav-links .active {
+      border-bottom: 1px solid var(--text);
+      padding-bottom: 7px;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 140px 7vw 80px;
+      padding-top: 120px;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 42%, rgba(0,0,0,0.15) 100%),
+        linear-gradient(to top, #050505 0%, rgba(5,5,5,0.2) 38%, rgba(5,5,5,0.05) 100%),
+        url('images/hero-image.jpg') center/cover no-repeat;
+    }
+
+    .hero-content {
+      max-width: 720px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.44em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(4.5rem, 12vw, 9.8rem);
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      margin-bottom: 28px;
+    }
+
+    .hero-line {
+      width: 58px;
+      height: 1px;
+      background: var(--text);
+      margin-bottom: 22px;
+      opacity: 0.8;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.85rem, 1.4vw, 1rem);
+      letter-spacing: 0.48em;
+      text-transform: uppercase;
+      margin-bottom: 44px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--line);
+      padding: 16px 28px;
+      font-size: 0.76rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+
+    .button:hover {
+      border-color: rgba(255,255,255,0.42);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .play {
+      font-size: 0.8rem;
+    }
+
+    .section {
+      padding: 74px 7vw;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .small-link {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .film-card {
+      min-height: 380px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--panel);
+    }
+
+    .film-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--image) center/cover no-repeat;
+      transform: scale(1.02);
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      opacity: 0.74;
+    }
+
+    .film-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.26), rgba(0,0,0,0.08));
+    }
+
+    .film-card:hover::before {
+      transform: scale(1.08);
+      opacity: 0.9;
+    }
+
+    .film-content {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 26px;
+      z-index: 2;
+    }
+
+    .episode {
+      font-size: 0.68rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .film-content h3 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      font-size: 1.65rem;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .film-content p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 330px;
+      margin-bottom: 24px;
+    }
+
+    .watch-link {
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg-soft);
+    }
+
+    .about-panel {
+      min-height: 460px;
+      padding: 84px 7vw;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.46)),
+        url('images/about.jpg') center/cover no-repeat;
+    }
+
+    .about-panel h2,
+    .gear-panel h2 {
+      font-size: 0.9rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-weight: 400;
+      margin-bottom: 36px;
+    }
+
+    .about-panel .lead {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.7rem, 3vw, 2.35rem);
+      line-height: 1.22;
+      max-width: 560px;
+      margin-bottom: 24px;
+    }
+
+    .about-panel p {
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .gear-panel {
+      padding: 84px 7vw 84px 4vw;
+      background: #070707;
+    }
+
+    .gear-list {
+      list-style: none;
+      max-width: 420px;
+      margin-bottom: 30px;
+    }
+
+    .gear-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      color: var(--muted);
+    }
+
+    .gear-list span:first-child {
+      color: var(--text);
+      opacity: 0.88;
+    }
+
+    .contact {
+      position: relative;
+      padding: 76px 7vw;
+      background:
+        linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.86)),
+        url('images/contact.jpg') center/cover no-repeat;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .contact h2 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 8px;
+    }
+
+    .contact p {
+      color: var(--muted);
+    }
+
+    .contact-form {
+      display: flex;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .contact-form input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      padding: 18px 20px;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .contact-form input::placeholder {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .contact-form button {
+      border: 0;
+      border-left: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 0 28px;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .contact-form button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .footer {
+      padding: 30px 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: #050505;
+      font-size: 0.82rem;
+    }
+
+    .footer-brand {
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      font-size: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.68rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .film-grid,
+      .split,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .gear-panel {
+        padding: 70px 7vw;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 45px 6vw;
+        background: rgba(0,0,0,0.72);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 120;
+      }
+
+      .mobile-menu-button {
+        display: block;
+        background: transparent;
+        border: 0;
+        color: var(--text);
+        font-size: 2rem;
+        cursor: pointer;
+        line-height: 1;
+        position: absolute;
+        left: 6vw;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 999;
+      }
+
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+      } 
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 58%;
+        max-width: 330px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 26px;
+        padding: 100px 38px 40px;
+        background: rgba(0,0,0,0.92);
+        backdrop-filter: blur(18px);
+        border-right: 1px solid rgba(255,255,255,0.12);
+        font-size: 0.72rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-100%);
+        transition: transform 0.35s ease, opacity 0.25s ease;
+        z-index: 150;
+      }
+
+      body.menu-open .nav-links {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .nav-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: transparent;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      body.menu-open .nav-overlay {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .hero {
+        min-height: 88vh;
+        padding-top: 160px;
+        padding-bottom: 60px;
+        background-position: 70% center;
+      }
+
+      .section,
+      .about-panel,
+      .gear-panel,
+      .contact {
+        padding-left: 6vw;
+        padding-right: 6vw;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .film-card {
+        min-height: 340px;
+      }
+
+      .contact-form {
+        flex-direction: column;
+      }
+
+      .contact-form button {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 16px 20px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="nav">
+      <button class="mobile-menu-button" aria-label="Open menu" onclick="toggleMenu()">
+        <span class="menu-icon"></span>
+      </button>
+
+      <a href="#top" class="logo">ByJDG</a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#top" class="active">Home</a>
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="#about">About</a>
+        <a href="https://www.byjdg.com/projects.html">Projects</a>
+      </nav>
+    </header>
+
+    <div class="nav-overlay" onclick="closeMenu()"></div>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">Cinematic Visual Journal</div>
+          <h1>ByJDG</h1>
+          <div class="hero-line"></div>
+          <p class="hero-subtitle">Quiet stories in motion.</p>
+          <a class="button" href="https://www.youtube.com/watch?v=5Rd5Dptml4s&amp;t=3s" target="_blank" rel="noopener">
+            <span class="play">▶</span>
+            Watch Latest Film</a>
+        </div>
+      </section>
+
+      <section class="section" id="latest">
+        <div class="section-header">
+          <h2 class="section-title">Latest Films</h2>
+          <a class="small-link" href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">View All Episodes →</a>
+        </div>
+
+        <div class="film-grid">
+          <article class="film-card" style="--image: url('images/e0bd7d13-fbad-4f9f-bb1d-2eaadc0d3943-png-532b283f.png');">
+            <div class="film-content">
+              <div class="episode">Episode 1</div>
+              <h3>Routine &amp; Wonder</h3>
+              <p>A quiet day, a familiar rhythm, and the beauty in the ordinary.</p>
+              <a class="watch-link" href="https://youtu.be/6M5C7oGllsE?si=yrhUGJ1OyDcMZ6ek" target="_blank" rel="noopener">Watch Film →</a>
+            </div>
+          </article>
+
+          <article class="film-card" style="--image: url('images/episode-2.jpg');">
+            <div class="film-content">
+              <div class="episode">Episode 2</div>
+              <h3>Seeking &amp; Return</h3>
+              <p>New places, Pilot Mountain, and a quiet evening in North Carolina.</p>
+              <a class="watch-link" href="https://youtu.be/odL94MiIh2I?si=fMfCbbGF8Wfy_Hvk" target="_blank" rel="noopener">Watch Film →</a>
+            </div>
+          </article>
+
+          <article class="film-card" style="--image: url('images/episode-3.jpg');">
+            <div class="film-content">
+              <div class="episode">Episode 3</div>
+              <h3>Miles &amp; Meaning</h3>
+              <p>A Tesla road trip from Texas to North Carolina and the transition into a different pace of life.</p>
+              <a class="watch-link" href="https://www.youtube.com/" target="_blank" rel="noopener">Stay Tuned</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="split">
+        <div class="about-panel" id="about">
+          <h2>About</h2>
+          <p class="lead">Cinematic visuals and quiet stories inspired by everyday moments.</p>
+          <p>These films are quiet moments, drives, routines, landscapes, and thoughts captured along the way.</p>
+          <a class="small-link" href="#latest">Watch the Journey →</a>
+        </div>
+
+        <div class="gear-panel" id="gear">
+          <h2>Gear</h2>
+          <ul class="gear-list">
+            <li><span>Camera</span><span>Sony ZV-E10 II</span></li>
+            <li><span>Wide Lens</span><span>Viltrox 15mm f/1.7</span></li>
+            <li><span>Telephoto</span><span>Sony 55-210mm</span></li>
+            <li><span>Editing</span><span>Final Cut Pro</span></li>
+            <li><span>Computer</span><span>MacBook Air M4</span></li>
+          </ul>
+          <a class="small-link" href="#contact">View Full Gear List →</a>
+        </div>
+      </section>
+
+      <section class="contact" id="contact">
+        <div>
+          <h2>Let’s create something meaningful.</h2>
+          <p>Collaborations, creative work, or just say hello.</p>
+        </div>
+
+        <form class="contact-form" action="https://formspree.io/f/maqvrlrz" method="POST">
+          <input 
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            aria-label="Email address"
+            required
+          > 
+          
+          <button type="submit">Send Message</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-brand">ByJDG</div>
+      <div>© 2026 ByJDG. All rights reserved..</div>
+      <div class="footer-links">
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:filmsbyjdg@icloud.com">Email</a>
+        <a href="/privacy.html">Privacy</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.body.classList.toggle('menu-open');
+    }
+
+    function closeMenu() {
+      document.body.classList.remove('menu-open');
+    }
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+  </script>
+</body>
+</html>

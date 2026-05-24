@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ByJDG Local CMS</title>
+<style>
+  :root { --bg:#050505; --panel:#111; --panel2:#171717; --text:#f5f1ea; --muted:#b7b0a7; --line:rgba(255,255,255,.14); --accent:#d6b36a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+  .shell { display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+  aside { border-right:1px solid var(--line); padding:28px; position:sticky; top:0; height:100vh; background:#070707; }
+  .brand { font-family:Georgia,serif; font-size:2rem; margin-bottom:6px; }
+  .muted { color:var(--muted); font-size:.85rem; line-height:1.5; }
+  nav { display:grid; gap:10px; margin-top:30px; }
+  nav button, .primary, .secondary, .danger, .mobile-menu-toggle { border:1px solid var(--line); background:transparent; color:var(--text); padding:12px 14px; text-align:left; cursor:pointer; letter-spacing:.12em; text-transform:uppercase; font-size:.72rem; }
+  nav button.active, .primary { background:var(--text); color:#050505; }
+  .danger { color:#ffb2b2; }
+  .mobile-menu-toggle { display:none; width:100%; margin-top:18px; }
+  main { padding:34px 5vw 80px; }
+  section { display:none; max-width:980px; }
+  section.active { display:block; }
+  h1 { font-family:Georgia,serif; font-size:clamp(2.2rem,5vw,4.5rem); font-weight:400; letter-spacing:-.06em; margin:0 0 8px; }
+  h2 { font-family:Georgia,serif; font-size:2rem; font-weight:400; margin:34px 0 18px; }
+  .card { background:var(--panel); border:1px solid var(--line); padding:22px; margin:18px 0; }
+  label { display:block; color:var(--muted); text-transform:uppercase; letter-spacing:.18em; font-size:.68rem; margin:14px 0 7px; }
+  input, textarea { width:100%; background:#050505; border:1px solid var(--line); color:var(--text); padding:13px 14px; font-size:1rem; outline:none; }
+  textarea { min-height:96px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .buttons { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .episode-card { background:var(--panel2); border:1px solid var(--line); padding:18px; margin:14px 0; }
+  .toolbar { position:sticky; bottom:0; background:rgba(5,5,5,.88); backdrop-filter:blur(12px); border-top:1px solid var(--line); padding:16px 0; margin-top:40px; }
+  .status { color:var(--accent); margin-top:12px; min-height:22px; }
+  img.preview { width:160px; height:90px; object-fit:cover; border:1px solid var(--line); margin-top:10px; }
+
+  @media (max-width:800px) {
+    .shell { display:block; }
+
+    aside {
+      height:auto;
+      position:sticky;
+      top:0;
+      z-index:50;
+      padding:18px;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+      background:rgba(7,7,7,.96);
+      backdrop-filter:blur(14px);
+    }
+
+    .brand { font-size:1.8rem; }
+    aside .muted { display:none; }
+
+    .mobile-menu-toggle {
+      display:block;
+    }
+
+    nav {
+      display:none;
+      margin-top:10px;
+      gap:8px;
+    }
+
+    nav.open {
+      display:grid;
+    }
+
+    nav button {
+      width:100%;
+      padding:13px 14px;
+      font-size:.68rem;
+    }
+
+    main {
+      padding:28px 18px 120px;
+    }
+
+    h1 { font-size:2.7rem; }
+    h2 { font-size:2rem; }
+    .row { grid-template-columns:1fr; }
+
+    .toolbar {
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:60;
+      padding:12px 14px;
+    }
+
+    .toolbar .primary,
+    .toolbar .secondary {
+      text-align:center;
+      padding:12px 10px;
+      font-size:.62rem;
+    }
+
+    img.preview {
+      width:100%;
+      height:auto;
+      max-height:180px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand">ByJDG</div>
+    <div class="muted">Local CMS test. This edits the test copy of index.html in this folder only.</div>
+
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰ Menu</button>
+
+    <nav id="cmsNav">
+      <button class="active" onclick="showTab('hero', this)">Hero</button>
+      <button onclick="showTab('episodes', this)">Latest Films</button>
+      <button onclick="showTab('about', this)">About + Gear</button>
+      <button onclick="showTab('contact', this)">Contact + Footer</button>
+    </nav>
+  </aside>
+
+  <main>
+    <h1>Local Website Editor</h1>
+    <p class="muted" id="sourcePath">Loading source file...</p>
+
+    <section id="hero" class="active">
+      <h2>Hero</h2>
+      <div class="card">
+        <label>Hero Image</label>
+        <input id="hero.image" />
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'hero.image')" />
+        <img class="preview" id="preview.hero.image" />
+        <label>Hero Eyebrow</label><input id="hero.eyebrow" />
+        <label>Hero Title / Logo Text</label><input id="hero.title" />
+        <label>Hero Subtitle</label><input id="hero.subtitle" />
+        <div class="row">
+          <div><label>Hero Button Text</label><input id="hero.buttonText" /></div>
+          <div><label>Hero Button Link</label><input id="hero.buttonHref" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="episodes">
+      <h2>Latest Films</h2>
+      <div class="card">
+        <label>Section Title</label><input id="latest.title" />
+        <div class="row">
+          <div><label>View All Text</label><input id="latest.viewAllText" /></div>
+          <div><label>View All Link</label><input id="latest.viewAllHref" /></div>
+        </div>
+      </div>
+      <div id="episodeList"></div>
+      <button class="secondary" onclick="addEpisode()">+ Create New Episode</button>
+    </section>
+
+    <section id="about">
+      <h2>About</h2>
+      <div class="card">
+        <label>About Title</label><input id="about.title" />
+        <label>About Lead</label><textarea id="about.lead"></textarea>
+        <label>About Text</label><textarea id="about.text"></textarea>
+        <div class="row">
+          <div><label>About CTA</label><input id="about.cta" /></div>
+          <div><label>About CTA Link</label><input id="about.href" /></div>
+        </div>
+      </div>
+
+      <h2>Gear</h2>
+      <div class="card">
+        <label>Gear Title</label><input id="gear.title" />
+        <div id="gearList"></div>
+        <button class="secondary" onclick="addGearItem()">+ Add Gear Item</button>
+        <div class="row">
+          <div><label>Gear CTA</label><input id="gear.cta" /></div>
+          <div><label>Gear CTA Link</label><input id="gear.href" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <div class="card">
+        <label>Contact Title</label><input id="contact.title" />
+        <label>Contact Subtext</label><input id="contact.text" />
+      </div>
+
+      <h2>Footer</h2>
+      <div class="card">
+        <label>Footer Logo</label><input id="footer.brand" />
+        <label>Copyright</label><input id="footer.copyright" />
+        <div id="footerLinks"></div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <button class="primary" onclick="saveHtml()">Generate HTML</button>
+      <button class="secondary" onclick="previewSite()">Preview Site</button>
+      <button class="secondary" onclick="loadContent()">Reload From index.html</button>
+      <div class="status" id="status"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+let data = null;
+
+function byId(id) { return document.getElementById(id); }
+function setField(path, value) { const el = byId(path); if (el) el.value = value || ''; }
+function getField(path) { const el = byId(path); return el ? el.value : ''; }
+
+function toggleMobileMenu() {
+  byId('cmsNav').classList.toggle('open');
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  byId(id).classList.add('active');
+  btn.classList.add('active');
+
+  if (window.innerWidth <= 800) {
+    byId('cmsNav').classList.remove('open');
+  }
+}
+
+async function loadContent() {
+  const res = await fetch('/api/content');
+  data = await res.json();
+  byId('sourcePath').textContent = `Editing: ${data.filePath}`;
+
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
+    const parts = path.split('.');
+    setField(path, data[parts[0]][parts[1]]);
+  });
+  updatePreview('hero.image');
+  renderEpisodes();
+  renderGear();
+  renderFooterLinks();
+  byId('status').textContent = 'Loaded from index.html.';
+}
+
+function renderEpisodes() {
+  byId('episodeList').innerHTML = data.episodes.map((ep, i) => `
+    <div class="episode-card">
+      <div class="row">
+        <div><label>Image</label><input id="episode.${i}.image" value="${escapeAttr(ep.image)}" oninput="updateEpisode(${i}, 'image', this.value)"><input type="file" accept="image/*" onchange="uploadEpisodeImage(event, ${i})"><img class="preview" id="preview.episode.${i}" src="/${ep.image}"></div>
+        <div><label>Eyebrow</label><input value="${escapeAttr(ep.eyebrow)}" oninput="updateEpisode(${i}, 'eyebrow', this.value)"></div>
+      </div>
+      <label>Title</label><input value="${escapeAttr(ep.title)}" oninput="updateEpisode(${i}, 'title', this.value)">
+      <label>Subtext</label><textarea oninput="updateEpisode(${i}, 'text', this.value)">${escapeHtml(ep.text)}</textarea>
+      <div class="row">
+        <div><label>CTA Text</label><input value="${escapeAttr(ep.cta)}" oninput="updateEpisode(${i}, 'cta', this.value)"></div>
+        <div><label>CTA Link</label><input value="${escapeAttr(ep.href)}" oninput="updateEpisode(${i}, 'href', this.value)"></div>
+      </div>
+      <div class="buttons"><button class="danger" onclick="deleteEpisode(${i})">Delete Episode</button></div>
+    </div>`).join('');
+}
+function updateEpisode(i, key, value) { data.episodes[i][key] = value; }
+function addEpisode() { data.episodes.push({ image:'images/new-episode.jpg', eyebrow:`Episode ${data.episodes.length + 1}`, title:'New Episode', text:'Episode description goes here.', href:'https://www.youtube.com/@by-jdg', cta:'Watch Film →' }); renderEpisodes(); }
+function deleteEpisode(i) { data.episodes.splice(i, 1); renderEpisodes(); }
+
+function renderGear() {
+  byId('gearList').innerHTML = data.gear.items.map((item, i) => `
+    <div class="row">
+      <div><label>Gear Label</label><input value="${escapeAttr(item.label)}" oninput="data.gear.items[${i}].label=this.value"></div>
+      <div><label>Gear Value</label><input value="${escapeAttr(item.value)}" oninput="data.gear.items[${i}].value=this.value"></div>
+    </div>
+    <div class="buttons"><button class="danger" onclick="deleteGearItem(${i})">Delete Gear Item</button></div>`).join('');
+}
+function addGearItem() { data.gear.items.push({ label:'New Item', value:'Details' }); renderGear(); }
+function deleteGearItem(i) { data.gear.items.splice(i, 1); renderGear(); }
+
+function renderFooterLinks() {
+  byId('footerLinks').innerHTML = data.footer.links.map((link, i) => `
+    <div class="row">
+      <div><label>Footer Link Label</label><input value="${escapeAttr(link.label)}" oninput="data.footer.links[${i}].label=this.value"></div>
+      <div><label>Footer Link URL</label><input value="${escapeAttr(link.href)}" oninput="data.footer.links[${i}].href=this.value"></div>
+    </div>`).join('');
+}
+
+function collectData() {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
+    const [group, key] = path.split('.');
+    data[group][key] = getField(path);
+  });
+  return data;
+}
+
+async function saveHtml() {
+  byId('status').textContent = 'Generating HTML...';
+  const res = await fetch('/api/save', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(collectData()) });
+  const result = await res.json();
+  byId('status').textContent = result.ok ? `HTML generated. Backup created.` : `Error: ${result.error}`;
+}
+
+function previewSite() {
+  window.open('/preview', '_blank');
+}
+
+async function uploadImage(event, fieldId) {
+  const path = await uploadFile(event.target.files[0]);
+  if (!path) return;
+  byId(fieldId).value = path;
+  updatePreview(fieldId);
+}
+async function uploadEpisodeImage(event, i) {
+  const path = await uploadFile(event.target.files[0]);
+  if (!path) return;
+  data.episodes[i].image = path;
+  renderEpisodes();
+}
+async function uploadFile(file) {
+  if (!file) return '';
+  const base64 = await fileToBase64(file);
+  const res = await fetch('/api/upload', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ filename:file.name, base64 }) });
+  const result = await res.json();
+  return result.path;
+}
+function fileToBase64(file) { return new Promise(resolve => { const reader = new FileReader(); reader.onload = () => resolve(reader.result.split(',')[1]); reader.readAsDataURL(file); }); }
+function updatePreview(fieldId) { const img = byId('preview.' + fieldId); if (img) img.src = '/' + byId(fieldId).value; }
+function escapeHtml(s='') { return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function escapeAttr(s='') { return escapeHtml(s).replace(/'/g, '&#39;'); }
+loadContent();
+</script>
+</body>
+</html>
