@@ -1,0 +1,16 @@
+{
+  "name": "byjdg-cms",
+  "productName": "ByJDG CMS",
+  "version": "1.0.0",
+  "description": "Local CMS for ByJDG",
+  "main": "main.js",
+  "author": "JDG",
+  "license": "ISC",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^42.2.0"
+  }
+}
