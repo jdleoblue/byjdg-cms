@@ -620,9 +620,7 @@
     html[data-theme="white"] .gear-panel { background: rgba(255,255,255,.55); }
     /* Keep the original photo treatments and light text over photography. */
     html[data-theme="white"] .hero,
-    html[data-theme="white"] .film-card,
-    html[data-theme="white"] .about-panel,
-    html[data-theme="white"] .contact {
+    html[data-theme="white"] .film-card {
       --text: #f5f1ea;
       --muted: #b7b0a7;
       --line: rgba(255,255,255,.2);
@@ -632,6 +630,31 @@
     html[data-theme="white"] a:focus-visible,
     html[data-theme="white"] button:focus-visible,
     html[data-theme="white"] input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    html[data-theme="white"] .about-panel,
+    html[data-theme="white"] .contact {
+      background: rgba(255,255,255,.55);
+      color: var(--text);
+      backdrop-filter: blur(12px);
+    }
+    html[data-theme="white"] .about-panel {
+      border-right: 1px solid var(--line);
+    }
+    html[data-theme="white"] .about-panel .lead { color: var(--text); }
+    html[data-theme="white"] .contact {
+      border-top: 1px solid var(--line);
+    }
+    html[data-theme="white"] .contact-form {
+      background: rgba(255,255,255,.65);
+      box-shadow: 0 8px 32px rgba(40,36,28,.06);
+    }
+    html[data-theme="white"] .contact-form input::placeholder { color: var(--muted); }
+    html[data-theme="white"] .contact-form button { background: rgba(40,36,28,.04); }
+    html[data-theme="white"] .contact-form button:hover { background: rgba(40,36,28,.09); }
+    @media (max-width:900px) {
+      html[data-theme="white"] .about-panel {
+        border-right: 0; border-bottom: 1px solid var(--line);
+      }
+    }
   </style>
 </head>
 
