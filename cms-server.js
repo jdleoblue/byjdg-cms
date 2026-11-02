@@ -72,6 +72,7 @@ function parseContent(html) {
 
   return {
     filePath: INDEX_PATH,
+    appearance: { theme: matchOne(html, /<html\b[^>]*\bdata-theme="(black|white)"/i, "black").toLowerCase() },
     hero: {
       image: heroBg,
       eyebrow: matchOne(heroBlock, /<div class="eyebrow">([\s\S]*?)<\/div>/i, 'Cinematic Visual Journal'),
@@ -142,6 +143,13 @@ function footerLinkHtml(link) {
 
 function updateHtml(data) {
   let html = readIndex();
+  const theme = data.appearance?.theme ?? parseContent(html).appearance.theme;
+  if (!['black', 'white'].includes(theme)) throw new Error('Choose Black Glass or White Glass.');
+  html = html.replace(/<html\b[^>]*>/i, tag => {
+    const clean = tag.replace(/\sdata-theme=["'][^"']*["']/gi, '');
+    return clean.replace(/>$/, ` data-theme="${theme}">`);
+  });
+
 
   if (!fs.existsSync(BACKUPS_DIR)) {
     fs.mkdirSync(BACKUPS_DIR, { recursive: true });
@@ -150,7 +158,9 @@ function updateHtml(data) {
   const backupPath = path.join(BACKUPS_DIR, `index.backup-${Date.now()}.html`);
   fs.copyFileSync(INDEX_PATH, backupPath);
 
-  html = html.replace(/url\(['"]?images\/hero-image\.jpg['"]?\) center\/cover no-repeat;/i, `url('${data.hero.image}') center/cover no-repeat;`);
+  html = html.replace(/(\.hero\s*\{[\s\S]*?)url\(['"]?[^'"\)]+['"]?\) center\/cover no-repeat;/i,
+    (_, prefix) => `${prefix}url('${escapeHtml(data.hero.image)}') center/cover no-repeat;`);
+  html = html.replace(/--hero-image:\s*url\([^;]+;/i, () => `--hero-image: url('${escapeHtml(data.hero.image)}');`);
   html = html.replace(/(<section class="hero">[\s\S]*?<div class="eyebrow">)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.hero.eyebrow)}$3`);
   html = html.replace(/(<section class="hero">[\s\S]*?<h1>)([\s\S]*?)(<\/h1>)/i, `$1${escapeHtml(data.hero.title)}$3`);
   html = html.replace(/(<p class="hero-subtitle">)([\s\S]*?)(<\/p>)/i, `$1${escapeHtml(data.hero.subtitle)}$3`);

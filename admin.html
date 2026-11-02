@@ -100,6 +100,7 @@
     <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰ Menu</button>
 
     <nav id="cmsNav">
+      <button onclick="showTab('appearance', this)">Website Appearance</button>
       <button class="active" onclick="showTab('hero', this)">Hero</button>
       <button onclick="showTab('episodes', this)">Latest Films</button>
       <button onclick="showTab('about', this)">About + Gear</button>
@@ -111,6 +112,18 @@
     <h1>Website Studio</h1>
     <p class="muted" id="sourcePath">Loading source file...</p>
 
+    <section id="appearance">
+      <h2>Website Appearance</h2>
+      <div class="card">
+        <p class="muted">Choose the appearance for all visitors. Preview saves your choice locally; publish when ready to update the public website.</p>
+        <label for="siteTheme">Glass Theme</label>
+        <select id="siteTheme" style="width:100%;padding:14px;background:#171717;color:#f5f1ea;border:1px solid #777;font-size:1rem">
+          <option value="black">Black Glass — original cinematic look</option>
+          <option value="white">White Glass — bright frosted glass</option>
+        </select>
+        <p class="muted">Applies across the homepage: navigation, films, about, gear, contact and footer.</p>
+      </div>
+    </section>
     <section id="hero" class="active">
       <h2>Hero</h2>
       <div class="card">
@@ -240,6 +253,7 @@ async function loadContent() {
     setField(path, data[parts[0]][parts[1]]);
   });
 
+  byId('siteTheme').value = data.appearance?.theme || 'black';
   updatePreview('hero.image');
   renderEpisodes();
   renderGear();
@@ -289,6 +303,7 @@ function renderFooterLinks() {
 }
 
 function collectData() {
+  data.appearance = { theme: byId('siteTheme').value };
   ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
     const [group, key] = path.split('.');
     data[group][key] = getField(path);

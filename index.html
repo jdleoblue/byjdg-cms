@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="white">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -115,6 +115,7 @@
     }
 
     .hero {
+      --hero-image: url('images/hero-image-ef811527.jpg');
       min-height: 100vh;
       position: relative;
       display: flex;
@@ -598,6 +599,58 @@
       }
     }
   </style>
+
+  <!-- CMS appearance: saved in this document and published with the site. -->
+  <style id="byjdg-appearance">
+    html[data-theme="white"] {
+      color-scheme: light;
+      --bg: #f5f3ee; --bg-soft: #eeece6; --text: #24221e;
+      --muted: #59564f; --line: rgba(40,36,28,.2);
+      --panel: rgba(255,255,255,.65); --accent: #806025;
+    }
+    html[data-theme="white"] .nav,
+    html[data-theme="white"] .nav-links {
+      background: rgba(255,255,255,.88); border-color: var(--line);
+    }
+    html[data-theme="white"] .hero {
+      background-image:
+        linear-gradient(to right, rgba(245,243,238,.94), rgba(245,243,238,.65) 48%, rgba(245,243,238,.18)),
+        linear-gradient(to top, #f5f3ee, rgba(245,243,238,0) 55%),
+        var(--hero-image);
+    }
+    html[data-theme="white"] .button,
+    html[data-theme="white"] .contact-form {
+      background: rgba(255,255,255,.6); border-color: var(--line);
+      box-shadow: 0 8px 32px rgba(40,36,28,.06);
+    }
+    html[data-theme="white"] .button:hover,
+    html[data-theme="white"] .contact-form button:hover { background: rgba(255,255,255,.9); }
+    html[data-theme="white"] .section,
+    html[data-theme="white"] .split,
+    html[data-theme="white"] .gear-list li,
+    html[data-theme="white"] .film-card,
+    html[data-theme="white"] .footer { border-color: var(--line); }
+    html[data-theme="white"] .film-card::after {
+      background: linear-gradient(to top, rgba(245,243,238,.98), rgba(245,243,238,.88) 35%, rgba(245,243,238,.06));
+    }
+    html[data-theme="white"] .film-content {
+      padding: 16px; left: 10px; right: 10px; bottom: 10px;
+      background: rgba(255,255,255,.72); backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+    }
+    html[data-theme="white"] .about-panel {
+      background-image: linear-gradient(to right, rgba(245,243,238,.97), rgba(245,243,238,.9)), url('images/about.jpg');
+    }
+    html[data-theme="white"] .gear-panel { background: rgba(255,255,255,.55); }
+    html[data-theme="white"] .contact {
+      background-image: linear-gradient(rgba(245,243,238,.94), rgba(245,243,238,.94)), url('images/contact.jpg');
+    }
+    html[data-theme="white"] .contact-form input::placeholder { color: var(--muted); }
+    html[data-theme="white"] .footer { background: var(--bg); }
+    html[data-theme="white"] a:focus-visible,
+    html[data-theme="white"] button:focus-visible,
+    html[data-theme="white"] input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  </style>
 </head>
 
 <body>
@@ -671,7 +724,7 @@
               <div class="episode">Episode 4</div>
               <h3>2 Minutes in Mallorca, Spain</h3>
               <p>Mallorca, Spain in just over two minutes. Old streets, live music, train rides, good food, and time by the sea.</p>
-              <a class="watch-link" href="https://youtu.be/Df7ixb_FMzM" target="_blank" rel="noopener">Watch Film →</a>
+              <a class="watch-link" href="https://youtu.be/1VNqtY3sweE" target="_blank" rel="noopener">Watch Film →</a>
             </div>
           </article>
         </div>
