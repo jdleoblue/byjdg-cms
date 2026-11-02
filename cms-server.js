@@ -6,10 +6,16 @@ const { exec } = require('child_process');
 
 const PORT = 4321;
 const ROOT = __dirname;
+const cinemaCMS = require('./cinema-cms');
+const projectsCMS = require('./projects-cms');
 const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
 const WEBSITE_DIR = path.dirname(INDEX_PATH);
 const IMAGES_DIR = path.join(WEBSITE_DIR, 'images');
 const BACKUPS_DIR = path.join(WEBSITE_DIR, 'backups');
+
+const PROJECTS_PATH = path.join(WEBSITE_DIR, 'projects.html');
+
+function readProjects() { return fs.readFileSync(PROJECTS_PATH, 'utf8'); }
 
 function readIndex() {
   return fs.readFileSync(INDEX_PATH, 'utf8');
@@ -71,6 +77,9 @@ function parseContent(html) {
     );
 
   return {
+    cinema: cinemaCMS.parse(html),
+    projects: projectsCMS.parse(readProjects()),
+    projectFields: projectsCMS.fields,
     filePath: INDEX_PATH,
     appearance: { theme: matchOne(html, /<html\b[^>]*\bdata-theme="(black|white)"/i, "black").toLowerCase() },
     hero: {
@@ -188,6 +197,10 @@ function updateHtml(data) {
   html = html.replace(/(<footer class="footer">[\s\S]*?<div class="footer-brand">[\s\S]*?<\/div>\s*<div>)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.footer.copyright)}$3`);
   html = html.replace(/<div class="footer-links">[\s\S]*?<\/div>\s*<\/footer>/i, `<div class="footer-links">\n${data.footer.links.map(footerLinkHtml).join('\n')}\n      </div>\n    </footer>`);
 
+  html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
+  const projectHtml = projectsCMS.render(readProjects(), data.projects || {}, theme);
+  fs.copyFileSync(PROJECTS_PATH, path.join(BACKUPS_DIR, `projects.backup-${Date.now()}.html`));
+  fs.writeFileSync(PROJECTS_PATH, projectHtml, 'utf8');
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
   return { ok: true, backupPath, filePath: INDEX_PATH };
 }
@@ -251,7 +264,11 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (req.method === 'GET' && req.url === '/preview') {
+    if (req.method === 'GET' && ['/projects.html', '/preview-projects'].includes(req.url)) {
+      send(res, 200, readProjects(), 'text/html');
+      return;
+    }
+    if (req.method === 'GET' && ['/preview', '/index.html'].includes(req.url)) {
       send(res, 200, readIndex(), 'text/html');
       return;
     }

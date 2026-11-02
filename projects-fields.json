@@ -1,0 +1,122 @@
+[
+  {
+    "key": "eyebrow",
+    "label": "Hero Eyebrow",
+    "multi": false
+  },
+  {
+    "key": "title",
+    "label": "Hero Title (new line creates a line break)",
+    "multi": true
+  },
+  {
+    "key": "intro",
+    "label": "Hero Description",
+    "multi": true
+  },
+  {
+    "key": "contactTitle",
+    "label": "Contact Heading",
+    "multi": true
+  },
+  {
+    "key": "contactIntro",
+    "label": "Contact Introduction",
+    "multi": true
+  },
+  {
+    "key": "formTitle",
+    "label": "Form Heading",
+    "multi": true
+  },
+  {
+    "key": "note",
+    "label": "Form Note",
+    "multi": true
+  },
+  {
+    "key": "connectTitle",
+    "label": "Social Heading",
+    "multi": true
+  },
+  {
+    "key": "connectIntro",
+    "label": "Social Introduction",
+    "multi": true
+  },
+  {
+    "key": "service0Title",
+    "label": "Service 1 Title",
+    "multi": false
+  },
+  {
+    "key": "service1Title",
+    "label": "Service 2 Title",
+    "multi": false
+  },
+  {
+    "key": "service2Title",
+    "label": "Service 3 Title",
+    "multi": false
+  },
+  {
+    "key": "service3Title",
+    "label": "Service 4 Title",
+    "multi": false
+  },
+  {
+    "key": "service0Text",
+    "label": "Service 1 Description",
+    "multi": true
+  },
+  {
+    "key": "service1Text",
+    "label": "Service 2 Description",
+    "multi": true
+  },
+  {
+    "key": "service2Text",
+    "label": "Service 3 Description",
+    "multi": true
+  },
+  {
+    "key": "service3Text",
+    "label": "Service 4 Description",
+    "multi": true
+  },
+  {
+    "key": "quote",
+    "label": "Footer Quote",
+    "multi": true
+  },
+  {
+    "key": "quoteBy",
+    "label": "Quote Attribution",
+    "multi": false
+  },
+  {
+    "key": "location",
+    "label": "Location Heading",
+    "multi": false
+  },
+  {
+    "key": "availability",
+    "label": "Availability",
+    "multi": true
+  },
+  {
+    "key": "connect0Text",
+    "label": "Contact Link 1 Label",
+    "multi": false
+  },
+  {
+    "key": "connect1Text",
+    "label": "Contact Link 2 Label",
+    "multi": false
+  },
+  {
+    "key": "connect2Text",
+    "label": "Contact Link 3 Label",
+    "multi": false
+  }
+]

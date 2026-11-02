@@ -25,7 +25,10 @@
       "main.js",
       "package.json",
       "images/**/*",
-      "backups/**/*"
+      "projects.html",
+      "projects-cms.js",
+      "projects-fields.json",
+      "cinema-cms.js"
     ]
   },
   "devDependencies": {

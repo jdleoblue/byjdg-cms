@@ -102,7 +102,9 @@
     <nav id="cmsNav">
       <button onclick="showTab('appearance', this)">Website Appearance</button>
       <button class="active" onclick="showTab('hero', this)">Hero</button>
-      <button onclick="showTab('episodes', this)">Latest Films</button>
+      <button onclick="showTab('projects', this)">Projects Page</button>
+      <button onclick="showTab('cinema', this)">Featured Film</button>
+      <button onclick="showTab('episodes', this)">Film Collection</button>
       <button onclick="showTab('about', this)">About + Gear</button>
       <button onclick="showTab('contact', this)">Contact + Footer</button>
     </nav>
@@ -121,7 +123,7 @@
           <option value="black">Black Glass — original cinematic look</option>
           <option value="white">White Glass — bright frosted glass</option>
         </select>
-        <p class="muted">Applies across the homepage: navigation, films, about, gear, contact and footer.</p>
+        <p class="muted">Applies to the homepage and Projects page. Photos keep their original appearance.</p>
       </div>
     </section>
     <section id="hero" class="active">
@@ -141,6 +143,21 @@
       </div>
     </section>
 
+    <section id="projects">
+      <h2>Projects Page</h2>
+      <p class="muted">Shares the Website Appearance setting with your homepage. Changes are saved and published together.</p>
+      <div class="card" id="projectsFields"></div>
+      <button class="secondary" onclick="previewChanges('/projects.html')">Preview Projects Page</button>
+    </section>
+    <section id="cinema">
+      <h2>Featured Film</h2>
+      <div class="card">
+        <p class="muted">Choose a film from your collection for the large homepage feature. Its image, title and watch link follow the selected episode.</p>
+        <label for="cinema.featuredIndex">Featured Film</label><select id="cinema.featuredIndex" style="width:100%;padding:14px;background:#171717;color:#f5f1ea;border:1px solid #777"></select>
+        <label for="cinema.headline">Feature Headline</label><input id="cinema.headline">
+        <label for="cinema.intro">Feature Introduction</label><textarea id="cinema.intro"></textarea>
+      </div>
+    </section>
     <section id="episodes">
       <h2>Latest Films</h2>
       <div class="card">
@@ -157,6 +174,9 @@
     <section id="about">
       <h2>About</h2>
       <div class="card">
+        <label for="cinema.portrait">About Portrait</label><input id="cinema.portrait">
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'cinema.portrait')">
+        <img class="preview" id="preview.cinema.portrait" alt="About portrait preview">
         <label>About Title</label><input id="about.title" />
         <label>About Lead</label><textarea id="about.lead"></textarea>
         <label>About Text</label><textarea id="about.text"></textarea>
@@ -254,6 +274,10 @@ async function loadContent() {
   });
 
   byId('siteTheme').value = data.appearance?.theme || 'black';
+  ['headline','intro','portrait'].forEach(key => setField('cinema.' + key, data.cinema[key]));
+  renderFeaturedOptions();
+  updatePreview('cinema.portrait');
+  renderProjects();
   updatePreview('hero.image');
   renderEpisodes();
   renderGear();
@@ -263,6 +287,7 @@ async function loadContent() {
 }
 
 function renderEpisodes() {
+  renderFeaturedOptions();
   byId('episodeList').innerHTML = data.episodes.map((ep, i) => `
     <div class="episode-card">
       <div class="row">
@@ -279,9 +304,14 @@ function renderEpisodes() {
     </div>`).join('');
 }
 
-function updateEpisode(i, key, value) { data.episodes[i][key] = value; }
+function updateEpisode(i, key, value) { data.episodes[i][key] = value; if (key === 'title' || key === 'eyebrow') renderFeaturedOptions(); }
 function addEpisode() { data.episodes.push({ image:'images/new-episode.jpg', eyebrow:`Episode ${data.episodes.length + 1}`, title:'New Episode', text:'Episode description goes here.', href:'https://www.youtube.com/@by-jdg', cta:'Watch Film →' }); renderEpisodes(); }
-function deleteEpisode(i) { data.episodes.splice(i, 1); renderEpisodes(); }
+function deleteEpisode(i) {
+ const select=byId('cinema.featuredIndex');let selected=Number(select.value);
+ if(selected===i)selected=-1;else if(selected>i)selected--;
+ data.episodes.splice(i,1);select.value=String(selected);data.cinema.featuredIndex=selected;
+ renderEpisodes();renderFeaturedOptions();
+}
 
 function renderGear() {
   byId('gearList').innerHTML = data.gear.items.map((item, i) => `
@@ -302,7 +332,29 @@ function renderFooterLinks() {
     </div>`).join('');
 }
 
+function renderProjects() {
+  const extra = [{key:'image',label:'Hero Image Path or HTTPS Address'},
+    {key:'formAction',label:'Message Form Destination (HTTPS)'},
+    ...[0,1,2].map(i=>({key:`connect${i}Href`,label:`Contact Link ${i+1} Address`}))];
+  byId('projectsFields').innerHTML = [...extra, ...data.projectFields].map(f => {
+    const id = 'projects.' + f.key;
+    const control = f.multi
+      ? `<textarea id="${id}">${escapeHtml(data.projects[f.key])}</textarea>`
+      : `<input id="${id}" value="${escapeAttr(data.projects[f.key])}">`;
+    return `<label for="${id}">${escapeHtml(f.label)}</label>${control}`;
+  }).join('');
+}
+
+function renderFeaturedOptions() {
+  const select = byId('cinema.featuredIndex');
+  const selected = select.value === '' ? data.cinema.featuredIndex : Number(select.value);
+  select.innerHTML = '<option value="-1">No featured film</option>' + data.episodes.map((ep,i)=>`<option value="${i}">${escapeHtml(ep.eyebrow)} — ${escapeHtml(ep.title)}</option>`).join('');
+  select.value = String(selected >= data.episodes.length ? data.episodes.length - 1 : selected);
+}
+
 function collectData() {
+  data.cinema = {featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait')};
+  Object.keys(data.projects).forEach(key => { data.projects[key] = getField('projects.' + key); });
   data.appearance = { theme: byId('siteTheme').value };
   ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
     const [group, key] = path.split('.');
@@ -324,14 +376,14 @@ async function saveHtml() {
   return await res.json();
 }
 
-async function previewChanges() {
+async function previewChanges(page = '/preview') {
   byId('status').textContent = 'Saving preview...';
 
   const result = await saveHtml();
 
   if (result.ok) {
     byId('status').textContent = 'Preview ready.';
-    window.open('/preview', '_blank');
+    window.open(page, '_blank');
   } else {
     byId('status').textContent = 'Preview failed: ' + result.error;
   }
