@@ -877,6 +877,46 @@ html[data-about-tone="charcoal"] #about .small-link { color:var(--cinema-accent)
   
   
 <script type="application/json" id="site-navigation-settings">[{"label":"Home","href":"#top","newTab":false},{"label":"YouTube","href":"https://www.youtube.com/@by-jdg","newTab":true},{"label":"Collaborate","href":"./projects.html","newTab":false}]</script>
+<style id="byjdg-film-hover">
+/* Slow, restrained motion keeps the thumbnail frame and captions still. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  #latest .film-card::before {
+    background-size: 100% auto;
+    transition: background-size 700ms cubic-bezier(.22,.61,.36,1), filter 700ms ease;
+  }
+  #latest .film-card:hover::before,
+  #latest .film-card:focus-within::before {
+    background-size: 103% auto;
+    filter: brightness(1.035);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #latest .film-card::before { transition: none; }
+}
+</style>
+<style id="byjdg-cta-hover">
+  .jdg-motion-cta { position:relative; display:inline-block; width:fit-content; max-width:100%; align-self:flex-start; }
+  .jdg-motion-cta::after {
+    content:""; position:absolute; left:0; right:0; bottom:-6px;
+    height:1px; background:currentColor; transform:scaleX(0); transform-origin:left;
+  }
+  .jdg-motion-cta .jdg-cta-arrow { display:inline-block; }
+  @media (prefers-reduced-motion:no-preference) {
+    .jdg-motion-cta::after { transition:transform 320ms cubic-bezier(.22,.61,.36,1); }
+    .jdg-motion-cta .jdg-cta-arrow,
+    .jdg-motion-cta > .cta-icon { transition:transform 320ms cubic-bezier(.22,.61,.36,1); }
+    .jdg-motion-cta:focus-visible .jdg-cta-arrow { transform:translateX(5px); }
+    .jdg-motion-cta:focus-visible > .cta-icon { transform:translate(4px,-4px); }
+    @media (hover:hover) and (pointer:fine) {
+      .jdg-motion-cta:hover .jdg-cta-arrow { transform:translateX(5px); }
+      .jdg-motion-cta:hover > .cta-icon { transform:translate(4px,-4px); }
+    }
+  }
+  .jdg-motion-cta:focus-visible::after { transform:scaleX(1); }
+  @media (hover:hover) and (pointer:fine) {
+    .jdg-motion-cta:hover::after { transform:scaleX(1); }
+  }
+</style>
 <style id="byjdg-hero-rotation">.hero{isolation:isolate;overflow:hidden}.hero-slide{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity 1s ease;pointer-events:none}.hero-rotation-pause{position:absolute;right:24px;bottom:20px;z-index:3;color:#f5f1ea;background:transparent;border:0;border-radius:50%;padding:0;width:44px;height:44px;display:grid;place-items:center;opacity:.65;cursor:pointer;transition:opacity .2s}.hero-rotation-pause:hover{opacity:1}.hero-rotation-pause svg{display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}.hero-rotation-pause:focus-visible{outline:2px solid white;outline-offset:3px}@media(prefers-reduced-motion:reduce){.hero-slide,.hero-rotation-pause{display:none!important}}.hero-rotation-pause[hidden]{display:none}</style>
   <meta name="description" content="Explore travel films by JDG, capturing coastal escapes, beautiful streets, local culture, and memorable moments from destinations near and far." />
   <meta property="og:title" content="by JDG | Travel Films" />
@@ -1030,8 +1070,8 @@ html[data-tone-home-footer="charcoal"] .footer select option{background:#2d2b28;
 
       <section class="featured-film" id="featured" data-cinema-index="0" data-cinema-cta="Watch now" data-cinema-eyebrow="Watch on YouTube" data-cinema-headline="" data-cinema-intro="" data-cinema-portrait="images/hero-image-ef811527.jpg">
 <div class="feature-lead"><div><p class="cinema-eyebrow">Featured film / Malta 2025</p><h2></h2></div><p class="feature-intro"></p></div>
-<a class="feature-image" href="https://youtu.be/7F-zYy5aUmU" target="_blank" rel="noopener" aria-label="Watch Malta Travel Film | Coastal Views, Beautiful Streets &amp; Island Life"><img src="images/chatgpt-image-nov-2--2026--01_02_46-pm-3b22cc1a.png" alt="Malta Travel Film | Coastal Views, Beautiful Streets &amp; Island Life" width="1920" height="1080" loading="lazy"></a>
-<div class="feature-caption"><div><p class="cinema-eyebrow">Watch on YouTube</p><h3>Malta Travel Film | Coastal Views, Beautiful Streets &amp; Island Life</h3></div><a class="button" href="https://youtu.be/7F-zYy5aUmU" target="_blank" rel="noopener">Watch now <span aria-hidden="true"><svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></span></a></div>
+<a class="feature-image" href="https://youtu.be/7F-zYy5aUmU" target="_blank" rel="noopener" aria-label="Watch Malta — Coastal Days"><img src="images/chatgpt-image-nov-2--2026--01_02_46-pm-3b22cc1a.png" alt="Malta — Coastal Days" width="1920" height="1080" loading="lazy"></a>
+<div class="feature-caption"><div><p class="cinema-eyebrow">Watch on YouTube</p><h3>Malta — Coastal Days</h3></div><a class="button" href="https://youtu.be/7F-zYy5aUmU" target="_blank" rel="noopener">Watch now <span aria-hidden="true"><svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></span></a></div>
 </section>
 
       <section class="section" id="latest">
@@ -1044,7 +1084,7 @@ html[data-tone-home-footer="charcoal"] .footer select option{background:#2d2b28;
           <article class="film-card" style="--image: url('images/chatgpt-image-nov-2--2026--01_02_46-pm-3b22cc1a.png');">
             <div class="film-content">
               <div class="episode">Malta 2025</div>
-              <h3>Malta Travel Film | Coastal Views, Beautiful Streets &amp; Island Life</h3>
+              <h3>Malta — Coastal Days</h3>
               <p>Here are some of my favorite moments from my trip to Malta. We walked around, took a boat ride, and got to see some really beautiful places.
 
 I really loved it here. The views were amazing, and everyone we met was so nice. If you get the chance to visit Malta, go. I’m glad I did.
@@ -1066,6 +1106,15 @@ Have you been to Mallorca?</p>
               <a class="watch-link" href="https://youtu.be/r5MR8YdOBKU" target="_blank" rel="noopener">Watch now →</a>
             </div>
           </article>
+
+          <article class="film-card" style="--image: url('images/winter-in-europe_-strasbourg-lights-7d532805.png');">
+            <div class="film-content">
+              <div class="episode">Europe 2024</div>
+              <h3>First Time Abroad</h3>
+              <p>A few highlights from my winter trip through France and Germany. Exploring new places, wandering through the cities, and enjoying everything along the way.</p>
+              <a class="watch-link" href="https://youtu.be/Xw4r-hoq4nQ" target="_blank" rel="noopener">Watch Film →</a>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -1074,7 +1123,7 @@ Have you been to Mallorca?</p>
           <h2>Behind the camera</h2>
           <img class="about-portrait" src="images/hero-image-ef811527.jpg" alt="JDG outdoors" width="640" height="720" loading="lazy">
           <p class="lead">Places I've been. Moments I've captured.</p>
-          <p>A collection of travel films from places I've explored, near and far.</p>
+          <p>I film so I can come back to a moment, the sounds, the movement, how it felt to be there. Some things I may never experience twice, but I can watch them again and share a little of what made them worth remembering.</p>
           <a class="small-link" href="https://www.youtube.com/@by-jdg">Watch now →</a>
         </div>
       </section>
@@ -1082,8 +1131,8 @@ Have you been to Mallorca?</p>
       <section class="contact" id="contact">
         <div>
           <h2>Let’s create something meaningful.</h2>
-          <p>Collabs, creative work, or just say hello.</p>
-          <a class="small-link project-invitation" href="./projects.html">Start a project <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
+          <p>For collaborations and inquiries, leave your email and I’ll be in touch.</p>
+          <a class="small-link project-invitation" href="./projects.html">Explore Collaborations <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
         </div>
 
         <form class="contact-form" action="https://formspree.io/f/maqvrlrz" method="POST">
@@ -1095,7 +1144,7 @@ Have you been to Mallorca?</p>
             required
           > 
           
-          <button type="submit">Send Message</button>
+          <button type="submit">Request Contact</button>
         </form>
       </section>
     </main>
@@ -1144,6 +1193,41 @@ Have you been to Mallorca?</p>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="byjdg-cta-hover-runtime">
+(() => {
+  // Enhance rendered links without changing the CMS's editable text markup.
+  document.querySelectorAll('#latest .film-card .watch-link, #about .small-link, #contact .project-invitation').forEach(link => {
+    link.classList.add('jdg-motion-cta');
+    if (link.querySelector('.cta-icon, .jdg-cta-arrow')) return;
+    const text = [...link.childNodes].reverse().find(node => node.nodeType === 3 && /→\s*$/.test(node.textContent));
+    if (!text) return;
+    const arrow = document.createElement('span');
+    arrow.className = 'jdg-cta-arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '→';
+    text.textContent = text.textContent.replace(/→\s*$/, '');
+    text.after(arrow);
+  });
+})();
+</script>
 
 
 

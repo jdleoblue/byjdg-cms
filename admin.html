@@ -314,6 +314,9 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
       <div class="card">
         <label>Contact Title</label><input id="contact.title" />
         <label>Contact Subtext</label><input id="contact.text" />
+        <label for="contact.buttonText">Email Button Text</label><input id="contact.buttonText" maxlength="120" />
+        <label for="contact.ctaText">Start a Project CTA Text</label><input id="contact.ctaText" maxlength="120" />
+        <label for="contact.ctaHref">Start a Project CTA URL</label><input id="contact.ctaHref" />
       </div>
 
 
@@ -415,7 +418,7 @@ async function loadContent() {
   document.querySelector('.brand').textContent = data.branding.logoText;
   byId('sourcePath').textContent = 'Website Connected • Ready to Publish';
 
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
     const parts = path.split('.');
     setField(path, data[parts[0]][parts[1]]);
   });
@@ -534,7 +537,7 @@ function collectData() {
   data.cinema = {aboutTone:getField('cinema.aboutTone'),featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait'),eyebrow:getField('cinema.eyebrow'),ctaText:getField('cinema.ctaText')};
   Object.keys(data.projects).forEach(key => { data.projects[key] = getField('projects.' + key); });
   data.appearance = { theme: byId('siteTheme').value };
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
     const [group, key] = path.split('.');
     data[group][key] = getField(path);
   });

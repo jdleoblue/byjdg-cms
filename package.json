@@ -37,7 +37,8 @@
       "delivery-page.html",
       "hero-rotation.js",
       "hero-runtime.js",
-      "site-navigation.js"
+      "site-navigation.js",
+      "contact-controls.js"
     ]
   },
   "devDependencies": {

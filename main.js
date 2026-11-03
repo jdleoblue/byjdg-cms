@@ -12,6 +12,7 @@ const PORT = 4321;
 const ROOT = __dirname;
 const sectionTones = require('./section-tones');
 const siteBranding = require('./site-branding');
+const contactControls = require('./contact-controls');
 const siteNavigation = require('./site-navigation');
 const pageMeta = require('./page-meta');
 const cinemaCMS = require('./cinema-cms');
@@ -129,6 +130,7 @@ function parseContent(html) {
       href: matchOne(html, /<div class="about-panel"[\s\S]*?<a class="small-link" href="([^"]*)">/i, '#latest')
     },
     contact: {
+      ...contactControls.parse(html),
       title: matchOne(html, /<section class="contact"[\s\S]*?<h2>([\s\S]*?)<\/h2>/i, ''),
       text: matchOne(html, /<section class="contact"[\s\S]*?<p>([\s\S]*?)<\/p>/i, '')
     },
@@ -175,6 +177,7 @@ function updateHtml(data) {
 
   const backupPath = path.join(BACKUPS_DIR, `index.backup-${Date.now()}.html`);
   const navigation = siteNavigation.validate(data.navigation || siteNavigation.parse(html));
+  contactControls.validate({...contactControls.parse(html),...data.contact});
   fs.copyFileSync(INDEX_PATH, backupPath);
 
   html = html.replace(/(\.hero\s*\{[\s\S]*?)url\(['"]?[^'"\)]+['"]?\) center\/cover no-repeat;/i,
@@ -204,6 +207,7 @@ function updateHtml(data) {
   html = html.replace(/(<footer class="footer">[\s\S]*?<div class="footer-brand">[\s\S]*?<\/div>\s*<div>)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.footer.copyright)}$3`);
   html = html.replace(/<div class="footer-links">[\s\S]*?<\/div>\s*<\/footer>/i, `<div class="footer-links">\n${data.footer.links.map(footerLinkHtml).join('\n')}\n      </div>\n    </footer>`);
 
+  html = contactControls.render(html, data.contact);
   html = heroRotation.render(html, data.hero);
   html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
   html = pageMeta.render(html, data.pages?.home);
