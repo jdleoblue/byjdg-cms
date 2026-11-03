@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en" data-about-tone="stone" data-tone-home-featured="theme" data-tone-home-collection="theme" data-tone-home-contact="theme" data-tone-home-footer="theme" data-theme="black" data-tone-aboutPage-introduction="theme" data-tone-aboutPage-story="stone" data-tone-aboutPage-share="theme" data-tone-aboutPage-contact="theme">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>by JDG | About Me</title>
+  <link rel="icon" type="image/png" href="images/by-jdg-gold-favicon.png?v=1" />
+  
+
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-soft: #0b0b0b;
+      --text: #f5f1ea;
+      --muted: #b7b0a7;
+      --line: rgba(255, 255, 255, 0.14);
+      --panel: rgba(255, 255, 255, 0.045);
+      --accent: #d6b36a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 7vw;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      letter-spacing: -0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      font-size: 0.72rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu-button {
+      display: none;
+    }
+
+    .menu-icon {
+      display: block;
+    }
+
+    .menu-icon::before {
+      content: '☰';
+    } 
+
+    body.menu-open .menu-icon::before {
+      content: '×';
+    }
+
+    .nav-overlay {
+      display: none;
+    }
+
+    .nav-links a {
+      opacity: 0.82;
+      transition: opacity 0.2s ease;
+      line-height: 1;
+    }
+
+    .nav-links a:hover,
+    .nav-links .active {
+      opacity: 1;
+    }
+
+    .nav-links .active {
+      border-bottom: 1px solid var(--text);
+      padding-bottom: 7px;
+    }
+
+    .hero {
+      --hero-image: url('images/hero-camera-lens-e4985926.png');
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 140px 7vw 80px;
+      padding-top: 120px;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 42%, rgba(0,0,0,0.15) 100%),
+        linear-gradient(to top, #050505 0%, rgba(5,5,5,0.2) 38%, rgba(5,5,5,0.05) 100%),
+        url('images/hero-camera-lens-e4985926.png') center/cover no-repeat;
+    }
+
+    .hero-content {
+      max-width: 720px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.44em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(4.5rem, 12vw, 9.8rem);
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      margin-bottom: 28px;
+    }
+
+    .hero-line {
+      width: 58px;
+      height: 1px;
+      background: var(--text);
+      margin-bottom: 22px;
+      opacity: 0.8;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.85rem, 1.4vw, 1rem);
+      letter-spacing: 0.48em;
+      text-transform: uppercase;
+      margin-bottom: 44px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--line);
+      padding: 16px 28px;
+      font-size: 0.76rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+
+    .button:hover {
+      border-color: rgba(255,255,255,0.42);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .play {
+      font-size: 0.8rem;
+    }
+
+    .section {
+      padding: 74px 7vw;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .small-link {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .film-card {
+      min-height: 380px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--panel);
+    }
+
+    .film-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--image) center/cover no-repeat;
+      transform: scale(1.02);
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      opacity: 0.74;
+    }
+
+    .film-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.26), rgba(0,0,0,0.08));
+    }
+
+    .film-card:hover::before {
+      transform: scale(1.08);
+      opacity: 0.9;
+    }
+
+    .film-content {
+      position: absolute;
+      left: 26px;
+      right: 26px;
+      bottom: 26px;
+      z-index: 2;
+    }
+
+    .episode {
+      font-size: 0.68rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .film-content h3 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      font-size: 1.65rem;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .film-content p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 330px;
+      margin-bottom: 24px;
+    }
+
+    .watch-link {
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: var(--bg-soft);
+    }
+
+    .about-panel {
+      min-height: 460px;
+      padding: 84px 7vw;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.9), rgba(0,0,0,0.46)),
+        url('images/about.jpg') center/cover no-repeat;
+    }
+
+    .about-panel h2,
+    .gear-panel h2 {
+      font-size: 0.9rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-weight: 400;
+      margin-bottom: 36px;
+    }
+
+    .about-panel .lead {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1.7rem, 3vw, 2.35rem);
+      line-height: 1.22;
+      max-width: 560px;
+      margin-bottom: 24px;
+    }
+
+    .about-panel p {
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .gear-panel {
+      padding: 84px 7vw 84px 4vw;
+      background: #070707;
+    }
+
+    .gear-list {
+      list-style: none;
+      max-width: 420px;
+      margin-bottom: 30px;
+    }
+
+    .gear-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.09);
+      color: var(--muted);
+    }
+
+    .gear-list span:first-child {
+      color: var(--text);
+      opacity: 0.88;
+    }
+
+    .contact {
+      position: relative;
+      padding: 76px 7vw;
+      background:
+        linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.86)),
+        url('images/contact.jpg') center/cover no-repeat;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .contact h2 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-weight: 400;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 8px;
+    }
+
+    .contact p {
+      color: var(--muted);
+    }
+
+    .contact-form {
+      display: flex;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .contact-form input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      padding: 18px 20px;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .contact-form input::placeholder {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .contact-form button {
+      border: 0;
+      border-left: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 0 28px;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .contact-form button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .footer {
+      padding: 30px 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: #050505;
+      font-size: 0.82rem;
+    }
+
+    .footer-brand {
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--text);
+      font-size: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.68rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .nav-links {
+        gap: 16px;
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .film-grid,
+      .split,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .gear-panel {
+        padding: 70px 7vw;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 45px 6vw;
+        background: rgba(0,0,0,0.72);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 120;
+      }
+
+      .mobile-menu-button {
+        display: block;
+        background: transparent;
+        border: 0;
+        color: var(--text);
+        font-size: 2rem;
+        cursor: pointer;
+        line-height: 1;
+        position: absolute;
+        left: auto;
+        right: 6vw;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 999;
+      }
+
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+      } 
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: 0;
+        width: 58%;
+        max-width: 330px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 26px;
+        padding: 100px 38px 40px;
+        background: rgba(0,0,0,0.92);
+        backdrop-filter: blur(18px);
+        border-left: 1px solid rgba(255,255,255,0.12);
+        font-size: 0.72rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(100%);
+        transition: transform 0.35s ease, opacity 0.25s ease;
+        z-index: 150;
+      }
+
+      body.menu-open .nav-links {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .nav-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: transparent;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      body.menu-open .nav-overlay {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .hero {
+        min-height: 88vh;
+        padding-top: 160px;
+        padding-bottom: 60px;
+        background-position: 70% center;
+      }
+
+      .section,
+      .about-panel,
+      .gear-panel,
+      .contact {
+        padding-left: 6vw;
+        padding-right: 6vw;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .film-card {
+        min-height: 340px;
+      }
+
+      .contact-form {
+        flex-direction: column;
+      }
+
+      .contact-form button {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 16px 20px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+
+  <!-- CMS appearance: saved in this document and published with the site. -->
+  <style id="byjdg-appearance">
+    html[data-theme="white"] {
+      color-scheme: light;
+      --bg: #f5f3ee; --bg-soft: #eeece6; --text: #24221e;
+      --muted: #59564f; --line: rgba(40,36,28,.2);
+      --panel: rgba(255,255,255,.65); --accent: #806025;
+    }
+    html[data-theme="white"] .nav {
+      background: rgba(255,255,255,.88); border-color: var(--line);
+    }
+    html[data-theme="white"] .nav-links {
+      background: transparent; border-color: var(--line);
+    }
+    @media (max-width:650px) {
+      html[data-theme="white"] .nav-links { background: rgba(255,255,255,.96); }
+    }
+    html[data-theme="white"] .section,
+    html[data-theme="white"] .split,
+    html[data-theme="white"] .gear-list li,
+    html[data-theme="white"] .film-card,
+    html[data-theme="white"] .footer { border-color: var(--line); }
+    html[data-theme="white"] .gear-panel { background: rgba(255,255,255,.55); }
+    /* Keep the original photo treatments and light text over photography. */
+    html[data-theme="white"] .hero,
+    html[data-theme="white"] .film-card {
+      --text: #f5f1ea;
+      --muted: #b7b0a7;
+      --line: rgba(255,255,255,.2);
+      color: var(--text);
+    }
+    html[data-theme="white"] .footer { background: var(--bg); }
+    html[data-theme="white"] a:focus-visible,
+    html[data-theme="white"] button:focus-visible,
+    html[data-theme="white"] input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+    html[data-theme="white"] .about-panel,
+    html[data-theme="white"] .contact {
+      background: rgba(255,255,255,.55);
+      color: var(--text);
+      backdrop-filter: blur(12px);
+    }
+    html[data-theme="white"] .about-panel {
+      border-right: 1px solid var(--line);
+    }
+    html[data-theme="white"] .about-panel .lead { color: var(--text); }
+    html[data-theme="white"] .contact {
+      border-top: 1px solid var(--line);
+    }
+    html[data-theme="white"] .contact-form {
+      background: rgba(255,255,255,.65);
+      box-shadow: 0 8px 32px rgba(40,36,28,.06);
+    }
+    html[data-theme="white"] .contact-form input::placeholder { color: var(--muted); }
+    html[data-theme="white"] .contact-form button { background: rgba(40,36,28,.04); }
+    html[data-theme="white"] .contact-form button:hover { background: rgba(40,36,28,.09); }
+    @media (max-width:900px) {
+      html[data-theme="white"] .about-panel {
+        border-right: 0; border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+
+  <style id="byjdg-film-layout">
+    /* A full thumbnail above its caption, without cropping or overlays. */
+    .film-card {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+    }
+    .film-card::before {
+      position: relative;
+      inset: auto;
+      display: block;
+      flex: none;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--image) center / contain no-repeat;
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .film-card::after { display: none; }
+    .film-card:hover::before { transform: none; opacity: 1; }
+    .film-content {
+      position: relative;
+      inset: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .film-content p { max-width: none; }
+    .film-content .watch-link { margin-top: auto; padding-top: 4px; }
+    html[data-theme="white"] .film-card {
+      --text: #24221e;
+      --muted: #59564f;
+      --line: rgba(40,36,28,.2);
+      color: var(--text);
+      background: rgba(255,255,255,.65);
+      border-color: var(--line);
+    }
+    @media (min-width:651px) and (max-width:1100px) {
+      .film-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width:650px) {
+      .film-grid { grid-template-columns: minmax(0, 1fr); }
+      .film-content { padding: 22px; }
+    }
+  </style>
+
+<style id="cinema-first-layout">
+  :root { --cinema-accent:#d6b36a; }
+  html[data-theme="white"] { --cinema-accent:#806025; }
+  .nav { padding:22px 7vw; }
+  .logo { font-size:2.25rem; }
+  .nav-links { font-size:.65rem; letter-spacing:.22em; }
+  .hero { min-height:640px; min-height:min(760px,88svh); padding:180px 7vw 80px; align-items:flex-end; background-position:center; }
+  .hero-content { max-width:800px; }
+  .hero h1 { font-size:clamp(3.8rem,8vw,7.6rem); letter-spacing:-.065em; line-height:1; }
+  .hero .eyebrow { color:#e7d6b2; letter-spacing:.28em; }
+  .hero-subtitle { font-size:1rem; line-height:1.8; text-transform:none; letter-spacing:.025em; max-width:420px; margin-bottom:28px; color:#ded8ce; }
+  .hero-line { display:none; }
+  .hero .button { letter-spacing:.17em; }
+  .featured-film { padding:72px 7vw; background:var(--bg); border-top:1px solid var(--line); }
+  .featured-film[hidden] { display:none; }
+  .feature-lead { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:end; margin-bottom:36px; }
+  .cinema-eyebrow { font-size:.67rem; letter-spacing:.22em; text-transform:uppercase; color:var(--cinema-accent); margin-bottom:16px; }
+  .feature-lead h2 { font:400 clamp(2.2rem,4vw,3.9rem)/1.1 Georgia,serif; letter-spacing:-.04em; max-width:570px; }
+  .feature-intro { max-width:440px; color:var(--muted); line-height:1.85; }
+  .feature-image { display:block; background:var(--bg-soft); }
+  .feature-image img { width:100%;height:auto;aspect-ratio:16/9;object-fit:contain; }
+  .feature-caption { display:flex; align-items:center; justify-content:space-between; gap:28px; padding-top:28px; }
+  .feature-caption h3 { font:400 clamp(1.5rem,3vw,2.4rem)/1.2 Georgia,serif; letter-spacing:-.025em; }
+  .feature-caption .cinema-eyebrow { margin-bottom:8px; }
+  .feature-caption .button { flex-shrink:0; }
+  .featured-film .button { color:var(--text); background:var(--panel); }
+  .film-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:36px; }
+  .film-card { border:0; background:transparent; }
+  .film-content { padding:22px 0 6px; }
+  .film-content h3 { font-size:1.8rem; }
+  .film-content p { max-width:510px; }
+  html[data-theme="white"] .film-card { background:transparent; }
+  .section { padding-top:64px; padding-bottom:72px; }
+  .split { display:block; }
+  .about-panel { background:var(--bg-soft); padding:76px 7vw; min-height:430px; display:flow-root; }
+  .about-panel h2 { display:none; }
+  .about-portrait { float:left; width:34%; height:350px; object-fit:cover; object-position:68% center; margin:0 7% 0 0; }
+  .about-panel p,.about-panel .lead { max-width:none; }
+  .about-panel .lead { font-size:clamp(1.8rem,3.4vw,3.1rem); line-height:1.15; letter-spacing:-.025em; }
+  .about-panel .small-link { display:inline-block; margin-top:4px; }
+  html[data-theme="white"] .about-panel { background:var(--bg-soft); border-right:0; }
+  .gear-panel { padding:42px 7vw; border-top:1px solid var(--line); background:var(--bg); }
+  .gear-panel h2 { margin-bottom:18px; color:var(--cinema-accent); }
+  .gear-list { max-width:none; display:grid;grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px;margin-bottom:18px; }
+  .gear-list li {display:block;}
+  .gear-list span {display:block;}
+  .gear-list span:first-child {font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:7px;}
+  .contact { background:var(--bg-soft); border-top:1px solid var(--line);padding:72px 7vw; }
+  .contact h2 {max-width:560px;font-size:clamp(2.3rem,4vw,3.5rem);line-height:1.1;letter-spacing:-.04em;}
+  .project-invitation {display:inline-block;margin-top:24px;color:var(--cinema-accent);}
+  html[data-theme="white"] .contact {background:var(--bg);}
+  @media(max-width:900px){.feature-lead{gap:28px}.contact{grid-template-columns:1fr}.gear-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:650px){
+    .nav{padding:40px 6vw;}.logo{font-size:2rem;}
+    .hero{min-height:600px;min-height:82svh;padding:145px 6vw 62px;background-position:66% center;}
+    .hero h1{font-size:clamp(3.3rem,12vw,5rem);}.hero .eyebrow{font-size:.65rem;letter-spacing:.2em;}
+    .featured-film{padding:44px 6vw;}.feature-lead{grid-template-columns:1fr;gap:22px;margin-bottom:26px;}
+    .feature-caption{display:block;}.feature-caption .button{margin-top:22px;}
+    .film-grid{grid-template-columns:minmax(0,1fr);gap:32px;}.film-content{padding:18px 0 0;}
+    .section{padding-top:40px;padding-bottom:44px;}.about-panel{padding:44px 6vw;}
+    .about-portrait{float:none;width:100%;height:310px;margin:0 0 28px;object-position:68% center;}
+    .about-panel h2{margin-bottom:22px;}.gear-panel{padding:32px 6vw;}.gear-list{gap:16px;}
+    .contact{padding:48px 6vw;}.feature-intro{font-size:.95rem;}
+  }
+  @media(prefers-reduced-motion:no-preference){.feature-image{transition:box-shadow .25s ease}.feature-image:hover{box-shadow:0 12px 32px rgba(0,0,0,.12)}}
+</style>
+
+<style id="byjdg-shared-header">
+  .nav { padding:22px 7vw; align-items:center; gap:20px; }
+  .logo { font-size:2.25rem; }
+  .nav-links { font-size:.65rem; letter-spacing:.22em; gap:34px; }
+  @media(max-width:900px) and (min-width:651px) {
+    .nav-links { gap:16px; font-size:.62rem; letter-spacing:.22em; flex-wrap:wrap; justify-content:flex-end; }
+  }
+  @media(max-width:650px) {
+    .nav { padding:40px 6vw; justify-content:center; }
+    .logo { font-size:2rem; }
+    .mobile-menu-button { left:auto; right:6vw; }
+    .nav-links {
+      left:auto; right:0; border-right:0; border-left:1px solid var(--line);
+      transform:translateX(100%); font-size:.72rem; letter-spacing:.32em;
+      gap:26px; justify-content:flex-start;
+    }
+    body.menu-open .nav-links { transform:translateX(0); }
+  }
+</style>
+
+<style id="byjdg-cta-icons">
+.cta-icon { display:inline-block; width:1em; height:1em; flex:none; vertical-align:-.12em; }
+.play { display:inline-flex; align-items:center; }
+.play .cta-icon { width:1.25em; height:1.25em; }
+.project-invitation .cta-icon { margin-left:.35em; }
+</style>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+<style id="byjdg-about-tone">
+html[data-about-tone="stone"] #about {
+ --about-surface:#c8c2b8; --text:#292722; --muted:#45413a; --cinema-accent:#645027;
+}
+html[data-about-tone="taupe"] #about {
+ --about-surface:#62584f; --text:#fff9ee; --muted:#eee5d8; --cinema-accent:#f1d298;
+}
+html[data-about-tone="charcoal"] #about {
+ --about-surface:#2d2b28; --text:#f5f1e8; --muted:#d0c9bd; --cinema-accent:#dfbf82;
+}
+html[data-about-tone="stone"] #about,
+html[data-about-tone="taupe"] #about,
+html[data-about-tone="charcoal"] #about {
+ background:var(--about-surface); color:var(--text); border-color:var(--muted);
+}
+html[data-about-tone="stone"] #about p,
+html[data-about-tone="taupe"] #about p,
+html[data-about-tone="charcoal"] #about p { color:var(--muted); }
+html[data-about-tone="stone"] #about .lead,
+html[data-about-tone="taupe"] #about .lead,
+html[data-about-tone="charcoal"] #about .lead { color:var(--text); }
+html[data-about-tone="stone"] #about .small-link,
+html[data-about-tone="taupe"] #about .small-link,
+html[data-about-tone="charcoal"] #about .small-link { color:var(--cinema-accent); }
+</style>
+  
+  
+  
+  
+  
+  
+  
+<script type="application/json" id="site-navigation-settings">[{"label":"YouTube","href":"https://www.youtube.com/@by-jdg","newTab":true},{"label":"Collaborate","href":"./projects.html","newTab":false}]</script>
+<style id="byjdg-film-hover">
+/* Slow, restrained motion keeps the thumbnail frame and captions still. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  #latest .film-card::before {
+    background-size: 100% auto;
+    transition: background-size 700ms cubic-bezier(.22,.61,.36,1), filter 700ms ease;
+  }
+  #latest .film-card:hover::before,
+  #latest .film-card:focus-within::before {
+    background-size: 103% auto;
+    filter: brightness(1.035);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #latest .film-card::before { transition: none; }
+}
+</style>
+<style id="byjdg-cta-hover">
+  .jdg-motion-cta { position:relative; display:inline-block; width:fit-content; max-width:100%; align-self:flex-start; }
+  .jdg-motion-cta::after {
+    content:""; position:absolute; left:0; right:0; bottom:-6px;
+    height:1px; background:currentColor; transform:scaleX(0); transform-origin:left;
+  }
+  .jdg-motion-cta .jdg-cta-arrow { display:inline-block; }
+  @media (prefers-reduced-motion:no-preference) {
+    .jdg-motion-cta::after { transition:transform 320ms cubic-bezier(.22,.61,.36,1); }
+    .jdg-motion-cta .jdg-cta-arrow,
+    .jdg-motion-cta > .cta-icon { transition:transform 320ms cubic-bezier(.22,.61,.36,1); }
+    .jdg-motion-cta:focus-visible .jdg-cta-arrow { transform:translateX(5px); }
+    .jdg-motion-cta:focus-visible > .cta-icon { transform:translate(4px,-4px); }
+    @media (hover:hover) and (pointer:fine) {
+      .jdg-motion-cta:hover .jdg-cta-arrow { transform:translateX(5px); }
+      .jdg-motion-cta:hover > .cta-icon { transform:translate(4px,-4px); }
+    }
+  }
+  .jdg-motion-cta:focus-visible::after { transform:scaleX(1); }
+  @media (hover:hover) and (pointer:fine) {
+    .jdg-motion-cta:hover::after { transform:scaleX(1); }
+  }
+</style>
+<style id="byjdg-hero-rotation">.hero{isolation:isolate;overflow:hidden}.hero-slide{position:absolute;inset:0;z-index:0;background-position:center;background-size:cover;background-repeat:no-repeat;opacity:0;transition:opacity 1s ease;pointer-events:none}.hero-rotation-pause{position:absolute;right:24px;bottom:20px;z-index:3;color:#f5f1ea;background:transparent;border:0;border-radius:50%;padding:0;width:44px;height:44px;display:grid;place-items:center;opacity:.65;cursor:pointer;transition:opacity .2s}.hero-rotation-pause:hover{opacity:1}.hero-rotation-pause svg{display:block;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}.hero-rotation-pause:focus-visible{outline:2px solid white;outline-offset:3px}@media(prefers-reduced-motion:reduce){.hero-slide,.hero-rotation-pause{display:none!important}}.hero-rotation-pause[hidden]{display:none}</style>
+<style id="byjdg-about-layout">
+.about-content{padding-top:100px}.ab-wrap{padding-left:7vw;padding-right:7vw}.ab-intro{padding-top:70px;padding-bottom:85px}.ab-eyebrow{font-size:.65rem;letter-spacing:.34em;text-transform:uppercase;line-height:1.6;color:var(--muted);margin:0 0 24px}.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:9%;align-items:center;margin-top:30px}.ab-portrait{width:100%;height:445px;object-fit:cover;object-position:74% center;display:block}.about-content h1,.about-content h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.045em;line-height:1.07;margin:0 0 25px;white-space:pre-line}.about-content h1{font-size:42px}.about-content h2{font-size:48px}.ab-copy p,.ab-prose p{color:var(--muted);line-height:1.8;margin:0 0 22px}.ab-copy{max-width:570px}.ab-link{display:inline-block;font-size:.69rem;text-transform:uppercase;letter-spacing:.18em;border-bottom:1px solid var(--muted);padding-bottom:9px;margin-top:20px}.ab-link span{display:inline-block;margin-left:20px}.ab-story{padding-top:78px;padding-bottom:83px;display:grid;grid-template-columns:1fr 1.45fr;gap:10%}.ab-story h2{max-width:340px}.ab-prose{max-width:590px}.ab-share{padding-top:82px;padding-bottom:85px;display:grid;grid-template-columns:1.55fr .65fr;gap:9%;align-items:center}.ab-youtube{display:flex;align-items:center;justify-content:center;min-height:285px}.ab-youtube svg{width:200px;max-width:85%;height:auto;color:var(--text)}.ab-contact{padding-top:75px;padding-bottom:80px;border-top:1px solid var(--line);display:grid;grid-template-columns:1.1fr 1fr;gap:10%;align-items:center}.ab-contact h2{font-size:51px}.ab-contact-copy{border-top:1px solid var(--line);padding-top:18px}.ab-contact-copy p{color:var(--muted);line-height:1.8}.ab-collaboration{font-size:12px;margin-top:25px}.ab-collaboration a{text-decoration:underline;text-underline-offset:4px}@media(prefers-reduced-motion:no-preference){.ab-link span{transition:transform .2s}.ab-link:hover span{transform:translateX(5px)}}@media(max-width:700px){.about-content{padding-top:86px}.ab-intro{padding-top:45px;padding-bottom:48px}.ab-grid,.ab-story,.ab-share,.ab-contact{grid-template-columns:1fr;gap:35px}.ab-portrait{height:380px}.about-content h1{font-size:35px}.about-content h2,.ab-contact h2{font-size:39px}.ab-story,.ab-share,.ab-contact{padding-top:48px;padding-bottom:48px}.ab-youtube{min-height:160px}.ab-youtube svg{width:165px}.ab-story .ab-eyebrow{margin-bottom:15px}}
+</style>
+<script type="application/json" id="about-page-settings">{"introEyebrow":"A little about me","helloEyebrow":"Hello, I’m JDG","introTitle":"Places I’ve been.\nMoments I’ve kept.","portrait":"images/hero-image-ef811527.jpg","portraitAlt":"JDG outdoors wearing a cap","introText":"I make travel films about the places I explore and the moments that stay with me. This is where I share a little of the person behind those films.\n\nA beautiful view might be what brings me somewhere. But it’s often the smaller things—a quiet street, a passing conversation, the way a place feels—that I want to remember.","storyEyebrow":"My story","storyTitle":"A little curiosity.\nA different\nperspective.","storyText":"For me, making a film is a way to pay closer attention. To slow down, look around, and notice the things I might otherwise walk past.\n\nHere’s where I’d tell you a little about how that started: what first drew me to creating, the experiences that shaped my perspective, and why I keep picking up the camera.\n\nBeyond the videos, there’s a whole person here, too. This space can hold the interests, everyday moments, and personal details I’d want you to know if we were meeting for the first time.","shareEyebrow":"What I share","shareTitle":"Come along\nfor the moments.","shareText":"Travel films, coastal escapes, beautiful streets, and glimpses of everyday life along the way. A collection of places and moments, seen through my lens.","youtubeLabel":"See all videos on YouTube","youtubeHref":"https://www.youtube.com/@by-jdg","contactEyebrow":"Let’s connect","contactTitle":"A conversation\nstarts with hello.","contactText":"Have a question, an idea, or a story to share? I’d love to hear from you.","contactLabel":"Get in touch","contactHref":"mailto:filmsbyjdg@icloud.com","collaborationText":"For collaborations and creative work,","collaborationLabel":"explore working together","collaborationHref":"./projects.html"}</script>
+  <meta name="description" content="Get to know the person behind the travel films, places, and moments shared by JDG." />
+  <meta property="og:title" content="by JDG | About Me" />
+  <meta property="og:description" content="Get to know the person behind the travel films, places, and moments shared by JDG." />
+  <meta name="twitter:title" content="by JDG | About Me" />
+  <meta name="twitter:description" content="Get to know the person behind the travel films, places, and moments shared by JDG." />
+<style id="byjdg-section-tones">
+html[data-tone-aboutPage-introduction="stone"] .ab-intro,html[data-tone-aboutPage-introduction="stone"] .ab-intro .film-card{--text:#292722;--muted:#45413a;--accent:#645027;--cinema-accent:#645027;--line:rgba(41,39,34,.25);--panel:rgba(255,255,255,.22);color:var(--text);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro{background:#c8c2b8;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro p,html[data-tone-aboutPage-introduction="stone"] .ab-intro .feature-intro,html[data-tone-aboutPage-introduction="stone"] .ab-intro .episode{color:var(--muted);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro .cinema-eyebrow,html[data-tone-aboutPage-introduction="stone"] .ab-intro .small-link,html[data-tone-aboutPage-introduction="stone"] .ab-intro .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro .footer-card,html[data-tone-aboutPage-introduction="stone"] .ab-intro .contact-form,html[data-tone-aboutPage-introduction="stone"] .ab-intro input,html[data-tone-aboutPage-introduction="stone"] .ab-intro select,html[data-tone-aboutPage-introduction="stone"] .ab-intro textarea,html[data-tone-aboutPage-introduction="stone"] .ab-intro .button,html[data-tone-aboutPage-introduction="stone"] .ab-intro button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro input::placeholder,html[data-tone-aboutPage-introduction="stone"] .ab-intro textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro .quote-box,html[data-tone-aboutPage-introduction="stone"] .ab-intro .service-icon,html[data-tone-aboutPage-introduction="stone"] .ab-intro .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-introduction="stone"] .ab-intro select option{background:#c8c2b8;color:var(--text);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .film-card{--text:#fff9ee;--muted:#eee5d8;--accent:#f1d298;--cinema-accent:#f1d298;--line:rgba(255,249,238,.28);--panel:rgba(0,0,0,.12);color:var(--text);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro{background:#62584f;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro p,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .feature-intro,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .episode{color:var(--muted);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro .cinema-eyebrow,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .small-link,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro .footer-card,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .contact-form,html[data-tone-aboutPage-introduction="taupe"] .ab-intro input,html[data-tone-aboutPage-introduction="taupe"] .ab-intro select,html[data-tone-aboutPage-introduction="taupe"] .ab-intro textarea,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .button,html[data-tone-aboutPage-introduction="taupe"] .ab-intro button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro input::placeholder,html[data-tone-aboutPage-introduction="taupe"] .ab-intro textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro .quote-box,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .service-icon,html[data-tone-aboutPage-introduction="taupe"] .ab-intro .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-introduction="taupe"] .ab-intro select option{background:#62584f;color:var(--text);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .film-card{--text:#f5f1e8;--muted:#d0c9bd;--accent:#dfbf82;--cinema-accent:#dfbf82;--line:rgba(245,241,232,.24);--panel:rgba(255,255,255,.05);color:var(--text);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro{background:#2d2b28;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro p,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .feature-intro,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .episode{color:var(--muted);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .cinema-eyebrow,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .small-link,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .footer-card,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .contact-form,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro input,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro select,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro textarea,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .button,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro input::placeholder,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .quote-box,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .service-icon,html[data-tone-aboutPage-introduction="charcoal"] .ab-intro .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-introduction="charcoal"] .ab-intro select option{background:#2d2b28;color:var(--text);}
+html[data-tone-aboutPage-story="stone"] .ab-story,html[data-tone-aboutPage-story="stone"] .ab-story .film-card{--text:#292722;--muted:#45413a;--accent:#645027;--cinema-accent:#645027;--line:rgba(41,39,34,.25);--panel:rgba(255,255,255,.22);color:var(--text);}
+html[data-tone-aboutPage-story="stone"] .ab-story{background:#c8c2b8;border-color:var(--line);}
+html[data-tone-aboutPage-story="stone"] .ab-story p,html[data-tone-aboutPage-story="stone"] .ab-story .feature-intro,html[data-tone-aboutPage-story="stone"] .ab-story .episode{color:var(--muted);}
+html[data-tone-aboutPage-story="stone"] .ab-story .cinema-eyebrow,html[data-tone-aboutPage-story="stone"] .ab-story .small-link,html[data-tone-aboutPage-story="stone"] .ab-story .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-story="stone"] .ab-story .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-story="stone"] .ab-story .footer-card,html[data-tone-aboutPage-story="stone"] .ab-story .contact-form,html[data-tone-aboutPage-story="stone"] .ab-story input,html[data-tone-aboutPage-story="stone"] .ab-story select,html[data-tone-aboutPage-story="stone"] .ab-story textarea,html[data-tone-aboutPage-story="stone"] .ab-story .button,html[data-tone-aboutPage-story="stone"] .ab-story button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-story="stone"] .ab-story input::placeholder,html[data-tone-aboutPage-story="stone"] .ab-story textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-story="stone"] .ab-story .quote-box,html[data-tone-aboutPage-story="stone"] .ab-story .service-icon,html[data-tone-aboutPage-story="stone"] .ab-story .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-story="stone"] .ab-story select option{background:#c8c2b8;color:var(--text);}
+html[data-tone-aboutPage-story="taupe"] .ab-story,html[data-tone-aboutPage-story="taupe"] .ab-story .film-card{--text:#fff9ee;--muted:#eee5d8;--accent:#f1d298;--cinema-accent:#f1d298;--line:rgba(255,249,238,.28);--panel:rgba(0,0,0,.12);color:var(--text);}
+html[data-tone-aboutPage-story="taupe"] .ab-story{background:#62584f;border-color:var(--line);}
+html[data-tone-aboutPage-story="taupe"] .ab-story p,html[data-tone-aboutPage-story="taupe"] .ab-story .feature-intro,html[data-tone-aboutPage-story="taupe"] .ab-story .episode{color:var(--muted);}
+html[data-tone-aboutPage-story="taupe"] .ab-story .cinema-eyebrow,html[data-tone-aboutPage-story="taupe"] .ab-story .small-link,html[data-tone-aboutPage-story="taupe"] .ab-story .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-story="taupe"] .ab-story .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-story="taupe"] .ab-story .footer-card,html[data-tone-aboutPage-story="taupe"] .ab-story .contact-form,html[data-tone-aboutPage-story="taupe"] .ab-story input,html[data-tone-aboutPage-story="taupe"] .ab-story select,html[data-tone-aboutPage-story="taupe"] .ab-story textarea,html[data-tone-aboutPage-story="taupe"] .ab-story .button,html[data-tone-aboutPage-story="taupe"] .ab-story button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-story="taupe"] .ab-story input::placeholder,html[data-tone-aboutPage-story="taupe"] .ab-story textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-story="taupe"] .ab-story .quote-box,html[data-tone-aboutPage-story="taupe"] .ab-story .service-icon,html[data-tone-aboutPage-story="taupe"] .ab-story .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-story="taupe"] .ab-story select option{background:#62584f;color:var(--text);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story,html[data-tone-aboutPage-story="charcoal"] .ab-story .film-card{--text:#f5f1e8;--muted:#d0c9bd;--accent:#dfbf82;--cinema-accent:#dfbf82;--line:rgba(245,241,232,.24);--panel:rgba(255,255,255,.05);color:var(--text);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story{background:#2d2b28;border-color:var(--line);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story p,html[data-tone-aboutPage-story="charcoal"] .ab-story .feature-intro,html[data-tone-aboutPage-story="charcoal"] .ab-story .episode{color:var(--muted);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story .cinema-eyebrow,html[data-tone-aboutPage-story="charcoal"] .ab-story .small-link,html[data-tone-aboutPage-story="charcoal"] .ab-story .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story .footer-card,html[data-tone-aboutPage-story="charcoal"] .ab-story .contact-form,html[data-tone-aboutPage-story="charcoal"] .ab-story input,html[data-tone-aboutPage-story="charcoal"] .ab-story select,html[data-tone-aboutPage-story="charcoal"] .ab-story textarea,html[data-tone-aboutPage-story="charcoal"] .ab-story .button,html[data-tone-aboutPage-story="charcoal"] .ab-story button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story input::placeholder,html[data-tone-aboutPage-story="charcoal"] .ab-story textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story .quote-box,html[data-tone-aboutPage-story="charcoal"] .ab-story .service-icon,html[data-tone-aboutPage-story="charcoal"] .ab-story .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-story="charcoal"] .ab-story select option{background:#2d2b28;color:var(--text);}
+html[data-tone-aboutPage-share="stone"] .ab-share,html[data-tone-aboutPage-share="stone"] .ab-share .film-card{--text:#292722;--muted:#45413a;--accent:#645027;--cinema-accent:#645027;--line:rgba(41,39,34,.25);--panel:rgba(255,255,255,.22);color:var(--text);}
+html[data-tone-aboutPage-share="stone"] .ab-share{background:#c8c2b8;border-color:var(--line);}
+html[data-tone-aboutPage-share="stone"] .ab-share p,html[data-tone-aboutPage-share="stone"] .ab-share .feature-intro,html[data-tone-aboutPage-share="stone"] .ab-share .episode{color:var(--muted);}
+html[data-tone-aboutPage-share="stone"] .ab-share .cinema-eyebrow,html[data-tone-aboutPage-share="stone"] .ab-share .small-link,html[data-tone-aboutPage-share="stone"] .ab-share .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-share="stone"] .ab-share .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-share="stone"] .ab-share .footer-card,html[data-tone-aboutPage-share="stone"] .ab-share .contact-form,html[data-tone-aboutPage-share="stone"] .ab-share input,html[data-tone-aboutPage-share="stone"] .ab-share select,html[data-tone-aboutPage-share="stone"] .ab-share textarea,html[data-tone-aboutPage-share="stone"] .ab-share .button,html[data-tone-aboutPage-share="stone"] .ab-share button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-share="stone"] .ab-share input::placeholder,html[data-tone-aboutPage-share="stone"] .ab-share textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-share="stone"] .ab-share .quote-box,html[data-tone-aboutPage-share="stone"] .ab-share .service-icon,html[data-tone-aboutPage-share="stone"] .ab-share .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-share="stone"] .ab-share select option{background:#c8c2b8;color:var(--text);}
+html[data-tone-aboutPage-share="taupe"] .ab-share,html[data-tone-aboutPage-share="taupe"] .ab-share .film-card{--text:#fff9ee;--muted:#eee5d8;--accent:#f1d298;--cinema-accent:#f1d298;--line:rgba(255,249,238,.28);--panel:rgba(0,0,0,.12);color:var(--text);}
+html[data-tone-aboutPage-share="taupe"] .ab-share{background:#62584f;border-color:var(--line);}
+html[data-tone-aboutPage-share="taupe"] .ab-share p,html[data-tone-aboutPage-share="taupe"] .ab-share .feature-intro,html[data-tone-aboutPage-share="taupe"] .ab-share .episode{color:var(--muted);}
+html[data-tone-aboutPage-share="taupe"] .ab-share .cinema-eyebrow,html[data-tone-aboutPage-share="taupe"] .ab-share .small-link,html[data-tone-aboutPage-share="taupe"] .ab-share .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-share="taupe"] .ab-share .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-share="taupe"] .ab-share .footer-card,html[data-tone-aboutPage-share="taupe"] .ab-share .contact-form,html[data-tone-aboutPage-share="taupe"] .ab-share input,html[data-tone-aboutPage-share="taupe"] .ab-share select,html[data-tone-aboutPage-share="taupe"] .ab-share textarea,html[data-tone-aboutPage-share="taupe"] .ab-share .button,html[data-tone-aboutPage-share="taupe"] .ab-share button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-share="taupe"] .ab-share input::placeholder,html[data-tone-aboutPage-share="taupe"] .ab-share textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-share="taupe"] .ab-share .quote-box,html[data-tone-aboutPage-share="taupe"] .ab-share .service-icon,html[data-tone-aboutPage-share="taupe"] .ab-share .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-share="taupe"] .ab-share select option{background:#62584f;color:var(--text);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share,html[data-tone-aboutPage-share="charcoal"] .ab-share .film-card{--text:#f5f1e8;--muted:#d0c9bd;--accent:#dfbf82;--cinema-accent:#dfbf82;--line:rgba(245,241,232,.24);--panel:rgba(255,255,255,.05);color:var(--text);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share{background:#2d2b28;border-color:var(--line);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share p,html[data-tone-aboutPage-share="charcoal"] .ab-share .feature-intro,html[data-tone-aboutPage-share="charcoal"] .ab-share .episode{color:var(--muted);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share .cinema-eyebrow,html[data-tone-aboutPage-share="charcoal"] .ab-share .small-link,html[data-tone-aboutPage-share="charcoal"] .ab-share .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share .footer-card,html[data-tone-aboutPage-share="charcoal"] .ab-share .contact-form,html[data-tone-aboutPage-share="charcoal"] .ab-share input,html[data-tone-aboutPage-share="charcoal"] .ab-share select,html[data-tone-aboutPage-share="charcoal"] .ab-share textarea,html[data-tone-aboutPage-share="charcoal"] .ab-share .button,html[data-tone-aboutPage-share="charcoal"] .ab-share button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share input::placeholder,html[data-tone-aboutPage-share="charcoal"] .ab-share textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share .quote-box,html[data-tone-aboutPage-share="charcoal"] .ab-share .service-icon,html[data-tone-aboutPage-share="charcoal"] .ab-share .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-share="charcoal"] .ab-share select option{background:#2d2b28;color:var(--text);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact,html[data-tone-aboutPage-contact="stone"] .ab-contact .film-card{--text:#292722;--muted:#45413a;--accent:#645027;--cinema-accent:#645027;--line:rgba(41,39,34,.25);--panel:rgba(255,255,255,.22);color:var(--text);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact{background:#c8c2b8;border-color:var(--line);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact p,html[data-tone-aboutPage-contact="stone"] .ab-contact .feature-intro,html[data-tone-aboutPage-contact="stone"] .ab-contact .episode{color:var(--muted);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact .cinema-eyebrow,html[data-tone-aboutPage-contact="stone"] .ab-contact .small-link,html[data-tone-aboutPage-contact="stone"] .ab-contact .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact .footer-card,html[data-tone-aboutPage-contact="stone"] .ab-contact .contact-form,html[data-tone-aboutPage-contact="stone"] .ab-contact input,html[data-tone-aboutPage-contact="stone"] .ab-contact select,html[data-tone-aboutPage-contact="stone"] .ab-contact textarea,html[data-tone-aboutPage-contact="stone"] .ab-contact .button,html[data-tone-aboutPage-contact="stone"] .ab-contact button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact input::placeholder,html[data-tone-aboutPage-contact="stone"] .ab-contact textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact .quote-box,html[data-tone-aboutPage-contact="stone"] .ab-contact .service-icon,html[data-tone-aboutPage-contact="stone"] .ab-contact .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-contact="stone"] .ab-contact select option{background:#c8c2b8;color:var(--text);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact,html[data-tone-aboutPage-contact="taupe"] .ab-contact .film-card{--text:#fff9ee;--muted:#eee5d8;--accent:#f1d298;--cinema-accent:#f1d298;--line:rgba(255,249,238,.28);--panel:rgba(0,0,0,.12);color:var(--text);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact{background:#62584f;border-color:var(--line);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact p,html[data-tone-aboutPage-contact="taupe"] .ab-contact .feature-intro,html[data-tone-aboutPage-contact="taupe"] .ab-contact .episode{color:var(--muted);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact .cinema-eyebrow,html[data-tone-aboutPage-contact="taupe"] .ab-contact .small-link,html[data-tone-aboutPage-contact="taupe"] .ab-contact .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact .footer-card,html[data-tone-aboutPage-contact="taupe"] .ab-contact .contact-form,html[data-tone-aboutPage-contact="taupe"] .ab-contact input,html[data-tone-aboutPage-contact="taupe"] .ab-contact select,html[data-tone-aboutPage-contact="taupe"] .ab-contact textarea,html[data-tone-aboutPage-contact="taupe"] .ab-contact .button,html[data-tone-aboutPage-contact="taupe"] .ab-contact button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact input::placeholder,html[data-tone-aboutPage-contact="taupe"] .ab-contact textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact .quote-box,html[data-tone-aboutPage-contact="taupe"] .ab-contact .service-icon,html[data-tone-aboutPage-contact="taupe"] .ab-contact .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-contact="taupe"] .ab-contact select option{background:#62584f;color:var(--text);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .film-card{--text:#f5f1e8;--muted:#d0c9bd;--accent:#dfbf82;--cinema-accent:#dfbf82;--line:rgba(245,241,232,.24);--panel:rgba(255,255,255,.05);color:var(--text);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact{background:#2d2b28;border-color:var(--line);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact p,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .feature-intro,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .episode{color:var(--muted);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact .cinema-eyebrow,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .small-link,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .project-invitation{color:var(--accent);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact .film-card{background:transparent;border-color:var(--line);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact .footer-card,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .contact-form,html[data-tone-aboutPage-contact="charcoal"] .ab-contact input,html[data-tone-aboutPage-contact="charcoal"] .ab-contact select,html[data-tone-aboutPage-contact="charcoal"] .ab-contact textarea,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .button,html[data-tone-aboutPage-contact="charcoal"] .ab-contact button{background:var(--panel);color:var(--text);border-color:var(--line);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact input::placeholder,html[data-tone-aboutPage-contact="charcoal"] .ab-contact textarea::placeholder{color:var(--muted);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact .quote-box,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .service-icon,html[data-tone-aboutPage-contact="charcoal"] .ab-contact .connect-link span{border-color:var(--line);}
+html[data-tone-aboutPage-contact="charcoal"] .ab-contact select option{background:#2d2b28;color:var(--text);}
+</style>
+</head>
+<body><div class="page"><header class="nav">
+      <button class="mobile-menu-button" aria-label="Open menu" onclick="toggleMenu()">
+        <span class="menu-icon"></span>
+      </button>
+
+      <a href="./index.html" class="logo">by JDG</a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="./projects.html">Collaborate</a>
+      </nav>
+    </header><div class="nav-overlay" onclick="closeMenu()"></div><!-- ABOUT_CONTENT_START --><main class="about-content" id="top"><section class="ab-intro ab-wrap"><p class="ab-eyebrow">A little about me</p><div class="ab-grid"><img class="ab-portrait" src="images/hero-image-ef811527.jpg" alt="JDG outdoors wearing a cap" width="640" height="720"><div class="ab-copy"><p class="ab-eyebrow">Hello, I’m JDG</p><h1>Places I’ve been.
+Moments I’ve kept.</h1><p>I make travel films about the places I explore and the moments that stay with me. This is where I share a little of the person behind those films.</p><p>A beautiful view might be what brings me somewhere. But it’s often the smaller things—a quiet street, a passing conversation, the way a place feels—that I want to remember.</p></div></div></section><section class="ab-story ab-wrap" id="story"><div><p class="ab-eyebrow">My story</p><h2>A little curiosity.
+A different
+perspective.</h2></div><div class="ab-prose"><p>For me, making a film is a way to pay closer attention. To slow down, look around, and notice the things I might otherwise walk past.</p><p>Here’s where I’d tell you a little about how that started: what first drew me to creating, the experiences that shaped my perspective, and why I keep picking up the camera.</p><p>Beyond the videos, there’s a whole person here, too. This space can hold the interests, everyday moments, and personal details I’d want you to know if we were meeting for the first time.</p></div></section><section class="ab-share ab-wrap"><div class="ab-copy"><p class="ab-eyebrow">What I share</p><h2>Come along
+for the moments.</h2><p>Travel films, coastal escapes, beautiful streets, and glimpses of everyday life along the way. A collection of places and moments, seen through my lens.</p><a class="ab-link" href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">See all videos on YouTube<span aria-hidden="true">↗</span></a></div><div class="ab-youtube" aria-hidden="true"><svg viewBox="0 0 240 170" fill="none"><rect x="10" y="10" width="220" height="150" rx="42" fill="currentColor"/><path d="M104 53 104 117 160 85Z" fill="var(--bg)"/></svg></div></section><section class="ab-contact ab-wrap" id="contact"><div><p class="ab-eyebrow">Let’s connect</p><h2>A conversation
+starts with hello.</h2></div><div class="ab-contact-copy"><p>Have a question, an idea, or a story to share? I’d love to hear from you.</p><a class="ab-link" href="mailto:filmsbyjdg@icloud.com">Get in touch<span aria-hidden="true">↗</span></a><p class="ab-collaboration">For collaborations and creative work, <a href="./projects.html">explore working together</a>.</p></div></section></main><!-- ABOUT_CONTENT_END --><footer class="footer">
+      <div class="footer-brand">by JDG</div>
+      <div>© 2026 by JDG. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="https://www.youtube.com/@by-jdg" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:filmsbyjdg@icloud.com">Email</a>
+        <a href="/privacy.html">Privacy</a>
+      </div>
+    </footer></div><script>function toggleMenu(){document.body.classList.toggle('menu-open')}function closeMenu(){document.body.classList.remove('menu-open')}document.querySelectorAll('.nav-links a').forEach(link=>link.addEventListener('click',closeMenu));</script></body></html>

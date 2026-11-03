@@ -17,6 +17,7 @@ const siteNavigation = require('./site-navigation');
 const pageMeta = require('./page-meta');
 const cinemaCMS = require('./cinema-cms');
 const projectsCMS = require('./projects-cms');
+const aboutCMS = require('./about-cms');
 const heroRotation = require('./hero-rotation');
 
 const WEBSITE_DIR = '/Users/jdg/Documents/byjdg-cms-test';
@@ -29,6 +30,8 @@ const IMAGES_DIR = path.join(WEBSITE_DIR, 'images');
 const BACKUPS_DIR = path.join(app.getPath('userData'), 'backups');
 
 const PROJECTS_PATH = path.join(WEBSITE_DIR, 'projects.html');
+const ABOUT_PATH = path.join(WEBSITE_DIR, 'about.html');
+function readAbout(){ return fs.readFileSync(ABOUT_PATH, 'utf8'); }
 
 const deliveryManager = require('./deliveries').create({ dataDir: path.join(app.getPath('userData'), 'client-deliveries'), liveDir: LIVE_SITE_DIR });
 
@@ -90,12 +93,14 @@ function parseContent(html) {
     );
 
   return {
-    sectionTones: {home:sectionTones.parse(html,'home'),projects:sectionTones.parse(readProjects(),'projects')},
+    sectionTones: {home:sectionTones.parse(html,'home'),projects:sectionTones.parse(readProjects(),'projects'),aboutPage:sectionTones.parse(readAbout(),'aboutPage')},
     toneSections: sectionTones.sections,
-    pages: { home: pageMeta.parse(html), projects: pageMeta.parse(readProjects()) },
+    pages: { home: pageMeta.parse(html), projects: pageMeta.parse(readProjects()), aboutPage: pageMeta.parse(readAbout()) },
     cinema: cinemaCMS.parse(html),
     projects: projectsCMS.parse(readProjects()),
     projectFields: projectsCMS.fields,
+    aboutPage: aboutCMS.parse(readAbout()),
+    aboutPageFields: aboutCMS.fields,
     branding: siteBranding.parse(html),
     navigation: siteNavigation.parse(html),
     filePath: INDEX_PATH,
@@ -177,6 +182,7 @@ function updateHtml(data) {
 
   const backupPath = path.join(BACKUPS_DIR, `index.backup-${Date.now()}.html`);
   const navigation = siteNavigation.validate(data.navigation || siteNavigation.parse(html));
+  aboutCMS.validate(data.aboutPage || aboutCMS.parse(readAbout()));
   contactControls.validate({...contactControls.parse(html),...data.contact});
   fs.copyFileSync(INDEX_PATH, backupPath);
 
@@ -215,6 +221,9 @@ function updateHtml(data) {
   html = siteNavigation.render(siteBranding.render(html, branding), navigation, 'index.html');
   html = sectionTones.render(html,data.sectionTones?.home,'home');
   const projectHtml = siteNavigation.render(sectionTones.render(siteBranding.render(pageMeta.render(projectsCMS.render(readProjects(), data.projects || {}, theme), data.pages?.projects), branding), data.sectionTones?.projects, 'projects'), navigation, 'projects.html');
+  const aboutHtml = sectionTones.render(pageMeta.render(aboutCMS.render(readAbout(), data.aboutPage, html, theme), data.pages?.aboutPage), data.sectionTones?.aboutPage, 'aboutPage');
+  fs.copyFileSync(ABOUT_PATH, path.join(BACKUPS_DIR, `about.backup-${Date.now()}.html`));
+  fs.writeFileSync(ABOUT_PATH, aboutHtml, 'utf8');
   fs.copyFileSync(PROJECTS_PATH, path.join(BACKUPS_DIR, `projects.backup-${Date.now()}.html`));
   fs.writeFileSync(PROJECTS_PATH, projectHtml, 'utf8');
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
@@ -275,6 +284,7 @@ async function publishLive() {
 
     fs.copyFileSync(INDEX_PATH, LIVE_INDEX_PATH);
     fs.copyFileSync(PROJECTS_PATH, path.join(LIVE_SITE_DIR, 'projects.html'));
+    fs.copyFileSync(ABOUT_PATH, path.join(LIVE_SITE_DIR, 'about.html'));
 
     const betaImagesDir = path.join(WEBSITE_DIR, 'images');
     const liveImagesDir = path.join(LIVE_SITE_DIR, 'images');
@@ -325,6 +335,10 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === 'GET' && ['/about.html', '/preview-about'].includes(req.url.split('?')[0])) {
+      send(res, 200, readAbout(), 'text/html');
+      return;
+    }
     if (req.method === 'GET' && ['/projects.html', '/preview-projects'].includes(req.url)) {
       send(res, 200, readProjects(), 'text/html');
       return;

@@ -38,7 +38,9 @@
       "hero-rotation.js",
       "hero-runtime.js",
       "site-navigation.js",
-      "contact-controls.js"
+      "contact-controls.js",
+      "about.html",
+      "about-cms.js"
     ]
   },
   "devDependencies": {

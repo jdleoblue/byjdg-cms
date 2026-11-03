@@ -151,6 +151,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
     <nav id="cmsNav" aria-label="Studio navigation">
       <button class="active" data-destination="home" onclick="showDestination('home')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg></span> Homepage</button>
       <button data-destination="projects" onclick="showDestination('projects')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M7 5l3 5m4-5 3 5M3 5l3-3m3 3 3-3m3 3 3-3"/></svg></span> Projects Page</button>
+      <button data-destination="aboutPage" onclick="showDestination('aboutPage')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></span> About Me</button>
       <button data-destination="deliveries" onclick="showDestination('deliveries')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span> Client Deliveries</button>
       <div class="settings-nav"><button data-destination="settings" onclick="showDestination('settings')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-1 3-3 1-3 3 2 2-1 3 3 3 3-1 2 2 3-1 1-3 3-1 2-3-2-2 1-3-3-3-3 1-2-2Z"/><circle cx="12" cy="12" r="3"/></svg></span> Site Settings</button><p class="connection"><span aria-hidden="true">●</span> Website connected</p></div>
     </nav>
@@ -221,7 +222,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
         <label for="pages.projects.description">Search Description</label><textarea id="pages.projects.description"></textarea>
         <label for="pages.projects.socialImage">Social Sharing Image (optional full HTTPS address)</label><input id="pages.projects.socialImage" placeholder="https://www.byjdg.com/images/your-image.jpg">
       </div>
-    </section>
+    <div class="card"><h2>About Me</h2><label for="pages.aboutPage.title">Browser Tab / Page Title</label><input id="pages.aboutPage.title"><label for="pages.aboutPage.description">Search Description</label><textarea id="pages.aboutPage.description"></textarea><label for="pages.aboutPage.socialImage">Social Sharing Image (optional full HTTPS address)</label><input id="pages.aboutPage.socialImage"></div></section>
     <section id="appearance">
       <h2>Website Appearance</h2>
       <div class="card">
@@ -262,6 +263,10 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
       </div>
     </section>
 
+    <section id="aboutIntroduction"><div id="aboutIntroductionFields"></div></section>
+    <section id="aboutStory"><div id="aboutStoryFields"></div></section>
+    <section id="aboutShare"><div id="aboutShareFields"></div></section>
+    <section id="aboutContact"><div id="aboutContactFields"></div></section>
     <section id="projects">
       <h2>Projects Page</h2>
       <p class="muted">Shares the Website Appearance setting with your homepage. Changes are saved and published together.</p>
@@ -358,12 +363,13 @@ function toggleMobileMenu() {
 
 const studioDestinations = {
   home: {title:'Homepage',description:'Shape the first impression.',tabs:[['hero','Hero'],['cinema','Featured Film'],['episodes','Film Collection'],['about','About'],['contact','Contact']]},
+  aboutPage: {title:'About Me',description:'Share the person behind your work.',tabs:[['aboutIntroduction','Introduction'],['aboutStory','My Story'],['aboutShare','What I Share'],['aboutContact','Contact']]},
   projects: {title:'Projects Page',description:'Introduce your services and invite new inquiries.',tabs:[['projects','Page content']]},
   deliveries: {title:'Client Deliveries',description:'Create, share and manage client project libraries.',tabs:[['deliveries','Deliveries']]},
   settings: {title:'Site Settings',description:'Branding, appearance and shared website settings, together.',tabs:[['appearance','Appearance'],['sectionTones','Section Tones'],['branding','Branding'],['pageSettings','Page Titles & Search'],['navSettings','Nav Links'],['footerSettings','Footer']]}
 };
 let studioDestination = 'home';
-const studioLastTab = {home:'hero',projects:'projects',deliveries:'deliveries',settings:'appearance'};
+const studioLastTab = {home:'hero',aboutPage:'aboutIntroduction',projects:'projects',deliveries:'deliveries',settings:'appearance'};
 function showDestination(destination) {
   studioDestination = destination;
   showTab(studioLastTab[destination]);
@@ -427,9 +433,10 @@ async function loadContent() {
   ['headline','intro','portrait','eyebrow','ctaText','aboutTone'].forEach(key => setField('cinema.' + key, data.cinema[key]));
   renderFeaturedOptions();
   updatePreview('cinema.portrait');
-  ['home','projects'].forEach(page => ['title','description','socialImage'].forEach(key => setField('pages.'+page+'.'+key,data.pages[page][key])));
+  ['home','projects','aboutPage'].forEach(page => ['title','description','socialImage'].forEach(key => setField('pages.'+page+'.'+key,data.pages[page][key])));
   renderSectionTones();
   renderProjects();
+  renderAboutPage();
   updatePreview('hero.image');
   setField('hero.mode', data.hero.mode || 'static');
   setField('hero.interval', data.hero.interval || 5);
@@ -493,6 +500,17 @@ function renderFooterLinks() {
     </div>`).join('');
 }
 
+function renderAboutPage() {
+  const groups={introduction:'aboutIntroductionFields',story:'aboutStoryFields',share:'aboutShareFields',contact:'aboutContactFields'};
+  for(const [group,target] of Object.entries(groups)){
+    const fields=data.aboutPageFields.filter(f=>f.group===group);
+    byId(target).innerHTML='<div class="card"><h2>'+({introduction:'Introduction',story:'My Story',share:'What I Share',contact:'Contact'}[group])+'</h2>'+fields.map(f=>{
+      const id='aboutPage.'+f.key;const value=escapeAttr(data.aboutPage[f.key]);
+      return '<label for="'+id+'">'+escapeHtml(f.label)+'</label>'+(f.type==='textarea'?'<textarea id="'+id+'" rows="'+(f.key.endsWith('Text')?8:3)+'">'+value+'</textarea>':'<input id="'+id+'" value="'+value+'">')+(f.key==='portrait'?'<input type="file" accept="image/*" onchange="uploadImage(event, \'aboutPage.portrait\')"><img class="preview" id="preview.aboutPage.portrait" alt="About Me portrait preview">':'');
+    }).join('')+'<p class="muted">Use blank lines between paragraphs. Headline line breaks are preserved.</p></div>';
+  }
+  byId('aboutPage.portrait').addEventListener('input',()=>updatePreview('aboutPage.portrait'));updatePreview('aboutPage.portrait');
+}
 function renderProjects() {
   const extra = [{key:'image',label:'Hero Image Path or HTTPS Address'},
     {key:'formAction',label:'Message Form Destination (HTTPS)'},
@@ -521,19 +539,20 @@ function renderFeaturedOptions() {
 function renderSectionTones() {
   const aboutToneFields = byId('aboutToneSettings');
   if (aboutToneFields) aboutToneFields.remove();
-  byId('toneControls').innerHTML = ['home','projects'].map(page => `<div class="card"><h2>${page === 'home' ? 'Homepage' : 'Projects Page'}</h2>` + data.toneSections[page].map(s => {
+  byId('toneControls').innerHTML = ['home','projects','aboutPage'].map(page => `<div class="card"><h2>${page === 'home' ? 'Homepage' : page === 'aboutPage' ? 'About Me' : 'Projects Page'}</h2>` + data.toneSections[page].map(s => {
     const id = 'tones.' + page + '.' + s.key;
     return `<label for="${id}">${escapeHtml(s.label)}</label><select id="${id}"><option value="theme">Follow Website Theme</option><option value="stone">Warm Stone</option><option value="taupe">Soft Taupe</option><option value="charcoal">Smoked Charcoal</option></select>`;
   }).join('') + '</div>').join('');
   const homepageTones = byId('toneControls').firstElementChild;
   if (aboutToneFields) homepageTones.insertBefore(aboutToneFields, homepageTones.querySelector('[for="tones.home.contact"]'));
-  ['home','projects'].forEach(page => data.toneSections[page].forEach(s => setField('tones.'+page+'.'+s.key,data.sectionTones[page][s.key])));
+  ['home','projects','aboutPage'].forEach(page => data.toneSections[page].forEach(s => setField('tones.'+page+'.'+s.key,data.sectionTones[page][s.key])));
 }
 
 function collectData() {
-  ['home','projects'].forEach(page => data.toneSections[page].forEach(s => {data.sectionTones[page][s.key]=getField('tones.'+page+'.'+s.key);}));
+  ['home','projects','aboutPage'].forEach(page => data.toneSections[page].forEach(s => {data.sectionTones[page][s.key]=getField('tones.'+page+'.'+s.key);}));
+  Object.keys(data.aboutPage).forEach(key => {data.aboutPage[key]=getField('aboutPage.'+key);});
   data.branding = {logoText:getField('branding.logoText')};
-  ['home','projects'].forEach(page => ['title','description','socialImage'].forEach(key => { data.pages[page][key]=getField('pages.'+page+'.'+key); }));
+  ['home','projects','aboutPage'].forEach(page => ['title','description','socialImage'].forEach(key => { data.pages[page][key]=getField('pages.'+page+'.'+key); }));
   data.cinema = {aboutTone:getField('cinema.aboutTone'),featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait'),eyebrow:getField('cinema.eyebrow'),ctaText:getField('cinema.ctaText')};
   Object.keys(data.projects).forEach(key => { data.projects[key] = getField('projects.' + key); });
   data.appearance = { theme: byId('siteTheme').value };
@@ -559,7 +578,7 @@ async function saveHtml() {
   return await res.json();
 }
 
-async function previewChanges(page = studioDestination === 'projects' ? '/projects.html' : '/preview') {
+async function previewChanges(page = studioDestination === 'aboutPage' ? '/about.html' : studioDestination === 'projects' ? '/projects.html' : '/preview') {
   byId('status').textContent = 'Saving preview...';
 
   const result = await saveHtml();
