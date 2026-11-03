@@ -18,14 +18,16 @@ function validate(raw){
  if(!Array.isArray(p.files)||p.files.length>200)throw Error('Invalid file list.');
  project.files=p.files.map(f=>{const file={name:text(f.name,200),details:text(f.details,300),url:text(f.url,2048)};if(!file.name)throw Error('Enter a display name for each file.');let url;try{url=new URL(file.url);}catch{throw Error('Enter a valid Google Drive sharing link.');}if(url.protocol!=='https:'||!['drive.google.com','docs.google.com'].includes(url.hostname)||url.username||url.password)throw Error('Use an HTTPS Google Drive sharing link.');return file;});return project;});return d;
 }
-function render(d,preview=false){
+function render(d,preview=false,icon){
  const nav=d.projects.map((p,i)=>`<button class="project-link" data-project="project-${i}" aria-current="${i===0}">${escape(p.title)}<small>${escape(p.date)}</small></button>`).join('');
  const projects=d.projects.map((p,i)=>`<article class="project" id="project-${i}"${i?' hidden':''}><div class="eyebrow">${escape(p.date||'Project delivery')}</div><h2>${escape(p.title)}</h2><p class="muted">${escape(p.message)}</p><div class="files-heading"><span class="eyebrow">Project files</span><span class="muted">${p.files.length} ${p.files.length===1?'file':'files'}</span></div>${p.files.length?p.files.map((f,n)=>`<div class="file"><span class="number" aria-hidden="true">${String(n+1).padStart(2,'0')}</span><div><div class="file-title">${escape(f.name)}</div><p class="meta">${escape(f.details)}</p></div><a class="download" href="${escape(f.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escape('Open '+f.name+' in Google Drive')}">Open / Download <span aria-hidden="true">↗</span></a></div>`).join(''):'<p class="empty">No files have been added yet.</p>'}<p class="help">Files open in Google Drive. Use its download button to save them; Google may ask you to sign in.</p></article>`).join('');
  const values={TITLE:escape(d.client),CLIENT:escape(d.client),MESSAGE:escape(d.message),NAV:nav,PROJECTS:projects,PREVIEW:preview?'<div class="preview">Local preview — this delivery is not being published by viewing this page.</div>':''};
- return fs.readFileSync(path.join(__dirname,'delivery-page.html'),'utf8').replace(/\{\{([A-Z]+)\}\}/g,(_,key)=>values[key]);
+ const html=fs.readFileSync(path.join(__dirname,'delivery-page.html'),'utf8').replace(/\{\{([A-Z]+)\}\}/g,(_,key)=>values[key]);
+ return icon?require('./site-icon').render(html,icon):html;
 }
 function create(options){
  const {dataDir,liveDir}=options;fs.mkdirSync(dataDir,{recursive:true,mode:0o700});const dbPath=path.join(dataDir,'deliveries.json');let busy=false;
+ const renderPage=(d,preview=false)=>{const source=options.iconSource||path.join(liveDir,'index.html');return render(d,preview,fs.existsSync(source)?require('./site-icon').parse(fs.readFileSync(source,'utf8')):undefined);};
  const read=()=>fs.existsSync(dbPath)?JSON.parse(fs.readFileSync(dbPath,'utf8')):[];
  const write=rows=>{const tmp=dbPath+'.tmp';fs.writeFileSync(tmp,JSON.stringify(rows,null,2),{mode:0o600});fs.renameSync(tmp,dbPath);};
  function save(raw){const rows=read(),old=rows.find(d=>d.id===raw.id);if(!old)throw Error('Delivery not found.');const d={...old,...validate(raw),updatedAt:new Date().toISOString(),dirty:true};rows[rows.indexOf(old)]=d;write(rows);return d;}
@@ -40,7 +42,7 @@ function create(options){
  if(await run(liveDir,['status','--porcelain','--',relative]))throw Error('This delivery has unfinished local publishing changes. Resolve them before retrying.');
  let committed=false;
  try{
- if(remove){if(fs.existsSync(target))fs.unlinkSync(target);}else{fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,render(d));}
+ if(remove){if(fs.existsSync(target))fs.unlinkSync(target);}else{fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,renderPage(d));}
  await run(liveDir,['add','-A','--',`delivery/${d.id}`]);
  if(await run(liveDir,['diff','--cached','--name-only','--',relative])){await run(liveDir,['commit','-m',remove?'Remove delivery page':'Publish delivery page','--',relative]);committed=true;}
  await run(liveDir,['push','origin',branch]);
@@ -67,7 +69,7 @@ function create(options){
  const parts=url.pathname.split('/').filter(Boolean),id=parts[2],action=parts[3];
  if(req.method==='GET'&&!id){send(200,{deliveries:read(),publicRepository:true});return true;}
  const rows=read();let item=rows.find(x=>x.id===id);
- if(req.method==='GET'&&action==='preview'&&item){send(200,render(item,true),'text/html; charset=utf-8');return true;}
+ if(req.method==='GET'&&action==='preview'&&item){send(200,renderPage(item,true),'text/html; charset=utf-8');return true;}
  if(req.method!=='POST'){send(404,{error:'Not found'});return true;}
  let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>1024*1024)throw Error('Delivery data is too large.');}const data=JSON.parse(body||'{}');
  if(!id){item={id:crypto.randomBytes(16).toString('hex'),client:'New client',message:'Your files are ready. Thank you for creating with me. — JDG',projects:[{title:'New project',date:'',message:'',files:[]}],status:'draft',dirty:false,createdAt:new Date().toISOString()};rows.unshift(item);write(rows);send(200,{ok:true,delivery:item});return true;}

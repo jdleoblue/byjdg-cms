@@ -209,6 +209,15 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
     </section>
     <section id="pageSettings">
       <h2>Page Titles &amp; Search</h2>
+      <div class="card">
+        <h2>Website Icon (favicon)</h2>
+        <p class="muted">One browser-tab icon shared across your website. Use a square PNG, ideally 512 × 512 pixels. You can also upload an ICO, JPG, or WebP file (up to 2 MB).</p>
+        <img id="preview.websiteIcon.path" alt="Current website icon" style="display:block;width:64px;height:64px;object-fit:contain;margin:16px 0;border:1px solid var(--line);border-radius:8px;padding:8px">
+        <label for="websiteIconUpload">Upload / replace website icon</label>
+        <input id="websiteIconUpload" type="file" accept="image/png,image/jpeg,image/webp,.ico" onchange="uploadWebsiteIcon(event)">
+        <input id="websiteIcon.path" type="hidden">
+        <p id="websiteIconStatus" class="muted" role="status">Preview Changes saves your selection. Publish to Beta or Live when ready. Browsers may take time to refresh an icon.</p>
+      </div>
       <p class="muted">Titles appear in browser tabs. Search engines may use your title and description, but can choose different wording. Settings save and publish with each page.</p>
       <div class="card">
         <h2>Homepage</h2>
@@ -419,6 +428,8 @@ function dedupeFooterLinks() {
 async function loadContent() {
   const res = await fetch('/api/content');
   data = await res.json();
+  setField('websiteIcon.path',data.websiteIcon.path);
+  updatePreview('websiteIcon.path');
   setField('branding.logoText', data.branding.logoText);
   document.title = data.branding.logoText + ' Website Studio';
   document.querySelector('.brand').textContent = data.branding.logoText;
@@ -549,6 +560,7 @@ function renderSectionTones() {
 }
 
 function collectData() {
+  data.websiteIcon = {path:getField('websiteIcon.path')};
   ['home','projects','aboutPage'].forEach(page => data.toneSections[page].forEach(s => {data.sectionTones[page][s.key]=getField('tones.'+page+'.'+s.key);}));
   Object.keys(data.aboutPage).forEach(key => {data.aboutPage[key]=getField('aboutPage.'+key);});
   data.branding = {logoText:getField('branding.logoText')};
@@ -637,6 +649,22 @@ async function publishLive() {
     : 'Publish failed: ' + result.error;
 }
 
+async function uploadWebsiteIcon(event) {
+ const file=event.target.files[0];if(!file)return;
+ const status=byId('websiteIconStatus');
+ try{
+  if(!/\.(png|ico|jpe?g|webp)$/i.test(file.name))throw Error('Choose a PNG, ICO, JPG, or WebP icon.');
+  if(file.size>2*1024*1024)throw Error('Choose an icon smaller than 2 MB.');
+  if(!/\.ico$/i.test(file.name)){
+   const url=URL.createObjectURL(file);
+   try{const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('This image could not be opened.'));image.src=url;});if(image.naturalWidth!==image.naturalHeight)throw Error('Choose a square image so your icon displays correctly.');}finally{URL.revokeObjectURL(url);}
+  }
+  status.textContent='Uploading website icon…';
+  const imagePath=await uploadFile(file);if(!imagePath)throw Error('Upload failed. Please try again.');
+  setField('websiteIcon.path',imagePath);updatePreview('websiteIcon.path');
+  status.textContent='Icon selected. Use Preview Changes to save, then publish when ready.';
+ }catch(error){status.textContent=error.message;}finally{event.target.value='';}
+}
 async function uploadImage(event, fieldId) {
   const path = await uploadFile(event.target.files[0]);
   if (!path) return;

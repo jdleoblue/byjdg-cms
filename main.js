@@ -15,6 +15,7 @@ const siteBranding = require('./site-branding');
 const contactControls = require('./contact-controls');
 const siteNavigation = require('./site-navigation');
 const pageMeta = require('./page-meta');
+const siteIcon = require('./site-icon');
 const cinemaCMS = require('./cinema-cms');
 const projectsCMS = require('./projects-cms');
 const aboutCMS = require('./about-cms');
@@ -33,7 +34,7 @@ const PROJECTS_PATH = path.join(WEBSITE_DIR, 'projects.html');
 const ABOUT_PATH = path.join(WEBSITE_DIR, 'about.html');
 function readAbout(){ return fs.readFileSync(ABOUT_PATH, 'utf8'); }
 
-const deliveryManager = require('./deliveries').create({ dataDir: path.join(app.getPath('userData'), 'client-deliveries'), liveDir: LIVE_SITE_DIR });
+const deliveryManager = require('./deliveries').create({ iconSource: INDEX_PATH, dataDir: path.join(app.getPath('userData'), 'client-deliveries'), liveDir: LIVE_SITE_DIR });
 
 function readProjects() { return fs.readFileSync(PROJECTS_PATH, 'utf8'); }
 
@@ -101,6 +102,7 @@ function parseContent(html) {
     projectFields: projectsCMS.fields,
     aboutPage: aboutCMS.parse(readAbout()),
     aboutPageFields: aboutCMS.fields,
+    websiteIcon: siteIcon.parse(html),
     branding: siteBranding.parse(html),
     navigation: siteNavigation.parse(html),
     filePath: INDEX_PATH,
@@ -184,6 +186,8 @@ function updateHtml(data) {
   const navigation = siteNavigation.validate(data.navigation || siteNavigation.parse(html));
   aboutCMS.validate(data.aboutPage || aboutCMS.parse(readAbout()));
   contactControls.validate({...contactControls.parse(html),...data.contact});
+  const websiteIcon = siteIcon.validate(data.websiteIcon || siteIcon.parse(html));
+  if (!fs.existsSync(path.join(WEBSITE_DIR, websiteIcon.path))) throw new Error('The selected website icon is missing. Please upload it again.');
   fs.copyFileSync(INDEX_PATH, backupPath);
 
   html = html.replace(/(\.hero\s*\{[\s\S]*?)url\(['"]?[^'"\)]+['"]?\) center\/cover no-repeat;/i,
@@ -228,6 +232,7 @@ function updateHtml(data) {
   fs.writeFileSync(PROJECTS_PATH, projectHtml, 'utf8');
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
   siteNavigation.syncDirectory(WEBSITE_DIR, navigation);
+  siteIcon.syncDirectory(WEBSITE_DIR, websiteIcon);
   return { ok: true, backupPath, filePath: INDEX_PATH };
 }
 
@@ -300,6 +305,7 @@ async function publishLive() {
     }
 
     siteNavigation.syncDirectory(LIVE_SITE_DIR, siteNavigation.parse(readIndex()));
+    siteIcon.syncDirectory(LIVE_SITE_DIR, siteIcon.parse(readIndex()));
     return await runGitPublish(LIVE_SITE_DIR, 'Publish to Live');
   } catch (error) {
     return {
@@ -398,10 +404,10 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && req.url.startsWith('/images/')) {
-      const imgPath = path.join(WEBSITE_DIR, req.url);
+      const imgPath = path.join(WEBSITE_DIR, req.url.split('?')[0]);
       if (!fs.existsSync(imgPath)) return send(res, 404, 'Not found', 'text/plain');
       const ext = path.extname(imgPath).toLowerCase();
-      const types = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif' };
+      const types = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif', '.ico':'image/x-icon' };
       send(res, 200, fs.readFileSync(imgPath), types[ext] || 'application/octet-stream');
       return;
     }
