@@ -8,6 +8,7 @@ const PORT = Number(process.env.BYJDG_CMS_PORT || 4321);
 const ROOT = __dirname;
 const sectionTones = require('./section-tones');
 const siteBranding = require('./site-branding');
+const siteNavigation = require('./site-navigation');
 const pageMeta = require('./page-meta');
 const cinemaCMS = require('./cinema-cms');
 const projectsCMS = require('./projects-cms');
@@ -86,6 +87,7 @@ function parseContent(html) {
     projects: projectsCMS.parse(readProjects()),
     projectFields: projectsCMS.fields,
     branding: siteBranding.parse(html),
+    navigation: siteNavigation.parse(html),
     filePath: INDEX_PATH,
     appearance: { theme: matchOne(html, /<html\b[^>]*\bdata-theme="(black|white)"/i, "black").toLowerCase() },
     hero: {
@@ -163,6 +165,7 @@ function updateHtml(data) {
   }
 
   const backupPath = path.join(BACKUPS_DIR, `index.backup-${Date.now()}.html`);
+  const navigation = siteNavigation.validate(data.navigation || siteNavigation.parse(html));
   fs.copyFileSync(INDEX_PATH, backupPath);
 
   html = html.replace(/(\.hero\s*\{[\s\S]*?)url\(['"]?[^'"\)]+['"]?\) center\/cover no-repeat;/i,
@@ -196,12 +199,13 @@ function updateHtml(data) {
   html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
   html = pageMeta.render(html, data.pages?.home);
   const branding = data.branding || siteBranding.parse(readIndex());
-  html = siteBranding.render(html, branding);
+  html = siteNavigation.render(siteBranding.render(html, branding), navigation, 'index.html');
   html = sectionTones.render(html,data.sectionTones?.home,'home');
-  const projectHtml = sectionTones.render(siteBranding.render(pageMeta.render(projectsCMS.render(readProjects(), data.projects || {}, theme), data.pages?.projects), branding), data.sectionTones?.projects, 'projects');
+  const projectHtml = siteNavigation.render(sectionTones.render(siteBranding.render(pageMeta.render(projectsCMS.render(readProjects(), data.projects || {}, theme), data.pages?.projects), branding), data.sectionTones?.projects, 'projects'), navigation, 'projects.html');
   fs.copyFileSync(PROJECTS_PATH, path.join(BACKUPS_DIR, `projects.backup-${Date.now()}.html`));
   fs.writeFileSync(PROJECTS_PATH, projectHtml, 'utf8');
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
+  siteNavigation.syncDirectory(WEBSITE_DIR, navigation);
   return { ok: true, backupPath, filePath: INDEX_PATH };
 }
 

@@ -36,7 +36,8 @@
       "studio-deliveries.js",
       "delivery-page.html",
       "hero-rotation.js",
-      "hero-runtime.js"
+      "hero-runtime.js",
+      "site-navigation.js"
     ]
   },
   "devDependencies": {

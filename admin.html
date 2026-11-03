@@ -319,6 +319,14 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 
     </section>
 
+    <section id="navSettings">
+      <h2>Nav Links</h2>
+      <div class="card">
+        <p class="muted">Edit the navigation shown across all website pages. Changes apply when you preview or publish. Links beginning with # lead to the homepage section from other pages.</p>
+        <div id="navLinks"></div>
+        <button type="button" class="secondary" onclick="addNavLink()">Add Nav Link</button>
+      </div>
+    </section>
     <section id="footerSettings">      <h2>Footer</h2>
       <div class="card">
         <p class="muted">Edit the footer logo under Global Branding.</p>
@@ -349,7 +357,7 @@ const studioDestinations = {
   home: {title:'Homepage',description:'Shape the first impression.',tabs:[['hero','Hero'],['cinema','Featured Film'],['episodes','Film Collection'],['about','About'],['contact','Contact']]},
   projects: {title:'Projects Page',description:'Introduce your services and invite new inquiries.',tabs:[['projects','Page content']]},
   deliveries: {title:'Client Deliveries',description:'Create, share and manage client project libraries.',tabs:[['deliveries','Deliveries']]},
-  settings: {title:'Site Settings',description:'Branding, appearance and shared website settings, together.',tabs:[['appearance','Appearance'],['sectionTones','Section Tones'],['branding','Branding'],['pageSettings','Page Titles & Search'],['footerSettings','Footer']]}
+  settings: {title:'Site Settings',description:'Branding, appearance and shared website settings, together.',tabs:[['appearance','Appearance'],['sectionTones','Section Tones'],['branding','Branding'],['pageSettings','Page Titles & Search'],['navSettings','Nav Links'],['footerSettings','Footer']]}
 };
 let studioDestination = 'home';
 const studioLastTab = {home:'hero',projects:'projects',deliveries:'deliveries',settings:'appearance'};
@@ -427,6 +435,7 @@ async function loadContent() {
   renderEpisodes();
   dedupeFooterLinks();
   renderFooterLinks();
+  renderNavLinks();
   byId('status').textContent = 'Loaded from index.html.';
 }
 
@@ -455,6 +464,22 @@ function deleteEpisode(i) {
  if(selected===i)selected=-1;else if(selected>i)selected--;
  data.episodes.splice(i,1);select.value=String(selected);data.cinema.featuredIndex=selected;
  renderEpisodes();renderFeaturedOptions();
+}
+
+function renderNavLinks() {
+  byId('navLinks').innerHTML = (data.navigation || []).map((link,i) => `
+    <div class="episode-card">
+      <div class="row">
+        <div><label for="nav-label-${i}">Button Text</label><input id="nav-label-${i}" value="${escapeAttr(link.label)}" oninput="data.navigation[${i}].label=this.value"></div>
+        <div><label for="nav-url-${i}">URL</label><input id="nav-url-${i}" value="${escapeAttr(link.href)}" oninput="data.navigation[${i}].href=this.value"></div>
+      </div>
+      <button type="button" class="secondary" onclick="data.navigation.splice(${i},1);renderNavLinks()">Remove Link</button>
+    </div>`).join('');
+}
+function addNavLink() {
+  data.navigation = data.navigation || [];
+  data.navigation.push({label:'New Link',href:'https://',newTab:false});
+  renderNavLinks();
 }
 
 function renderFooterLinks() {
