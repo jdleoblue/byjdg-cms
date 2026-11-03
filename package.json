@@ -34,7 +34,9 @@
       "section-tones.js",
       "deliveries.js",
       "studio-deliveries.js",
-      "delivery-page.html"
+      "delivery-page.html",
+      "hero-rotation.js",
+      "hero-runtime.js"
     ]
   },
   "devDependencies": {

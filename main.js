@@ -15,6 +15,7 @@ const siteBranding = require('./site-branding');
 const pageMeta = require('./page-meta');
 const cinemaCMS = require('./cinema-cms');
 const projectsCMS = require('./projects-cms');
+const heroRotation = require('./hero-rotation');
 
 const WEBSITE_DIR = '/Users/jdg/Documents/byjdg-cms-test';
 const INDEX_PATH = path.join(WEBSITE_DIR, 'index.html');
@@ -98,6 +99,7 @@ function parseContent(html) {
     appearance: { theme: matchOne(html, /<html\b[^>]*\bdata-theme="(black|white)"/i, "black").toLowerCase() },
     hero: {
       image: heroBg,
+      ...heroRotation.parse(html, heroBg),
       eyebrow: matchOne(heroBlock, /<div class="eyebrow">([\s\S]*?)<\/div>/i, 'Cinematic Visual Journal'),
       title: matchOne(heroBlock, /<h1>([\s\S]*?)<\/h1>/i, 'ByJDG'),
       subtitle: matchOne(heroBlock, /<p class="hero-subtitle">([\s\S]*?)<\/p>/i, 'Quiet stories in motion.'),
@@ -199,6 +201,7 @@ function updateHtml(data) {
   html = html.replace(/(<footer class="footer">[\s\S]*?<div class="footer-brand">[\s\S]*?<\/div>\s*<div>)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.footer.copyright)}$3`);
   html = html.replace(/<div class="footer-links">[\s\S]*?<\/div>\s*<\/footer>/i, `<div class="footer-links">\n${data.footer.links.map(footerLinkHtml).join('\n')}\n      </div>\n    </footer>`);
 
+  html = heroRotation.render(html, data.hero);
   html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
   html = pageMeta.render(html, data.pages?.home);
   const branding = data.branding || siteBranding.parse(readIndex());

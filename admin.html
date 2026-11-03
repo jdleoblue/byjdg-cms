@@ -137,6 +137,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 
 .hero-image-card .upload-label{position:relative}.hero-upload{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;padding:0;margin:0;border:0}.upload-label:focus-within{outline:2px solid #737f90;outline-offset:3px}
 #projects > h2, #deliveries > h2 { display:none; }
+.hero-slide-editor{margin:16px 0;padding:14px 0;border-bottom:1px solid var(--line)}.hero-slide-editor img{width:100%;height:120px;object-fit:cover;border-radius:6px}.hero-slide-editor .buttons{gap:6px}.hero-slide-editor button{padding:8px;font-size:11px}#heroSlidesControls[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -241,10 +242,21 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
           <label for="hero.subtitle">Description</label><textarea id="hero.subtitle"></textarea>
           <div class="row"><div><label for="hero.buttonText">Button label</label><input id="hero.buttonText"></div><div><label for="hero.buttonHref">Button link</label><input id="hero.buttonHref"></div></div>
         </div>
-        <div class="card hero-image-card"><h2>Hero image</h2>
+        <div class="card hero-image-card"><h2>Hero images</h2>
+          <label for="hero.mode">Display mode</label><select id="hero.mode" onchange="renderHeroSlides()"><option value="static">Static image</option><option value="rotating">Rotating images</option></select>
+          <p class="muted">Your text and button stay still. Both modes keep your uploaded images.</p>
+          <label>Static image / reduced-motion fallback</label>
           <img class="preview" id="preview.hero.image" alt="Homepage hero image preview">
           <label class="upload-label" for="heroUpload">Replace image<input class="hero-upload" id="heroUpload" type="file" accept="image/*" onchange="uploadImage(event, 'hero.image')"></label>
           <label for="hero.image">Image path or HTTPS address</label><input id="hero.image" oninput="updatePreview('hero.image')">
+<div id="heroSlidesControls" hidden>
+            <label for="hero.interval">Seconds per image</label><input id="hero.interval" type="number" min="3" max="30" step="1" value="5">
+            <p class="muted">A gentle 1-second crossfade. Five seconds per image is recommended.</p>
+            <div id="heroSlides"></div>
+            <label for="heroSlidesUpload">Add rotating images (up to 12)</label><input id="heroSlidesUpload" type="file" accept="image/*" multiple onchange="uploadHeroSlides(event)">
+            <button type="button" class="secondary" onclick="if(data.hero.images.length<12){data.hero.images.push(byId('hero.image').value);renderHeroSlides();}">Add current static image</button>
+            <p class="muted" id="heroSlideStatus" role="status" aria-live="polite"></p>
+          </div>
           <p class="muted">Website colors and section tones are managed in Site Settings.</p>
         </div>
       </div>
@@ -408,6 +420,10 @@ async function loadContent() {
   renderSectionTones();
   renderProjects();
   updatePreview('hero.image');
+  setField('hero.mode', data.hero.mode || 'static');
+  setField('hero.interval', data.hero.interval || 5);
+  data.hero.images = data.hero.images || [data.hero.image];
+  renderHeroSlides();
   renderEpisodes();
   dedupeFooterLinks();
   renderFooterLinks();
@@ -498,6 +514,8 @@ function collectData() {
     data[group][key] = getField(path);
   });
 
+  data.hero.mode = getField('hero.mode');
+  data.hero.interval = Number(getField('hero.interval'));
   dedupeFooterLinks();
 
   return data;
@@ -621,6 +639,13 @@ function escapeHtml(s='') {
 function escapeAttr(s='') {
   return escapeHtml(s).replace(/'/g, '&#39;');
 }
+
+function renderHeroSlides(){
+ const rotating=byId('hero.mode').value==='rotating';byId('heroSlidesControls').hidden=!rotating;
+ byId('heroSlides').innerHTML=(data.hero.images||[]).map((url,i)=>`<div class="hero-slide-editor"><img src="${escapeAttr(url.startsWith('https://')?url:'/'+url)}" alt="Rotating hero image ${i+1}"><label for="hero-slide-${i}">Image ${i+1}</label><input id="hero-slide-${i}" value="${escapeAttr(url)}" oninput="data.hero.images[${i}]=this.value" onchange="renderHeroSlides()"><div class="buttons"><button type="button" class="secondary" onclick="moveHeroSlide(${i},-1)" ${i===0?'disabled':''}>Move up</button><button type="button" class="secondary" onclick="moveHeroSlide(${i},1)" ${i===data.hero.images.length-1?'disabled':''}>Move down</button><button type="button" class="secondary" onclick="byId('hero.image').value=data.hero.images[${i}];updatePreview('hero.image')">Use as static</button><button type="button" class="danger" onclick="data.hero.images.splice(${i},1);renderHeroSlides()">Remove</button></div></div>`).join('');
+}
+function moveHeroSlide(i,delta){const j=i+delta;if(j<0||j>=data.hero.images.length)return;[data.hero.images[i],data.hero.images[j]]=[data.hero.images[j],data.hero.images[i]];renderHeroSlides();}
+async function uploadHeroSlides(event){const files=[...event.target.files];if(data.hero.images.length+files.length>12){alert('Choose up to 12 images in total.');return;}byId('heroSlideStatus').textContent='Uploading images…';try{for(const file of files){const path=await uploadFile(file);if(!path)throw Error('Image upload failed.');data.hero.images.push(path);}renderHeroSlides();byId('heroSlideStatus').textContent='Images added. Preview or publish to save your changes.';}catch(error){byId('heroSlideStatus').textContent=error.message;}event.target.value='';}
 
 loadContent();
 </script>
