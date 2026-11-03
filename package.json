@@ -1,6 +1,6 @@
 {
   "name": "byjdg-website-studio",
-  "productName": "ByJDG Website Studio",
+  "productName": "by JDG Website Studio",
   "version": "1.0.0",
   "description": "Desktop website studio for ByJDG",
   "main": "main.js",
@@ -13,7 +13,7 @@
   },
   "build": {
     "appId": "com.byjdg.websitestudio",
-    "productName": "ByJDG Website Studio",
+    "productName": "by JDG Website Studio",
     "mac": {
       "target": "dmg",
       "category": "public.app-category.developer-tools"
@@ -28,7 +28,13 @@
       "projects.html",
       "projects-cms.js",
       "projects-fields.json",
-      "cinema-cms.js"
+      "cinema-cms.js",
+      "page-meta.js",
+      "site-branding.js",
+      "section-tones.js",
+      "deliveries.js",
+      "studio-deliveries.js",
+      "delivery-page.html"
     ]
   },
   "devDependencies": {

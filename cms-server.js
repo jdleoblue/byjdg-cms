@@ -4,8 +4,11 @@ const path = require('path');
 const crypto = require('crypto');
 const { exec } = require('child_process');
 
-const PORT = 4321;
+const PORT = Number(process.env.BYJDG_CMS_PORT || 4321);
 const ROOT = __dirname;
+const sectionTones = require('./section-tones');
+const siteBranding = require('./site-branding');
+const pageMeta = require('./page-meta');
 const cinemaCMS = require('./cinema-cms');
 const projectsCMS = require('./projects-cms');
 const INDEX_PATH = process.env.BYJDG_INDEX_PATH || path.join(ROOT, 'index.html');
@@ -14,6 +17,8 @@ const IMAGES_DIR = path.join(WEBSITE_DIR, 'images');
 const BACKUPS_DIR = path.join(WEBSITE_DIR, 'backups');
 
 const PROJECTS_PATH = path.join(WEBSITE_DIR, 'projects.html');
+
+const deliveryManager = require('./deliveries').create({ dataDir: process.env.BYJDG_DELIVERY_DATA_DIR || path.join(require('os').homedir(), 'Library/Application Support/ByJDG Website Studio/client-deliveries'), liveDir: process.env.BYJDG_DELIVERY_LIVE_DIR || '/Users/jdg/Documents/ByJDG Website/Active/live-site' });
 
 function readProjects() { return fs.readFileSync(PROJECTS_PATH, 'utf8'); }
 
@@ -56,10 +61,6 @@ function parseContent(html) {
 
   const episodeMatches = [...html.matchAll(/<article class="film-card" style="--image: url\(['"]([^'"]+)['"]\);">[\s\S]*?<div class="episode">([\s\S]*?)<\/div>[\s\S]*?<h3>([\s\S]*?)<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<a class="watch-link" href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<\/article>/gi)];
 
-  const gearItems = [...html.matchAll(/<li><span>([\s\S]*?)<\/span><span>([\s\S]*?)<\/span><\/li>/gi)].map(m => ({
-    label: unescapeHtml(m[1].trim()),
-    value: unescapeHtml(m[2].trim())
-  }));
 
   const footerLinksBlock = matchOne(
   html,
@@ -77,9 +78,13 @@ function parseContent(html) {
     );
 
   return {
+    sectionTones: {home:sectionTones.parse(html,'home'),projects:sectionTones.parse(readProjects(),'projects')},
+    toneSections: sectionTones.sections,
+    pages: { home: pageMeta.parse(html), projects: pageMeta.parse(readProjects()) },
     cinema: cinemaCMS.parse(html),
     projects: projectsCMS.parse(readProjects()),
     projectFields: projectsCMS.fields,
+    branding: siteBranding.parse(html),
     filePath: INDEX_PATH,
     appearance: { theme: matchOne(html, /<html\b[^>]*\bdata-theme="(black|white)"/i, "black").toLowerCase() },
     hero: {
@@ -110,12 +115,6 @@ function parseContent(html) {
       cta: matchOne(html, /<div class="about-panel"[\s\S]*?<a class="small-link" href="[^"]*">([\s\S]*?)<\/a>/i, 'Watch the Journey →'),
       href: matchOne(html, /<div class="about-panel"[\s\S]*?<a class="small-link" href="([^"]*)">/i, '#latest')
     },
-    gear: {
-      title: matchOne(html, /<div class="gear-panel"[\s\S]*?<h2>([\s\S]*?)<\/h2>/i, 'Gear'),
-      items: gearItems,
-      cta: matchOne(html, /<div class="gear-panel"[\s\S]*?<a class="small-link" href="[^"]*">([\s\S]*?)<\/a>/i, 'View Full Gear List →'),
-      href: matchOne(html, /<div class="gear-panel"[\s\S]*?<a class="small-link" href="([^"]*)">/i, '#contact')
-    },
     contact: {
       title: matchOne(html, /<section class="contact"[\s\S]*?<h2>([\s\S]*?)<\/h2>/i, ''),
       text: matchOne(html, /<section class="contact"[\s\S]*?<p>([\s\S]*?)<\/p>/i, '')
@@ -139,9 +138,6 @@ function episodeHtml(ep) {
           </article>`;
 }
 
-function gearHtml(item) {
-  return `            <li><span>${escapeHtml(item.label)}</span><span>${escapeHtml(item.value)}</span></li>`;
-}
 
 function footerLinkHtml(link) {
   const href = escapeHtml(link.href);
@@ -173,7 +169,7 @@ function updateHtml(data) {
   html = html.replace(/(<section class="hero">[\s\S]*?<div class="eyebrow">)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.hero.eyebrow)}$3`);
   html = html.replace(/(<section class="hero">[\s\S]*?<h1>)([\s\S]*?)(<\/h1>)/i, `$1${escapeHtml(data.hero.title)}$3`);
   html = html.replace(/(<p class="hero-subtitle">)([\s\S]*?)(<\/p>)/i, `$1${escapeHtml(data.hero.subtitle)}$3`);
-  html = html.replace(/(<a class="button" href=")[^"]*(" target="_blank" rel="noopener">[\s\S]*?<span class="play">▶<\/span>\s*)([^<]+)(\s*<\/a>)/i, `$1${escapeHtml(data.hero.buttonHref)}$2${escapeHtml(data.hero.buttonText)}$4`);
+  html = html.replace(/(<a class="button" href=")[^"]*(" target="_blank" rel="noopener">[\s\S]*?<span class="play">[\s\S]*?<\/span>\s*)([^<]+)(\s*<\/a>)/i, `$1${escapeHtml(data.hero.buttonHref)}$2${escapeHtml(data.hero.buttonText)}$4`);
 
   html = html.replace(/(<h2 class="section-title">)([\s\S]*?)(<\/h2>)/i, `$1${escapeHtml(data.latest.title)}$3`);
   html = html.replace(/<a class="small-link" href="[^"]*" target="_blank" rel="noopener">\s*[^<]*View All Episodes[^<]*\s*<\/a>/i, `<a class="small-link" href="${escapeHtml(data.latest.viewAllHref)}" target="_blank" rel="noopener">${escapeHtml(data.latest.viewAllText)}</a>`);
@@ -186,9 +182,6 @@ function updateHtml(data) {
   html = html.replace(/(<div class="about-panel"[\s\S]*?<p class="lead">[\s\S]*?<\/p>\s*<p>)([\s\S]*?)(<\/p>)/i, `$1${escapeHtml(data.about.text)}$3`);
   html = html.replace(/(<div class="about-panel"[\s\S]*?<a class="small-link" href=")[^"]*(">)([\s\S]*?)(<\/a>)/i, `$1${escapeHtml(data.about.href)}$2${escapeHtml(data.about.cta)}$4`);
 
-  html = html.replace(/(<div class="gear-panel" id="gear">\s*<h2>)([\s\S]*?)(<\/h2>)/i, `$1${escapeHtml(data.gear.title)}$3`);
-  html = html.replace(/<ul class="gear-list">[\s\S]*?<\/ul>/i, `<ul class="gear-list">\n${data.gear.items.map(gearHtml).join('\n')}\n          </ul>`);
-  html = html.replace(/(<div class="gear-panel"[\s\S]*?<a class="small-link" href=")[^"]*(">)([\s\S]*?)(<\/a>)/i, `$1${escapeHtml(data.gear.href)}$2${escapeHtml(data.gear.cta)}$4`);
 
   html = html.replace(/(<section class="contact" id="contact">[\s\S]*?<h2>)([\s\S]*?)(<\/h2>)/i, `$1${escapeHtml(data.contact.title)}$3`);
   html = html.replace(/(<section class="contact" id="contact">[\s\S]*?<h2>[\s\S]*?<\/h2>\s*<p>)([\s\S]*?)(<\/p>)/i, `$1${escapeHtml(data.contact.text)}$3`);
@@ -198,7 +191,11 @@ function updateHtml(data) {
   html = html.replace(/<div class="footer-links">[\s\S]*?<\/div>\s*<\/footer>/i, `<div class="footer-links">\n${data.footer.links.map(footerLinkHtml).join('\n')}\n      </div>\n    </footer>`);
 
   html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
-  const projectHtml = projectsCMS.render(readProjects(), data.projects || {}, theme);
+  html = pageMeta.render(html, data.pages?.home);
+  const branding = data.branding || siteBranding.parse(readIndex());
+  html = siteBranding.render(html, branding);
+  html = sectionTones.render(html,data.sectionTones?.home,'home');
+  const projectHtml = sectionTones.render(siteBranding.render(pageMeta.render(projectsCMS.render(readProjects(), data.projects || {}, theme), data.pages?.projects), branding), data.sectionTones?.projects, 'projects');
   fs.copyFileSync(PROJECTS_PATH, path.join(BACKUPS_DIR, `projects.backup-${Date.now()}.html`));
   fs.writeFileSync(PROJECTS_PATH, projectHtml, 'utf8');
   fs.writeFileSync(INDEX_PATH, html, 'utf8');
@@ -259,6 +256,11 @@ function readBody(req) {
 
 const server = http.createServer(async (req, res) => {
   try {
+    if (await deliveryManager.handle(req, res)) return;
+    if (req.method === 'GET' && req.url === '/studio-deliveries.js') {
+      send(res, 200, fs.readFileSync(path.join(ROOT, 'studio-deliveries.js'), 'utf8'), 'application/javascript');
+      return;
+    }
     if (req.method === 'GET' && req.url === '/') {
       send(res, 200, fs.readFileSync(path.join(ROOT, 'admin.html'), 'utf8'), 'text/html');
       return;
@@ -318,7 +320,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '127.0.0.1', () => {
   console.log(`ByJDG Local CMS running at http://localhost:${PORT}`);
   console.log(`Editing source file: ${INDEX_PATH}`);
 });

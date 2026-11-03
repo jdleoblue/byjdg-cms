@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ByJDG Website Studio</title>
+<title>by JDG Website Studio</title>
 <style>
   :root { --bg:#050505; --panel:#111; --panel2:#171717; --text:#f5f1ea; --muted:#b7b0a7; --line:rgba(255,255,255,.14); --accent:#d6b36a; --beta:#2563eb; --live:#d6b36a; }
   * { box-sizing:border-box; }
@@ -89,37 +89,144 @@
     .toolbar .primary, .toolbar .secondary, .toolbar .beta-btn, .toolbar .live-btn { text-align:center; padding:12px 10px; font-size:.62rem; flex:1; min-width:0; }
     img.preview { width:100%; height:auto; max-height:180px; }
   }
+
+  #deliveries .d-layout { display:grid;grid-template-columns:210px minmax(0,1fr);gap:18px;align-items:start; }
+  #deliveries .card { background:linear-gradient(135deg,#ffffff0a,#ffffff02),#101113;border-radius:12px;min-width:0; }
+  #deliveries .d-choice,#deliveries .d-project { display:block;width:100%;padding:13px 10px;text-align:left;background:transparent;color:var(--text);border:1px solid transparent;border-radius:7px;cursor:pointer; }
+  #deliveries .d-choice small { display:block;color:var(--muted);margin-top:6px;font-size:11px;line-height:1.5; }
+  #deliveries [aria-pressed="true"] { background:#ffffff0b;border-color:var(--line);color:var(--accent); }
+  #deliveries .d-head { display:flex;align-items:center;justify-content:space-between;gap:15px;margin:22px 0 15px;flex-wrap:wrap; }
+  #deliveries h3 { font:24px Georgia,serif;margin:0; }
+  #deliveries .d-state { color:var(--accent);font-size:12px; }
+  #deliveries .d-projects { display:flex;gap:8px;flex-wrap:wrap; }
+  #deliveries .d-project { width:auto;max-width:100%;overflow-wrap:anywhere; }
+  #deliveries .d-file { padding:16px 0;border-bottom:1px solid var(--line); }
+  #deliveries .d-filehead { display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted); }
+  #deliveries .d-notice { padding:14px;background:#d6b36a0c;border:1px solid #d6b36a40;margin-top:20px; }
+  #deliveries .d-ack { display:flex;align-items:start;gap:12px;text-transform:none;font-size:12px;letter-spacing:0;line-height:1.65;margin:0; }
+  #deliveries .d-ack input { width:auto;margin-top:5px;flex:none; }
+  #deliveries .d-close { border-top:1px solid var(--line);padding-top:20px;margin-top:25px; }
+  #deliveries .d-close button { margin-top:12px; }
+  #deliveries [hidden] { display:none!important; }
+  #deliveries button:disabled { opacity:.5;cursor:wait; }
+  #deliveries :is(input,textarea,button):focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+  @media(max-width:1000px) { #deliveries .d-layout{grid-template-columns:1fr;} #deliveries .d-list{display:flex;flex-wrap:wrap;gap:10px;} #deliveries .d-choice{width:auto;flex:1;min-width:150px;} }
+:root{color-scheme:light;--bg:#f0f1f4;--panel:rgba(255,255,255,.56);--panel2:rgba(255,255,255,.48);--text:#292d33;--muted:#656b74;--line:rgba(57,65,80,.17);--accent:#343a43;--beta:#343a43;--live:#343a43}
+body{background:radial-gradient(ellipse at 88% 12%,#e2e6ed99,transparent 60%),radial-gradient(ellipse at 15% 90%,#fff9,transparent 60%),var(--bg);color:var(--text);font-size:14px}
+.shell{grid-template-columns:238px minmax(0,1fr)}
+aside{padding:30px 20px 22px;background:rgba(247,248,250,.62);backdrop-filter:blur(24px);border-color:var(--line);display:flex;flex-direction:column}
+.brand{font:38px/1.1 Georgia,serif;letter-spacing:-2px;margin-bottom:6px}.studio-name{font-size:12px;letter-spacing:2px;color:var(--muted)}
+#cmsNav{display:flex;flex-direction:column;gap:7px;flex:1;margin-top:36px}
+#cmsNav button{border:0;border-left:3px solid transparent;border-radius:7px;padding:14px 12px;letter-spacing:0;text-transform:none;font-size:14px;display:flex;gap:12px;align-items:center;color:var(--text);background:transparent;width:100%}
+#cmsNav button span{display:inline-grid;place-items:center;width:19px;font-size:20px;color:var(--muted)}
+#cmsNav button:hover{background:#dce0e75c}#cmsNav button.active{background:linear-gradient(120deg,#cbd0d877,#d8dce34d);border-left-color:#41464e;color:#20242a}
+.settings-nav{margin-top:auto;padding-top:24px}.settings-nav>button{border-top:1px solid var(--line)!important;border-radius:0!important;padding-top:20px!important}.connection{font-size:11px;margin:18px 12px 0;color:var(--muted)}.connection span{color:#348752;margin-right:8px}
+main{min-width:0;padding:32px 34px 40px}main>section{max-width:1200px}.workspace-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 23px}#studioBreadcrumb{font-size:12px;color:var(--muted);margin:0 0 18px}h1{font:400 clamp(32px,4vw,46px)/1.1 Georgia,serif;letter-spacing:-1px;margin-bottom:9px}#workspaceDescription{margin:0}#sourcePath{display:none}
+h2{font-size:27px;letter-spacing:-.5px;margin:24px 0 18px}main>section>h2{font-size:25px;margin:26px 0 15px}.card h2:first-child{margin-top:0}
+.section-navigation{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);margin:0 0 26px}.section-tab{padding:12px 14px;background:transparent;color:var(--muted);font-size:14px;border:0;border-bottom:3px solid transparent;cursor:pointer}.section-tab.active{border-bottom-color:#3a4048;color:#242931}.section-tab:hover{color:#20242a;background:#fff4}
+.card,.episode-card{background:linear-gradient(120deg,#ffffff55,#ffffff1a),var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:inset 0 1px 0 #ffffffa8,0 8px 25px #33405a08;padding:24px;backdrop-filter:blur(20px)}
+label{font-size:12px;color:#40464f;letter-spacing:0;text-transform:none;margin:18px 0 8px}input,textarea,select{font:14px/1.5 Arial,Helvetica,sans-serif;width:100%;padding:11px 12px;background:rgba(255,255,255,.4);color:var(--text);border:1px solid #69738340;border-radius:7px;outline:none}select{min-height:44px}select option{background:#f5f6f8;color:#292d33}textarea{min-height:110px}input[readonly]{background:#e5e8ed66;color:#515761}input[type=file]{font-size:12px}input[type=file]::file-selector-button{border:1px solid var(--line);padding:7px 12px;border-radius:5px;background:#fff9;color:var(--text);cursor:pointer;margin-right:10px}input[type=checkbox]{accent-color:#343a43}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.upload-label:focus-visible{outline:2px solid #737f90;outline-offset:3px}
+.primary,.secondary,.danger,.beta-btn,.live-btn,.mobile-menu-toggle{font:13px Arial,Helvetica,sans-serif;letter-spacing:0;text-transform:none;border:1px solid #68728442;border-radius:7px;padding:11px 16px;background:#ffffff55;color:var(--text);box-shadow:0 3px 9px #33405a05;cursor:pointer}.primary,.live-btn{background:linear-gradient(#3b4048,#2b3037);color:#fff;border-color:#333941;font-weight:400}.danger{color:#9b343a;background:#fff7;border-color:#a9474733}.secondary:hover,.beta-btn:hover{background:#ffffffaa;transform:none;border-color:#79839188}.live-btn:hover,.primary:hover{background:#242a32}.beta-btn,.live-btn{min-width:0;text-align:center}.publish-label{color:inherit;opacity:.75;font-size:10px;letter-spacing:0;margin-top:5px}.toolbar{background:#f1f3f6b3;backdrop-filter:blur(24px);border-top:1px solid var(--line);border-radius:0;padding:18px 0 0;margin-top:30px;gap:12px;justify-content:flex-end}.toolbar .status{font-size:12px;order:4;text-align:right;margin-top:3px}.muted{color:var(--muted);font-size:12px;line-height:1.65}.status{color:#444e5d;font-size:13px}
+.hero-editor{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:22px;align-items:start}.hero-editor .card{margin:0}.hero-image-card img.preview{width:100%;height:auto;aspect-ratio:1.85;object-fit:cover;border-radius:8px;margin:0 0 14px}.hero-image-card .muted{margin-top:20px}.hero-image-card .upload-label{display:inline-block;padding:10px 15px;border:1px solid var(--line);border-radius:6px;background:#fff7;cursor:pointer;margin:0 0 12px}.hero-upload{margin-bottom:12px}img.preview{border-radius:7px;border-color:var(--line)}
+#deliveries .card{background:linear-gradient(120deg,#ffffff66,#ffffff22),var(--panel);border-color:var(--line);box-shadow:inset 0 1px 0 #fff9,0 8px 25px #33405a08}#deliveries .d-choice,#deliveries .d-project{color:var(--text)}#deliveries [aria-pressed=true]{background:#ccd2dc66;border-color:var(--line);color:#252b33}#deliveries .d-state{color:#4c5665}#deliveries .d-notice{background:#e3e8ef77;border-color:#747f9440}#deliveries .d-ack input{width:auto}#deliveries :is(input,textarea,button):focus-visible{outline-color:#737f90}#deliveries h2{margin-top:0}#deliveries .d-close button{margin-bottom:0}
+[hidden]{display:none!important}
+@media(min-width:801px){#cmsNav{display:flex!important}}
+@media(max-width:1100px){.hero-editor{grid-template-columns:1fr}main{padding:28px}.shell{grid-template-columns:215px minmax(0,1fr)}}
+@media(max-width:800px){.shell{display:block}aside{padding:16px 20px;background:#f1f3f7eb;display:block;height:auto}.brand{font-size:28px}.studio-name{font-size:10px}#cmsNav{display:none;margin-top:18px;gap:4px}.settings-nav{margin-top:8px;padding-top:4px}#cmsNav.open{display:flex}.connection{display:none}.mobile-menu-toggle{margin-top:12px;padding:10px;width:100%}main{padding:25px 18px 155px}.workspace-heading{gap:12px;align-items:start}h1{font-size:33px}.workspace-heading>.secondary{padding:9px 12px}#studioBreadcrumb{margin-bottom:12px}.section-navigation{gap:0}.section-tab{font-size:12px;padding:12px 10px}.hero-editor{grid-template-columns:1fr}.card{padding:20px}.toolbar{left:0;right:0;bottom:0;padding:12px 16px;margin:0;background:#f1f3f6ed}.toolbar .status{font-size:11px}.toolbar .primary,.toolbar .secondary,.toolbar .beta-btn,.toolbar .live-btn{font-size:11px;padding:10px 8px}.publish-label{font-size:9px}.row{grid-template-columns:1fr}input,textarea,select{font-size:16px}}
+
+.hero-image-card .upload-label{position:relative}.hero-upload{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;padding:0;margin:0;border:0}.upload-label:focus-within{outline:2px solid #737f90;outline-offset:3px}
+#projects > h2, #deliveries > h2 { display:none; }
 </style>
 </head>
 <body>
 <div class="shell">
   <aside>
-    <div class="brand">ByJDG Website Studio</div>
-    <div class="muted">Create. Publish. Repeat.</div>
+    <div class="brand">by JDG</div>
+    <div class="studio-name">Website Studio</div>
 
     <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰ Menu</button>
 
-    <nav id="cmsNav">
-      <button onclick="showTab('appearance', this)">Website Appearance</button>
-      <button class="active" onclick="showTab('hero', this)">Hero</button>
-      <button onclick="showTab('projects', this)">Projects Page</button>
-      <button onclick="showTab('cinema', this)">Featured Film</button>
-      <button onclick="showTab('episodes', this)">Film Collection</button>
-      <button onclick="showTab('about', this)">About + Gear</button>
-      <button onclick="showTab('contact', this)">Contact + Footer</button>
+    <nav id="cmsNav" aria-label="Studio navigation">
+      <button class="active" data-destination="home" onclick="showDestination('home')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg></span> Homepage</button>
+      <button data-destination="projects" onclick="showDestination('projects')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M7 5l3 5m4-5 3 5M3 5l3-3m3 3 3-3m3 3 3-3"/></svg></span> Projects Page</button>
+      <button data-destination="deliveries" onclick="showDestination('deliveries')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span> Client Deliveries</button>
+      <div class="settings-nav"><button data-destination="settings" onclick="showDestination('settings')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-1 3-3 1-3 3 2 2-1 3 3 3 3-1 2 2 3-1 1-3 3-1 2-3-2-2 1-3-3-3-3 1-2-2Z"/><circle cx="12" cy="12" r="3"/></svg></span> Site Settings</button><p class="connection"><span aria-hidden="true">●</span> Website connected</p></div>
     </nav>
   </aside>
 
   <main>
-    <h1>Website Studio</h1>
+    <div class="workspace-heading"><div><p id="studioBreadcrumb">Website / Homepage</p><h1 id="workspaceTitle">Homepage</h1><p class="muted" id="workspaceDescription">Shape the first impression.</p></div><button class="secondary" id="workspacePreview" onclick="previewChanges()">Preview</button></div>
+    <div id="sectionNavigation" class="section-navigation" role="group" aria-label="Editing sections"></div>
     <p class="muted" id="sourcePath">Loading source file...</p>
 
+    <section id="deliveries">
+      <h2>Client Deliveries</h2>
+      <p class="muted">Create a black glass project library, share its unique link, and remove its page after delivery. Files stay in Google Drive.</p>
+      <div class="buttons"><button type="button" class="primary" data-action="new">+ New Delivery</button></div>
+      <div class="d-layout"><div class="card d-list" aria-label="Deliveries"></div><div class="card d-editor" hidden>
+        <div class="d-head"><h3>Delivery details</h3><span class="d-state"></span></div>
+        <label for="d-client">Client name</label><input id="d-client" maxlength="160">
+        <label for="d-message">Library welcome message</label><textarea id="d-message" maxlength="4000"></textarea>
+        <div class="d-head"><h3>Projects</h3><button type="button" class="secondary" data-action="add-project">+ Add project</button></div>
+        <div class="d-projects" aria-label="Delivery projects"></div>
+        <div class="row"><div><label for="d-title">Project title</label><input id="d-title" maxlength="200"></div><div><label for="d-date">Project date / label</label><input id="d-date" maxlength="80" placeholder="November 2026"></div></div>
+        <label for="d-note">Project message (optional)</label><textarea id="d-note" maxlength="4000"></textarea>
+        <div class="buttons"><button type="button" class="danger" data-action="delete-project">Remove selected project</button></div>
+        <div class="d-head"><h3>Files &amp; videos</h3><button type="button" class="secondary" data-action="add-file">+ Add file</button></div>
+        <div class="d-files"></div>
+        <p class="muted">Upload footage to Google Drive, then paste each file or folder’s sharing link here. Restricted sharing requires the client’s approved Google account; anyone-with-link sharing can be forwarded.</p>
+        <label for="d-link">Unique client page address</label><input id="d-link" readonly>
+        <div class="buttons"><button type="button" class="secondary" data-action="copy">Copy link</button></div>
+        <div class="d-notice"><label class="d-ack"><input id="d-public" type="checkbox"><span>I understand this page has no login. Publishing puts its client name, project details and Drive links in the public website repository and its history. Anyone who obtains them can view the page. Google Drive sharing controls access to the actual files.</span></label></div>
+        <div class="buttons"><button type="button" class="secondary" data-action="save">Save draft</button><button type="button" class="secondary" data-action="preview">Preview client page</button><button type="button" class="primary" data-action="publish">Publish delivery</button></div>
+        <div class="d-close"><p class="muted">Removing the page takes effect after the website deploys. It does not erase GitHub history, copied links, or files. Disable Google Drive sharing separately.</p><button type="button" class="danger" data-action="remove">Remove published page</button></div>
+      </div></div><p class="status d-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="sectionTones">
+      <h2>Section Tones</h2>
+      <p class="muted">Choose each section’s tone independently on Home and Projects. Follow Website Theme restores the section’s normal appearance. Photos stay unchanged; selections apply to desktop and mobile.</p>
+      <div id="toneControls"></div>
+      <div id="aboutToneSettings">        <label for="cinema.aboutTone">About Section Tone</label>
+        <select id="cinema.aboutTone">
+          <option value="theme">Follow Website Theme</option>
+          <option value="stone">Warm Stone</option>
+          <option value="taupe">Soft Taupe</option>
+          <option value="charcoal">Smoked Charcoal</option>
+        </select>
+        <p class="muted">Applies only to this section’s background, text and links on desktop and mobile. Your portrait is unchanged.</p>
+</div>
+    </section>
+    <section id="branding">
+      <h2>Global Branding</h2>
+      <div class="card">
+        <label for="branding.logoText">Website Logo Text</label><input id="branding.logoText" maxlength="80">
+        <p class="muted">One setting for the Home and Projects header and footer logos. Standard copyright names and the default quote attribution follow this setting. Page titles remain editable in Page Titles &amp; Search.</p>
+      </div>
+    </section>
+    <section id="pageSettings">
+      <h2>Page Titles &amp; Search</h2>
+      <p class="muted">Titles appear in browser tabs. Search engines may use your title and description, but can choose different wording. Settings save and publish with each page.</p>
+      <div class="card">
+        <h2>Homepage</h2>
+        <label for="pages.home.title">Browser Tab / Page Title</label><input id="pages.home.title">
+        <label for="pages.home.description">Search Description</label><textarea id="pages.home.description"></textarea>
+        <label for="pages.home.socialImage">Social Sharing Image (optional full HTTPS address)</label><input id="pages.home.socialImage" placeholder="https://www.byjdg.com/images/your-image.jpg">
+      </div>
+      <div class="card">
+        <h2>Projects Page</h2>
+        <label for="pages.projects.title">Browser Tab / Page Title</label><input id="pages.projects.title">
+        <label for="pages.projects.description">Search Description</label><textarea id="pages.projects.description"></textarea>
+        <label for="pages.projects.socialImage">Social Sharing Image (optional full HTTPS address)</label><input id="pages.projects.socialImage" placeholder="https://www.byjdg.com/images/your-image.jpg">
+      </div>
+    </section>
     <section id="appearance">
       <h2>Website Appearance</h2>
       <div class="card">
         <p class="muted">Choose the appearance for all visitors. Preview saves your choice locally; publish when ready to update the public website.</p>
         <label for="siteTheme">Glass Theme</label>
-        <select id="siteTheme" style="width:100%;padding:14px;background:#171717;color:#f5f1ea;border:1px solid #777;font-size:1rem">
+        <select id="siteTheme">
           <option value="black">Black Glass — original cinematic look</option>
           <option value="white">White Glass — bright frosted glass</option>
         </select>
@@ -127,18 +234,18 @@
       </div>
     </section>
     <section id="hero" class="active">
-      <h2>Hero</h2>
-      <div class="card">
-        <label>Hero Image</label>
-        <input id="hero.image" />
-        <input type="file" accept="image/*" onchange="uploadImage(event, 'hero.image')" />
-        <img class="preview" id="preview.hero.image" />
-        <label>Hero Eyebrow</label><input id="hero.eyebrow" />
-        <label>Hero Title / Logo Text</label><input id="hero.title" />
-        <label>Hero Subtitle</label><input id="hero.subtitle" />
-        <div class="row">
-          <div><label>Hero Button Text</label><input id="hero.buttonText" /></div>
-          <div><label>Hero Button Link</label><input id="hero.buttonHref" /></div>
+      <div class="hero-editor">
+        <div class="card"><h2>Hero content</h2>
+          <label for="hero.eyebrow">Eyebrow</label><input id="hero.eyebrow">
+          <label for="hero.title">Headline</label><input id="hero.title">
+          <label for="hero.subtitle">Description</label><textarea id="hero.subtitle"></textarea>
+          <div class="row"><div><label for="hero.buttonText">Button label</label><input id="hero.buttonText"></div><div><label for="hero.buttonHref">Button link</label><input id="hero.buttonHref"></div></div>
+        </div>
+        <div class="card hero-image-card"><h2>Hero image</h2>
+          <img class="preview" id="preview.hero.image" alt="Homepage hero image preview">
+          <label class="upload-label" for="heroUpload">Replace image<input class="hero-upload" id="heroUpload" type="file" accept="image/*" onchange="uploadImage(event, 'hero.image')"></label>
+          <label for="hero.image">Image path or HTTPS address</label><input id="hero.image" oninput="updatePreview('hero.image')">
+          <p class="muted">Website colors and section tones are managed in Site Settings.</p>
         </div>
       </div>
     </section>
@@ -153,9 +260,11 @@
       <h2>Featured Film</h2>
       <div class="card">
         <p class="muted">Choose a film from your collection for the large homepage feature. Its image, title and watch link follow the selected episode.</p>
-        <label for="cinema.featuredIndex">Featured Film</label><select id="cinema.featuredIndex" style="width:100%;padding:14px;background:#171717;color:#f5f1ea;border:1px solid #777"></select>
+        <label for="cinema.featuredIndex">Featured Film</label><select id="cinema.featuredIndex"></select>
         <label for="cinema.headline">Feature Headline</label><input id="cinema.headline">
         <label for="cinema.intro">Feature Introduction</label><textarea id="cinema.intro"></textarea>
+        <label for="cinema.eyebrow">Caption Eyebrow (above the film title)</label><input id="cinema.eyebrow">
+        <label for="cinema.ctaText">Featured CTA Text</label><input id="cinema.ctaText">
       </div>
     </section>
     <section id="episodes">
@@ -186,16 +295,6 @@
         </div>
       </div>
 
-      <h2>Gear</h2>
-      <div class="card">
-        <label>Gear Title</label><input id="gear.title" />
-        <div id="gearList"></div>
-        <button class="secondary" onclick="addGearItem()">+ Add Gear Item</button>
-        <div class="row">
-          <div><label>Gear CTA</label><input id="gear.cta" /></div>
-          <div><label>Gear CTA Link</label><input id="gear.href" /></div>
-        </div>
-      </div>
     </section>
 
     <section id="contact">
@@ -205,14 +304,15 @@
         <label>Contact Subtext</label><input id="contact.text" />
       </div>
 
-      <h2>Footer</h2>
-      <div class="card">
-        <label>Footer Logo</label><input id="footer.brand" />
-        <label>Copyright</label><input id="footer.copyright" />
-        <div id="footerLinks"></div>
-      </div>
+
     </section>
 
+    <section id="footerSettings">      <h2>Footer</h2>
+      <div class="card">
+        <p class="muted">Edit the footer logo under Global Branding.</p>
+        <label>Copyright</label><input id="footer.copyright" />
+        <div id="footerLinks"></div>
+      </div></section>
     <div class="toolbar">
       <button class="secondary" onclick="previewChanges()">Preview Changes</button>
       <button class="beta-btn" onclick="publishBeta()">Publish to Beta <span class="publish-label">beta.byjdg.com</span></button>
@@ -233,16 +333,40 @@ function toggleMobileMenu() {
   byId('cmsNav').classList.toggle('open');
 }
 
-function showTab(id, btn) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  byId(id).classList.add('active');
-  btn.classList.add('active');
-
-  if (window.innerWidth <= 800) {
-    byId('cmsNav').classList.remove('open');
-  }
+const studioDestinations = {
+  home: {title:'Homepage',description:'Shape the first impression.',tabs:[['hero','Hero'],['cinema','Featured Film'],['episodes','Film Collection'],['about','About'],['contact','Contact']]},
+  projects: {title:'Projects Page',description:'Introduce your services and invite new inquiries.',tabs:[['projects','Page content']]},
+  deliveries: {title:'Client Deliveries',description:'Create, share and manage client project libraries.',tabs:[['deliveries','Deliveries']]},
+  settings: {title:'Site Settings',description:'Branding, appearance and shared website settings, together.',tabs:[['appearance','Appearance'],['sectionTones','Section Tones'],['branding','Branding'],['pageSettings','Page Titles & Search'],['footerSettings','Footer']]}
+};
+let studioDestination = 'home';
+const studioLastTab = {home:'hero',projects:'projects',deliveries:'deliveries',settings:'appearance'};
+function showDestination(destination) {
+  studioDestination = destination;
+  showTab(studioLastTab[destination]);
 }
+function showTab(id) {
+  const group = Object.keys(studioDestinations).find(key => studioDestinations[key].tabs.some(t => t[0] === id));
+  if (!group) return;
+  studioDestination = group; studioLastTab[group] = id;
+  const config = studioDestinations[group];
+  document.querySelectorAll('main > section').forEach(section => section.classList.toggle('active', section.id === id));
+  document.querySelectorAll('#cmsNav [data-destination]').forEach(button => {
+    const active = button.dataset.destination === group;
+    button.classList.toggle('active', active);
+    if (active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');
+  });
+  byId('workspaceTitle').textContent = config.title;
+  byId('workspaceDescription').textContent = config.description;
+  byId('studioBreadcrumb').textContent = (group === 'deliveries' ? 'Clients' : 'Website') + ' / ' + config.title;
+  const tabs = byId('sectionNavigation');
+  tabs.hidden = config.tabs.length < 2;
+  tabs.innerHTML = config.tabs.map(t => `<button type="button" class="section-tab ${t[0] === id ? 'active' : ''}" aria-pressed="${t[0] === id}" onclick="showTab('${t[0]}')">${t[1]}</button>`).join('');
+  document.querySelector('.toolbar').style.display = group === 'deliveries' ? 'none' : '';
+  byId('workspacePreview').hidden = group === 'deliveries';
+  if (window.innerWidth <= 800) byId('cmsNav').classList.remove('open');
+}
+showDestination('home');
 
 function dedupeFooterLinks() {
   if (!data || !data.footer || !Array.isArray(data.footer.links)) return;
@@ -266,21 +390,25 @@ function dedupeFooterLinks() {
 async function loadContent() {
   const res = await fetch('/api/content');
   data = await res.json();
+  setField('branding.logoText', data.branding.logoText);
+  document.title = data.branding.logoText + ' Website Studio';
+  document.querySelector('.brand').textContent = data.branding.logoText;
   byId('sourcePath').textContent = 'Website Connected • Ready to Publish';
 
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','footer.copyright'].forEach(path => {
     const parts = path.split('.');
     setField(path, data[parts[0]][parts[1]]);
   });
 
   byId('siteTheme').value = data.appearance?.theme || 'black';
-  ['headline','intro','portrait'].forEach(key => setField('cinema.' + key, data.cinema[key]));
+  ['headline','intro','portrait','eyebrow','ctaText','aboutTone'].forEach(key => setField('cinema.' + key, data.cinema[key]));
   renderFeaturedOptions();
   updatePreview('cinema.portrait');
+  ['home','projects'].forEach(page => ['title','description','socialImage'].forEach(key => setField('pages.'+page+'.'+key,data.pages[page][key])));
+  renderSectionTones();
   renderProjects();
   updatePreview('hero.image');
   renderEpisodes();
-  renderGear();
   dedupeFooterLinks();
   renderFooterLinks();
   byId('status').textContent = 'Loaded from index.html.';
@@ -313,17 +441,6 @@ function deleteEpisode(i) {
  renderEpisodes();renderFeaturedOptions();
 }
 
-function renderGear() {
-  byId('gearList').innerHTML = data.gear.items.map((item, i) => `
-    <div class="row">
-      <div><label>Gear Label</label><input value="${escapeAttr(item.label)}" oninput="data.gear.items[${i}].label=this.value"></div>
-      <div><label>Gear Value</label><input value="${escapeAttr(item.value)}" oninput="data.gear.items[${i}].value=this.value"></div>
-    </div>
-    <div class="buttons"><button class="danger" onclick="deleteGearItem(${i})">Delete Gear Item</button></div>`).join('');
-}
-function addGearItem() { data.gear.items.push({ label:'New Item', value:'Details' }); renderGear(); }
-function deleteGearItem(i) { data.gear.items.splice(i, 1); renderGear(); }
-
 function renderFooterLinks() {
   byId('footerLinks').innerHTML = data.footer.links.map((link, i) => `
     <div class="row">
@@ -341,8 +458,13 @@ function renderProjects() {
     const control = f.multi
       ? `<textarea id="${id}">${escapeHtml(data.projects[f.key])}</textarea>`
       : `<input id="${id}" value="${escapeAttr(data.projects[f.key])}">`;
-    return `<label for="${id}">${escapeHtml(f.label)}</label>${control}`;
+    const upload = f.key === 'image'
+      ? `<label for="projectsHeroUpload">Upload Hero Image</label><input id="projectsHeroUpload" type="file" accept="image/*" onchange="uploadImage(event, 'projects.image')"><img class="preview" id="preview.projects.image" alt="Projects hero image preview"><p class="muted">Choose an image, then save or preview your changes. Publish to Live when ready.</p>`
+      : '';
+    return `<label for="${id}">${escapeHtml(f.label)}</label>${control}${upload}`;
   }).join('');
+  byId('projects.image').addEventListener('input', () => updatePreview('projects.image'));
+  updatePreview('projects.image');
 }
 
 function renderFeaturedOptions() {
@@ -352,11 +474,26 @@ function renderFeaturedOptions() {
   select.value = String(selected >= data.episodes.length ? data.episodes.length - 1 : selected);
 }
 
+function renderSectionTones() {
+  const aboutToneFields = byId('aboutToneSettings');
+  if (aboutToneFields) aboutToneFields.remove();
+  byId('toneControls').innerHTML = ['home','projects'].map(page => `<div class="card"><h2>${page === 'home' ? 'Homepage' : 'Projects Page'}</h2>` + data.toneSections[page].map(s => {
+    const id = 'tones.' + page + '.' + s.key;
+    return `<label for="${id}">${escapeHtml(s.label)}</label><select id="${id}"><option value="theme">Follow Website Theme</option><option value="stone">Warm Stone</option><option value="taupe">Soft Taupe</option><option value="charcoal">Smoked Charcoal</option></select>`;
+  }).join('') + '</div>').join('');
+  const homepageTones = byId('toneControls').firstElementChild;
+  if (aboutToneFields) homepageTones.insertBefore(aboutToneFields, homepageTones.querySelector('[for="tones.home.contact"]'));
+  ['home','projects'].forEach(page => data.toneSections[page].forEach(s => setField('tones.'+page+'.'+s.key,data.sectionTones[page][s.key])));
+}
+
 function collectData() {
-  data.cinema = {featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait')};
+  ['home','projects'].forEach(page => data.toneSections[page].forEach(s => {data.sectionTones[page][s.key]=getField('tones.'+page+'.'+s.key);}));
+  data.branding = {logoText:getField('branding.logoText')};
+  ['home','projects'].forEach(page => ['title','description','socialImage'].forEach(key => { data.pages[page][key]=getField('pages.'+page+'.'+key); }));
+  data.cinema = {aboutTone:getField('cinema.aboutTone'),featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait'),eyebrow:getField('cinema.eyebrow'),ctaText:getField('cinema.ctaText')};
   Object.keys(data.projects).forEach(key => { data.projects[key] = getField('projects.' + key); });
   data.appearance = { theme: byId('siteTheme').value };
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','gear.title','gear.cta','gear.href','contact.title','contact.text','footer.brand','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','footer.copyright'].forEach(path => {
     const [group, key] = path.split('.');
     data[group][key] = getField(path);
   });
@@ -376,7 +513,7 @@ async function saveHtml() {
   return await res.json();
 }
 
-async function previewChanges(page = '/preview') {
+async function previewChanges(page = studioDestination === 'projects' ? '/projects.html' : '/preview') {
   byId('status').textContent = 'Saving preview...';
 
   const result = await saveHtml();
@@ -471,7 +608,10 @@ function fileToBase64(file) {
 
 function updatePreview(fieldId) {
   const img = byId('preview.' + fieldId);
-  if (img) img.src = '/' + byId(fieldId).value;
+  if (img) {
+    const value = byId(fieldId).value.trim();
+    img.src = /^https:\/\//i.test(value) || value.startsWith('/') ? value : '/' + value;
+  }
 }
 
 function escapeHtml(s='') {
@@ -484,5 +624,6 @@ function escapeAttr(s='') {
 
 loadContent();
 </script>
+<script src="/studio-deliveries.js"></script>
 </body>
 </html>
