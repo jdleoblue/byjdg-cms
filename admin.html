@@ -1054,6 +1054,37 @@ body.hx main>section.hx-editor{padding:0}
 body.hx :is(#aboutEditor,#projectsEditor) .hx-body .card>h2:first-child{display:none}
 body.hx :is(#aboutEditor,#projectsEditor) .hx-body .card>label:nth-child(2){margin-top:4px}
 
+/* Photo position & zoom */
+.pz{margin:10px 0 4px;border:1px solid var(--line);border-radius:10px;background:#fff;grid-column:1/-1}
+.pz.is-empty{display:none}
+.pz-toggle{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;font:500 13px Inter,system-ui,sans-serif;color:var(--ink);border-radius:10px}
+.pz-toggle:hover{background:var(--soft)}
+.pz-toggle:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pz-toggle svg{flex:none;color:var(--muted)}
+.pz-toggle span{flex:1}
+.pz-state{font-style:normal;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--muted)}
+.pz-state.on{background:#eef2f8;color:#2c4a73}
+.pz-body{padding:0 12px 12px;border-top:1px solid var(--line)}
+.pz-body .hx-help{margin:10px 0}
+.pz-stage{position:relative;line-height:0;border-radius:8px;overflow:hidden;background:var(--soft);cursor:crosshair;touch-action:none;user-select:none;max-width:420px}
+.pz-stage:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pz-stage img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain;pointer-events:none;margin:0;border-radius:0}
+.pz-dot{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;border:2px solid #fff;background:rgba(28,27,25,.35);box-shadow:0 0 0 1px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.35);pointer-events:none}
+.pz-shapes{display:flex;gap:10px;align-items:flex-end;margin:12px 0 4px;flex-wrap:wrap}
+.pz-shapes figure{margin:0;display:flex;flex-direction:column;gap:4px}
+.pz-crop{height:120px;overflow:hidden;border-radius:6px;background:#0b0b0a;line-height:0}
+.pz-crop img{width:100%;height:100%;object-fit:cover;display:block;margin:0;border-radius:0;max-height:none}
+.pz-shapes figcaption{font-size:11px;color:var(--muted)}
+.pz-sliders{display:grid;gap:6px;margin:10px 0 2px}
+.pz-sliders label{display:grid!important;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px;margin:0!important;font-size:12px;color:var(--ink2)}
+.pz-sliders label i{font-style:normal;color:var(--faint)}
+.pz-sliders input[type=range]{display:block!important;width:100%;margin:0;padding:0;height:20px;accent-color:var(--ink);background:none;border:0;box-shadow:none}
+.pz-sliders output{font-size:12px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.pz-foot{display:flex;justify-content:flex-end;margin-top:8px}
+.pz-foot .hx-btn{margin-left:0}
+body.hx .hx-body .hero-slide-editor .pz{grid-column:1/-1}
+.fx-panel .pz-crop,#fxPanel .pz-crop{height:100px}
+
 </style>
 <script id="studio-refresh-js">
 /* ===== by JDG Website Studio — refreshed interface =====
@@ -1076,7 +1107,8 @@ var I={
  box:'<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>',
  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
  eye:'<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
- chev:'<path d="m6 9 6 6 6-6"/>'
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ focus:'<circle cx="12" cy="12" r="3"/><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5"/>'
 };
 function svg(name,size,sw){return '<svg aria-hidden="true" width="'+(size||18)+'" height="'+(size||18)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.7)+'" stroke-linecap="round" stroke-linejoin="round">'+I[name]+'</svg>'}
 
@@ -1392,6 +1424,136 @@ function previewEvents(){
  window.addEventListener('resize',fitPreview);
 }
 
+/* ---------- 8b. Photo position & zoom ----------
+   Stored on the image path itself: images/x.jpg#fp=<left%>,<top%>,<zoom>. Centered at 100% = no tag. */
+var FP_RE=/#fp=(\d{1,3}(?:\.\d{1,2})?),(\d{1,3}(?:\.\d{1,2})?),([1-3](?:\.\d{1,2})?)$/;
+function fpParse(u){var m=FP_RE.exec(String(u||''));return m?{x:Math.min(100,+m[1]),y:Math.min(100,+m[2]),z:Math.min(3,Math.max(1,+m[3]))}:{x:50,y:50,z:1}}
+function fpBase(u){return String(u||'').replace(/#fp=.*$/,'')}
+function fpJoin(base,f){
+ base=fpBase(base);if(!base)return base;
+ var x=Math.round(Math.max(0,Math.min(100,f.x))),y=Math.round(Math.max(0,Math.min(100,f.y))),z=Math.round(Math.max(1,Math.min(3,f.z))*100)/100;
+ if(x===50&&y===50&&z===1)return base;return base+'#fp='+x+','+y+','+z;
+}
+function fpLook(img,u,raw){
+ var f=fpParse(u),s=img.style;
+ if(raw||!FP_RE.test(String(u||''))){if(img.dataset.pz){s.objectPosition='';s.transform='';s.transformOrigin='';s.clipPath='';delete img.dataset.pz}return}
+ var k=(1-1/f.z)*100;img.dataset.pz='1';
+ s.objectPosition=f.x+'% '+f.y+'%';s.transformOrigin=f.x+'% '+f.y+'%';
+ s.transform=f.z>1.001?'scale('+f.z+')':'';
+ s.clipPath=f.z>1.001?'inset('+(f.y*k/100)+'% '+((100-f.x)*k/100)+'% '+((100-f.y)*k/100)+'% '+(f.x*k/100)+'%)':'';
+}
+/* Studio thumbnails show the chosen crop too */
+function pzDecorate(root){$$('img',root||d.body).forEach(function(img){if(img.closest('.pz'))return;var u=img.getAttribute('src')||'';if(u.indexOf('#fp=')>=0||img.dataset.pz)fpLook(img,u)})}
+function rxEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+/* Live previews: swap the same photo (any position) for the new value, then let the site script re-apply */
+var pvQueue={},pvRaf=0;
+function pvPhoto(val,page){var k=(page||'home')+'|'+fpBase(val).replace(/^\//,'');pvQueue[k]=val;if(!pvRaf)pvRaf=requestAnimationFrame(pvFlush)}
+function pvFlush(){
+ pvRaf=0;var q=pvQueue;pvQueue={};
+ Object.keys(EDITORS).forEach(function(page){
+  var p=EDITORS[page].pv;if(!p)return;
+  var doc=frameDoc(p);if(!doc||!doc.body)return;
+  Object.keys(q).forEach(function(key){
+   var cut=key.indexOf('|'),base=key.slice(cut+1);
+   if(!base||key.slice(0,cut)!==page)return;var re=new RegExp('/?'+rxEsc(base)+'(?:#fp=[0-9.,]*)?','g'),val=q[key].replace(/^\//,'');
+   $$('*',doc).forEach(function(el){
+    if(el.tagName==='STYLE'){if(el.textContent.indexOf(base)>=0)el.textContent=el.textContent.replace(re,function(m){return (m.charAt(0)==='/'?'/':'')+val});return}
+    for(var i=0;i<el.attributes.length;i++){var a=el.attributes[i];if(a.value.indexOf(base)>=0){var nv=a.value.replace(re,function(m){return (m.charAt(0)==='/'?'/':'')+val});if(nv!==a.value)el.setAttribute(a.name,nv)}}
+   });
+  });
+  try{if(p.frame.contentWindow.byjdgPhotoPositions)p.frame.contentWindow.byjdgPhotoPositions()}catch(e){}
+ });
+}
+var PZ={};
+/* opts: key, get(), set(v), shapes:[[w,h,label]], area */
+function pzControl(o){
+ var root=h('<div class="pz" data-pz-key="'+escapeAttr(o.key)+'">'+
+  '<button type="button" class="pz-toggle" aria-expanded="false">'+svg('focus',16)+'<span>Adjust photo position</span><em class="pz-state"></em></button>'+
+  '<div class="pz-body" hidden>'+
+   '<p class="hx-help">Drag the dot to the part of the photo that matters most, or use the sliders. The previews show how it will be cropped.</p>'+
+   '<div class="pz-stage" title="Drag to choose the focus"><img alt="" draggable="false"><span class="pz-dot" aria-hidden="true"></span></div>'+
+   '<div class="pz-shapes">'+o.shapes.map(function(s){return '<figure><div class="pz-crop" style="aspect-ratio:'+s[0]+'/'+s[1]+'"><img alt=""></div><figcaption>'+esc(s[2])+'</figcaption></figure>'}).join('')+'</div>'+
+   '<div class="pz-sliders">'+
+    '<label><span>Left <i>↔</i> Right</span><input type="range" min="0" max="100" step="1" data-a="x" data-hx-ignore="1"><output></output></label>'+
+    '<label><span>Top <i>↕</i> Bottom</span><input type="range" min="0" max="100" step="1" data-a="y" data-hx-ignore="1"><output></output></label>'+
+    '<label><span>Zoom</span><input type="range" min="100" max="300" step="5" data-a="z" data-hx-ignore="1"><output></output></label>'+
+   '</div>'+
+   '<div class="pz-foot"><button type="button" class="hx-btn small pz-reset">Center &amp; reset zoom</button></div>'+
+  '</div></div>');
+ var body=$('.pz-body',root),tog=$('.pz-toggle',root),stage=$('.pz-stage',root),dot=$('.pz-dot',root),state=$('.pz-state',root),f={x:50,y:50,z:1},base='';
+ var ranges={};$$('input[type=range]',root).forEach(function(r){ranges[r.dataset.a]=r});
+ function show(){
+  var src=base?imgSrc(base):'';
+  root.classList.toggle('is-empty',!base);
+  if($('img',stage).getAttribute('src')!==src){$$('img',root).forEach(function(i){if(src)i.setAttribute('src',src);else i.removeAttribute('src')})}
+  var v=fpJoin(base,f);$$('.pz-crop img',root).forEach(function(i){fpLook(i,v||'x#fp=50,50,1')});
+  dot.style.left=f.x+'%';dot.style.top=f.y+'%';
+  ranges.x.value=f.x;ranges.y.value=f.y;ranges.z.value=Math.round(f.z*100);
+  ranges.x.nextElementSibling.textContent=Math.round(f.x)+'%';ranges.y.nextElementSibling.textContent=Math.round(f.y)+'%';ranges.z.nextElementSibling.textContent=Math.round(f.z*100)+'%';
+  var custom=v!==base;state.textContent=custom?'Custom':'Centered';state.className='pz-state'+(custom?' on':'');
+ }
+ function commit(){if(!base)return;var v=fpJoin(base,f);if(v===o.get())return show();o.set(v);markDirty(o.dirtyKey||o.key,o.area);pvPhoto(v,o.page);show()}
+ function refresh(){var u=o.get()||'';base=fpBase(u);f=fpParse(u);show()}
+ tog.addEventListener('click',function(){var open=body.hidden;body.hidden=!open;tog.setAttribute('aria-expanded',String(open));root.classList.toggle('is-open',open)});
+ Object.keys(ranges).forEach(function(a){ranges[a].addEventListener('input',function(e){e.stopPropagation();f[a]=a==='z'?(+this.value)/100:+this.value;commit()})});
+ var dragging=false;
+ function at(e){var r=$('img',stage).getBoundingClientRect();if(!r.width)return;f.x=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));f.y=Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));commit()}
+ stage.addEventListener('pointerdown',function(e){if(!base)return;dragging=true;stage.setPointerCapture(e.pointerId);at(e);e.preventDefault()});
+ stage.addEventListener('pointermove',function(e){if(dragging)at(e)});
+ stage.addEventListener('pointerup',function(){dragging=false});stage.addEventListener('pointercancel',function(){dragging=false});
+ stage.tabIndex=0;stage.setAttribute('role','slider');stage.setAttribute('aria-label','Photo focus point. Arrow keys move it.');
+ stage.addEventListener('keydown',function(e){var st=e.shiftKey?10:2,k=e.key;if(k==='ArrowLeft')f.x-=st;else if(k==='ArrowRight')f.x+=st;else if(k==='ArrowUp')f.y-=st;else if(k==='ArrowDown')f.y+=st;else return;e.preventDefault();f.x=Math.max(0,Math.min(100,f.x));f.y=Math.max(0,Math.min(100,f.y));commit()});
+ $('.pz-reset',root).addEventListener('click',function(){f={x:50,y:50,z:1};commit()});
+ root._pz={refresh:refresh,get:o.get,page:o.page};PZ[o.key]=root._pz;refresh();return root;
+}
+/* Place a control after `anchor` once (re-used if already there) */
+function pzMount(anchor,o){
+ if(!anchor||!anchor.parentNode)return null;
+ var ex=anchor.parentNode.querySelector(':scope > .pz[data-pz-key="'+o.key+'"]');
+ if(ex){ex._pz.refresh();return ex}
+ var c=pzControl(o);anchor.insertAdjacentElement('afterend',c);return c;
+}
+function fieldPhoto(id,shapes,area){
+ return {key:id,area:area,page:/^aboutPage\./.test(id)?'aboutPage':/^projects\./.test(id)?'projects':'home',shapes:shapes,get:function(){return getField(id)},set:function(v){var el=byId(id);if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}))}};
+}
+var WIDE=[16,9,'Computer'],PHONE=[9,19.5,'Phone'],PORTRAIT=[4,5,'Portrait'];
+function mountPhotoControls(){
+ pzMount(byId('preview.hero.image'),fieldPhoto('hero.image',[WIDE,PHONE],'Homepage'));
+ pzMount(byId('preview.cinema.portrait'),fieldPhoto('cinema.portrait',[PORTRAIT],'Homepage'));
+ pzMount(byId('preview.aboutPage.portrait'),fieldPhoto('aboutPage.portrait',[PORTRAIT],'About'));
+ pzMount(byId('preview.projects.image'),fieldPhoto('projects.image',[WIDE,PHONE],'Collaborate'));
+ mountSlideControls();pzDecorate();
+}
+function mountSlideControls(){
+ $$('#heroSlides .hero-slide-editor').forEach(function(box,i){
+  var inp=byId('hero-slide-'+i);if(!inp||box.querySelector('.pz'))return;
+  var c=pzControl({key:'hero-slide-'+i,dirtyKey:'hero-slide-'+i,area:'Homepage',shapes:[WIDE,PHONE],
+   get:function(){return (data.hero.images||[])[i]||''},
+   set:function(v){data.hero.images[i]=v;inp.value=v;var im=box.querySelector(':scope > img');if(im){im.setAttribute('src',imgSrc(v));fpLook(im,v)}}});
+  box.appendChild(c);
+ });
+ pzDecorate(byId('heroSlides'));
+}
+function filmPhotoControl(panel,i){
+ var help=panel.querySelector('.fx-photo + .hx-help')||panel.querySelector('.fx-photo');if(!help)return;
+ var c=pzControl({key:'film-'+i,dirtyKey:'films:'+i+':image',area:'Films',shapes:[[16,9,'Latest film (wide)'],[4,5,'Film grid (tall)']],
+  get:function(){var ep=data.episodes[i];return ep?ep.image:''},
+  set:function(v){var ep=data.episodes[i];if(!ep)return;ep.image=v;
+   $$('.fx-photo img,.fx-card[data-i="'+i+'"] .fx-thumb img').forEach(function(im){im.setAttribute('src',imgSrc(v));fpLook(im,v)})}});
+ help.insertAdjacentElement('afterend',c);pzDecorate(panel);
+}
+function pzWrap(name,after){var orig=window[name];if(typeof orig!=='function'||orig._pz)return;var w=function(){var r=orig.apply(this,arguments);try{after.apply(this,arguments)}catch(e){console.error(e)}return r};w._pz=1;window[name]=w}
+function photoHooks(){
+ pzWrap('renderHeroSlides',function(){mountSlideControls()});
+ pzWrap('renderAboutPage',function(){pzMount(byId('preview.aboutPage.portrait'),fieldPhoto('aboutPage.portrait',[PORTRAIT],'About'))});
+ pzWrap('renderProjects',function(){pzMount(byId('preview.projects.image'),fieldPhoto('projects.image',[WIDE,PHONE],'Collaborate'))});
+ pzWrap('updatePreview',function(id){if(PZ[id])PZ[id].refresh();var pv=byId('preview.'+id);if(pv)fpLook(pv,getField(id))});
+ /* keep unsaved positions visible after a preview reloads */
+ previews.forEach(function(p){p.frame.addEventListener('load',function(){if(!dirty.size)return;Object.keys(PZ).forEach(function(k){var v=PZ[k].get();if(v)pvPhoto(v,PZ[k].page)})})});
+ var mo=new MutationObserver(function(){clearTimeout(mo._t);mo._t=setTimeout(function(){pzDecorate(main)},80)});
+ mo.observe(main,{subtree:true,childList:true,attributes:true,attributeFilter:['src']});
+}
+
 /* ---------- 8. Films ---------- */
 var sel=-1,dragFrom=-1;
 function buildFilms(){
@@ -1478,6 +1640,7 @@ function openFilm(i,keepFocus){
   if(!window.confirm('Remove “'+t+'” from your website?\n\nIt disappears from the Studio now, and from your website the next time you save and publish.'))return;
   deleteEpisode(sel);markDirty('films:remove:'+Date.now(),'Films');closeFilm();
  };
+ filmPhotoControl(panel,i);
  $$('.fx-card').forEach(function(c){c.classList.toggle('is-sel',+c.dataset.i===sel)});
  if(!keepFocus)byId('fx-title').focus({preventScroll:true});
 }
@@ -1542,7 +1705,7 @@ window.showDestination=function(dest){origShowDestination(dest);if(msg&&/^Loaded
 var origRenderEpisodes=window.renderEpisodes;
 window.renderEpisodes=function(){origRenderEpisodes();renderFilms();paintRows()};
 function afterLoad(){
- relabelAll();paintRows();renderFilms();
+ relabelAll();paintRows();renderFilms();mountPhotoControls();
  if(msg&&/^Loaded from/.test(msg.textContent))msg.textContent='';
  var mark=byId('hxMark'),logo=data&&data.branding&&data.branding.logoImage;
  if(mark&&logo)mark.innerHTML='<img src="'+esc(imgSrc(logo))+'" alt="">';
@@ -1552,7 +1715,7 @@ function init(){
  d.body.classList.add('hx');
  d.head.appendChild(h('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&display=swap">'));
  toastEl=h('<div class="hx-toast" role="status" hidden></div>');d.body.appendChild(toastEl);
- buildSidebar();buildTopbar();buildEditors();buildFilms();buildPublish();watch();previewEvents();
+ buildSidebar();buildTopbar();buildEditors();buildFilms();buildPublish();watch();previewEvents();photoHooks();
  var el=byId('episodeList');if(el)el.hidden=true;
  $$('#episodes > button').forEach(function(b){b.hidden=true});
  var tries=0,wait=setInterval(async function(){

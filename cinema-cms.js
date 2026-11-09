@@ -35,7 +35,7 @@ function render(html, settings, episodes) {
  const c={...parse(html),...settings};
  if(!Number.isInteger(c.featuredIndex)||c.featuredIndex< -1)throw new Error('Choose a featured film.');
  if(c.featuredIndex>=episodes.length)c.featuredIndex=episodes.length?episodes.length-1:-1;
- if(!/^(images\/[a-z0-9_./-]+|https:\/\/[^\s'"()<>]+)$/i.test(c.portrait))throw new Error('About image must use an images/ path or HTTPS address.');
+ if(!/^(images\/[a-z0-9_./-]+|https:\/\/[^\s'"()<>#]+)(?:#fp=\d{1,3}(?:\.\d{1,2})?,\d{1,3}(?:\.\d{1,2})?,[1-3](?:\.\d{1,2})?)?$/i.test(c.portrait))throw new Error('About image must use an images/ path or HTTPS address.');
  if(typeof c.ctaText !== 'string' || typeof c.eyebrow !== 'string') throw new Error('Featured CTA and eyebrow must be text.');
  if(!['theme','stone','taupe','charcoal'].includes(c.aboutTone)) throw new Error('Choose a valid About section tone.');
  if(typeof c.ctaHref!=='string')throw Error('Enter a valid CTA URL.');

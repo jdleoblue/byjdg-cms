@@ -30,7 +30,7 @@ function render(html, values, theme) {
   html=html.replace(new RegExp(`(data-project-href="connect${i}"[^>]*href=")[^"]*"`),(_,prefix)=>prefix+escape(value)+'"');
  }
  if (!/^https:\/\//i.test(v.formAction)) throw new Error('Form destination must start with https://.');
- if (!/^(images\/[a-z0-9_./-]+|https:\/\/[^\s'"()<>]+)$/i.test(v.image)) throw new Error('Use an images/ path or HTTPS image address.');
+ if (!/^(images\/[a-z0-9_./-]+|https:\/\/[^\s'"()<>#]+)(?:#fp=\d{1,3}(?:\.\d{1,2})?,\d{1,3}(?:\.\d{1,2})?,[1-3](?:\.\d{1,2})?)?$/i.test(v.image)) throw new Error('Use an images/ path or HTTPS image address.');
  html=html.replace(/(<form[^>]*action=")[^"]*"/,(_,prefix)=>prefix+escape(v.formAction)+'"');
  html=html.replace(/(\.hero\s*\{[\s\S]*?url\()['"][^'"]+['"]\)/,(_,prefix)=>prefix+"'"+escape(v.image)+"')");
  return html.replace(/<html\b[^>]*>/i,tag=>tag.replace(/\sdata-theme=["'][^"']*["']/gi,'').replace(/>$/,` data-theme="${theme}">`));

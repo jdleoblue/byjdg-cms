@@ -17,7 +17,7 @@ function parse(html){const match=html.match(settingsPattern);return {...defaults
 function safeUrl(value,image=false){
  if(!value||/[\u0000-\u0020\u007f\\<>"']/.test(value)||value.startsWith('//')||(/^[a-z][a-z0-9+.-]*:/i.test(value)&&!(image?/^https?:/i:/^(https?:|mailto:|tel:)/i).test(value)))throw Error('Enter a valid '+(image?'portrait image path':'About Me link')+'.');
  if(/^https?:/i.test(value)){try{new URL(value)}catch{throw Error('Enter a complete website URL.')}}
- if(image&&!/^https?:/i.test(value)&&(!/^\/?images\/[\w./%-]+$/.test(value)||value.split('/').includes('..')))throw Error('Use an uploaded portrait from the images folder.');
+ if(image&&!/^https?:/i.test(value)&&(!/^\/?images\/[\w./%-]+(?:#fp=\d{1,3}(?:\.\d{1,2})?,\d{1,3}(?:\.\d{1,2})?,[1-3](?:\.\d{1,2})?)?$/.test(value)||value.split('/').includes('..')))throw Error('Use an uploaded portrait from the images folder.');
 }
 function validate(settings){const data={...defaults,...settings};for(const key of Object.keys(defaults)){if(typeof data[key]!=='string'||data[key].length>50000)throw Error('About Me fields must be text.');}for(const key of ['youtubeHref','contactHref','collaborationHref'])safeUrl(data[key]);safeUrl(data.portrait,true);delete data.introEyebrow;return data;}
 const paragraphs=text=>text.split(/\n\s*\n/).filter(p=>p.trim()).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
