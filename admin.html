@@ -138,6 +138,11 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 .hero-image-card .upload-label{position:relative}.hero-upload{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;padding:0;margin:0;border:0}.upload-label:focus-within{outline:2px solid #737f90;outline-offset:3px}
 #projects > h2, #deliveries > h2 { display:none; }
 .hero-slide-editor{margin:16px 0;padding:14px 0;border-bottom:1px solid var(--line)}.hero-slide-editor img{width:100%;height:120px;object-fit:cover;border-radius:6px}.hero-slide-editor .buttons{gap:6px}.hero-slide-editor button{padding:8px;font-size:11px}#heroSlidesControls[hidden]{display:none!important}
+
+.pages-nav-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+#cmsNav .pages-nav-row .my-pages-button{flex:1;width:auto;margin:0}
+#cmsNav .pages-nav-row .add-page-button{display:flex;align-items:center;justify-content:center;flex:0 0 32px;width:32px;height:32px;padding:6px;margin:0;border:1px solid var(--line);border-radius:7px}
+#cmsNav .pages-nav-row .add-page-button:hover{background:#ffffffaa}
 </style>
 </head>
 <body>
@@ -153,7 +158,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
       <button data-destination="projects" onclick="showDestination('projects')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M7 5l3 5m4-5 3 5M3 5l3-3m3 3 3-3m3 3 3-3"/></svg></span> Projects Page</button>
       <button data-destination="aboutPage" onclick="showDestination('aboutPage')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/></svg></span> About Me</button>
       <button data-destination="deliveries" onclick="showDestination('deliveries')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span> Client Deliveries</button>
-      <div class="settings-nav"><button data-destination="settings" onclick="showDestination('settings')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-1 3-3 1-3 3 2 2-1 3 3 3 3-1 2 2 3-1 1-3 3-1 2-3-2-2 1-3-3-3-3 1-2-2Z"/><circle cx="12" cy="12" r="3"/></svg></span> Site Settings</button><p class="connection"><span aria-hidden="true">●</span> Website connected</p></div>
+      <div class="settings-nav"><div class="pages-nav-row"><button class="my-pages-button" data-destination="customPages" onclick="showDestination('customPages')">My Pages</button><button class="add-page-button" type="button" aria-label="Add Page" title="Add Page" onclick="addCustomPage()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button></div><button data-destination="settings" onclick="showDestination('settings')"><span aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.7 4.3a2.3 2.3 0 0 1 4.6 0 2.3 2.3 0 0 0 3.3 1.9 2.3 2.3 0 0 1 2.3 4 2.3 2.3 0 0 0 0 3.6 2.3 2.3 0 0 1-2.3 4 2.3 2.3 0 0 0-3.3 1.9 2.3 2.3 0 0 1-4.6 0 2.3 2.3 0 0 0-3.3-1.9 2.3 2.3 0 0 1-2.3-4 2.3 2.3 0 0 0 0-3.6 2.3 2.3 0 0 1 2.3-4 2.3 2.3 0 0 0 3.3-1.9"/><circle cx="12" cy="12" r="3"/></svg></span> Site Settings</button><p class="connection"><span aria-hidden="true">●</span> Website connected</p></div>
     </nav>
   </aside>
 
@@ -162,12 +167,13 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
     <div id="sectionNavigation" class="section-navigation" role="group" aria-label="Editing sections"></div>
     <p class="muted" id="sourcePath">Loading source file...</p>
 
+    <section id="customPages"></section>
     <section id="deliveries">
       <h2>Client Deliveries</h2>
-      <p class="muted">Create a black glass project library, share its unique link, and remove its page after delivery. Files stay in Google Drive.</p>
+      <p class="muted">Create a black glass project library, share its unique link, and remove its page after delivery. Files stay in iCloud or Google Drive.</p>
       <div class="buttons"><button type="button" class="primary" data-action="new">+ New Delivery</button></div>
       <div class="d-layout"><div class="card d-list" aria-label="Deliveries"></div><div class="card d-editor" hidden>
-        <div class="d-head"><h3>Delivery details</h3><span class="d-state"></span></div>
+        <div class="d-head"><h3>Delivery details</h3><span class="d-state"></span><button type="button" class="danger" data-action="delete-delivery" title="Permanently delete a draft or removed delivery from this Mac. Published pages must be removed first.">Delete client delivery</button></div>
         <label for="d-client">Client name</label><input id="d-client" maxlength="160">
         <label for="d-message">Library welcome message</label><textarea id="d-message" maxlength="4000"></textarea>
         <div class="d-head"><h3>Projects</h3><button type="button" class="secondary" data-action="add-project">+ Add project</button></div>
@@ -177,12 +183,12 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
         <div class="buttons"><button type="button" class="danger" data-action="delete-project">Remove selected project</button></div>
         <div class="d-head"><h3>Files &amp; videos</h3><button type="button" class="secondary" data-action="add-file">+ Add file</button></div>
         <div class="d-files"></div>
-        <p class="muted">Upload footage to Google Drive, then paste each file or folder’s sharing link here. Restricted sharing requires the client’s approved Google account; anyone-with-link sharing can be forwarded.</p>
+        <p class="muted">Upload footage to iCloud or Google Drive, then paste each file or folder’s sharing link here. iCloud Photos links are also supported. Access follows the sharing permissions you choose with that service.</p>
         <label for="d-link">Unique client page address</label><input id="d-link" readonly>
         <div class="buttons"><button type="button" class="secondary" data-action="copy">Copy link</button></div>
-        <div class="d-notice"><label class="d-ack"><input id="d-public" type="checkbox"><span>I understand this page has no login. Publishing puts its client name, project details and Drive links in the public website repository and its history. Anyone who obtains them can view the page. Google Drive sharing controls access to the actual files.</span></label></div>
+        <div class="d-notice"><label class="d-ack"><input id="d-public" type="checkbox"><span>I understand this page has no login. Publishing puts its client name, project details and sharing links in the public website repository and its history. Anyone who obtains them can view the page. Your iCloud or Google Drive sharing settings control access to the actual files.</span></label></div>
         <div class="buttons"><button type="button" class="secondary" data-action="save">Save draft</button><button type="button" class="secondary" data-action="preview">Preview client page</button><button type="button" class="primary" data-action="publish">Publish delivery</button></div>
-        <div class="d-close"><p class="muted">Removing the page takes effect after the website deploys. It does not erase GitHub history, copied links, or files. Disable Google Drive sharing separately.</p><button type="button" class="danger" data-action="remove">Remove published page</button></div>
+        <div class="d-close"><p class="muted">Removing the page takes effect after the website deploys. It does not erase GitHub history, copied links, or files. Disable sharing in iCloud or Google Drive separately.</p><button type="button" class="danger" data-action="remove">Remove published page</button></div>
       </div></div><p class="status d-status" role="status" aria-live="polite"></p>
     </section>
 
@@ -204,7 +210,13 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
       <h2>Global Branding</h2>
       <div class="card">
         <label for="branding.logoText">Website Logo Text</label><input id="branding.logoText" maxlength="80">
-        <p class="muted">One setting for the Home and Projects header and footer logos. Standard copyright names and the default quote attribution follow this setting. Page titles remain editable in Page Titles &amp; Search.</p>
+        <p class="muted">Your text is used as the logo unless you upload an image. It also describes the image for accessibility and remains available when you remove it.</p>
+        <label for="brandingLogoUpload">Logo Image (optional)</label>
+        <input id="brandingLogoUpload" type="file" accept="image/png,image/jpeg,image/webp" onchange="uploadBrandLogo(event)">
+        <input id="branding.logoImage" type="hidden">
+        <img id="preview.branding.logoImage" class="preview" alt="Selected website logo" hidden style="width:auto;max-width:240px;max-height:100px;object-fit:contain;padding:16px;background:repeating-conic-gradient(#e0e0e0 0% 25%,#777 0% 50%) 0 0/20px 20px">
+        <button id="removeBrandLogo" class="secondary" type="button" onclick="removeBrandLogo()">Remove Image / Use Text</button>
+        <p class="muted">PNG, JPG or WebP, up to 5 MB. A transparent PNG works well. The image replaces the top navigation logo across your website. Copyright text, page content and the browser icon stay separate. Save or preview, then publish when ready.</p>
       </div>
     </section>
     <section id="pageSettings">
@@ -276,31 +288,27 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
     <section id="aboutStory"><div id="aboutStoryFields"></div></section>
     <section id="aboutShare"><div id="aboutShareFields"></div></section>
     <section id="aboutContact"><div id="aboutContactFields"></div></section>
-    <section id="projects">
-      <h2>Projects Page</h2>
-      <p class="muted">Shares the Website Appearance setting with your homepage. Changes are saved and published together.</p>
-      <div class="card" id="projectsFields"></div>
-      <button class="secondary" onclick="previewChanges('/projects.html')">Preview Projects Page</button>
-    </section>
+    <section id="projects"><div id="projectsHeroFields"></div></section>
+    <section id="projectsServices"><div id="projectsServicesFields"></div></section>
+    <section id="projectsContact"><div id="projectsContactFields"></div></section>
+    <section id="projectsSocial"><div id="projectsSocialFields"></div></section>
+    <section id="projectsFooter"><div id="projectsFooterFields"></div></section>
     <section id="cinema">
       <h2>Featured Film</h2>
       <div class="card">
-        <p class="muted">Choose a film from your collection for the large homepage feature. Its image, title and watch link follow the selected episode.</p>
-        <label for="cinema.featuredIndex">Featured Film</label><select id="cinema.featuredIndex"></select>
-        <label for="cinema.headline">Feature Headline</label><input id="cinema.headline">
-        <label for="cinema.intro">Feature Introduction</label><textarea id="cinema.intro"></textarea>
-        <label for="cinema.eyebrow">Caption Eyebrow (above the film title)</label><input id="cinema.eyebrow">
+        <p class="muted">Choose the featured film here. Edit its image, title and video link in Film Collection. The caption and button text below appear beneath the featured image.</p>
+        <label for="cinema.featuredIndex">Featured Film</label><select id="cinema.featuredIndex" onchange="refreshFeaturedCTAHref()"></select>
+        <label for="cinema.eyebrow">Film Caption Eyebrow (below the image)</label><input id="cinema.eyebrow">
         <label for="cinema.ctaText">Featured CTA Text</label><input id="cinema.ctaText">
+        <label style="display:flex;align-items:center;gap:10px"><input style="width:auto" id="cinema.ctaUseFilmLink" type="checkbox" checked onchange="refreshFeaturedCTAHref()">Use the selected film’s video link</label>
+        <label for="cinema.ctaHref">Featured CTA URL</label><input id="cinema.ctaHref" type="url" placeholder="https://www.youtube.com/watch?v=...">
+        <p class="muted">Uncheck the option above to enter a different button URL. The featured image continues to link to the selected film.</p>
       </div>
     </section>
     <section id="episodes">
       <h2>Latest Films</h2>
       <div class="card">
         <label>Section Title</label><input id="latest.title" />
-        <div class="row">
-          <div><label>View All Text</label><input id="latest.viewAllText" /></div>
-          <div><label>View All Link</label><input id="latest.viewAllHref" /></div>
-        </div>
       </div>
       <div id="episodeList"></div>
       <button class="secondary" onclick="addEpisode()">+ Create New Episode</button>
@@ -346,7 +354,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
     </section>
     <section id="footerSettings">      <h2>Footer</h2>
       <div class="card">
-        <p class="muted">Edit the footer logo under Global Branding.</p>
+        <p class="muted">The footer contains copyright and links. Manage the top navigation logo in Branding.</p>
         <label>Copyright</label><input id="footer.copyright" />
         <div id="footerLinks"></div>
       </div></section>
@@ -371,14 +379,15 @@ function toggleMobileMenu() {
 }
 
 const studioDestinations = {
+  customPages: {title:'My Pages',description:'Create drafts, build sections and publish when ready.',tabs:[['customPages','Pages']]},
   home: {title:'Homepage',description:'Shape the first impression.',tabs:[['hero','Hero'],['cinema','Featured Film'],['episodes','Film Collection'],['about','About'],['contact','Contact']]},
   aboutPage: {title:'About Me',description:'Share the person behind your work.',tabs:[['aboutIntroduction','Introduction'],['aboutStory','My Story'],['aboutShare','What I Share'],['aboutContact','Contact']]},
-  projects: {title:'Projects Page',description:'Introduce your services and invite new inquiries.',tabs:[['projects','Page content']]},
+  projects: {title:'Projects Page',description:'Introduce your services and invite new inquiries.',tabs:[['projects','Hero'],['projectsServices','Services'],['projectsContact','Contact'],['projectsSocial','Social & Links'],['projectsFooter','Footer']]},
   deliveries: {title:'Client Deliveries',description:'Create, share and manage client project libraries.',tabs:[['deliveries','Deliveries']]},
   settings: {title:'Site Settings',description:'Branding, appearance and shared website settings, together.',tabs:[['appearance','Appearance'],['sectionTones','Section Tones'],['branding','Branding'],['pageSettings','Page Titles & Search'],['navSettings','Nav Links'],['footerSettings','Footer']]}
 };
 let studioDestination = 'home';
-const studioLastTab = {home:'hero',aboutPage:'aboutIntroduction',projects:'projects',deliveries:'deliveries',settings:'appearance'};
+const studioLastTab = {customPages:'customPages',home:'hero',aboutPage:'aboutIntroduction',projects:'projects',deliveries:'deliveries',settings:'appearance'};
 function showDestination(destination) {
   studioDestination = destination;
   showTab(studioLastTab[destination]);
@@ -400,8 +409,8 @@ function showTab(id) {
   const tabs = byId('sectionNavigation');
   tabs.hidden = config.tabs.length < 2;
   tabs.innerHTML = config.tabs.map(t => `<button type="button" class="section-tab ${t[0] === id ? 'active' : ''}" aria-pressed="${t[0] === id}" onclick="showTab('${t[0]}')">${t[1]}</button>`).join('');
-  document.querySelector('.toolbar').style.display = group === 'deliveries' ? 'none' : '';
-  byId('workspacePreview').hidden = group === 'deliveries';
+  document.querySelector('.toolbar').style.display = ['deliveries','customPages'].includes(group) ? 'none' : '';
+  byId('workspacePreview').hidden = ['deliveries','customPages'].includes(group);
   if (window.innerWidth <= 800) byId('cmsNav').classList.remove('open');
 }
 showDestination('home');
@@ -431,17 +440,21 @@ async function loadContent() {
   setField('websiteIcon.path',data.websiteIcon.path);
   updatePreview('websiteIcon.path');
   setField('branding.logoText', data.branding.logoText);
+  setField('branding.logoImage', data.branding.logoImage || '');
+  updateBrandLogoPreview();
   document.title = data.branding.logoText + ' Website Studio';
   document.querySelector('.brand').textContent = data.branding.logoText;
   byId('sourcePath').textContent = 'Website Connected • Ready to Publish';
 
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
     const parts = path.split('.');
     setField(path, data[parts[0]][parts[1]]);
   });
 
   byId('siteTheme').value = data.appearance?.theme || 'black';
-  ['headline','intro','portrait','eyebrow','ctaText','aboutTone'].forEach(key => setField('cinema.' + key, data.cinema[key]));
+  ['portrait','eyebrow','ctaText','aboutTone'].forEach(key => setField('cinema.' + key, data.cinema[key]));
+  setField('cinema.ctaHref',data.cinema.ctaHref||'');
+  byId('cinema.ctaUseFilmLink').checked=!data.cinema.ctaHref;
   renderFeaturedOptions();
   updatePreview('cinema.portrait');
   ['home','projects','aboutPage'].forEach(page => ['title','description','socialImage'].forEach(key => setField('pages.'+page+'.'+key,data.pages[page][key])));
@@ -478,7 +491,7 @@ function renderEpisodes() {
     </div>`).join('');
 }
 
-function updateEpisode(i, key, value) { data.episodes[i][key] = value; if (key === 'title' || key === 'eyebrow') renderFeaturedOptions(); }
+function updateEpisode(i, key, value) { data.episodes[i][key] = value; if (key === 'title' || key === 'eyebrow') renderFeaturedOptions(); if(key==='href')refreshFeaturedCTAHref(); }
 function addEpisode() { data.episodes.push({ image:'images/new-episode.jpg', eyebrow:`Episode ${data.episodes.length + 1}`, title:'New Episode', text:'Episode description goes here.', href:'https://www.youtube.com/@by-jdg', cta:'Watch Film →' }); renderEpisodes(); }
 function deleteEpisode(i) {
  const select=byId('cinema.featuredIndex');let selected=Number(select.value);
@@ -526,25 +539,46 @@ function renderProjects() {
   const extra = [{key:'image',label:'Hero Image Path or HTTPS Address'},
     {key:'formAction',label:'Message Form Destination (HTTPS)'},
     ...[0,1,2].map(i=>({key:`connect${i}Href`,label:`Contact Link ${i+1} Address`}))];
-  byId('projectsFields').innerHTML = [...extra, ...data.projectFields].map(f => {
-    const id = 'projects.' + f.key;
-    const control = f.multi
-      ? `<textarea id="${id}">${escapeHtml(data.projects[f.key])}</textarea>`
-      : `<input id="${id}" value="${escapeAttr(data.projects[f.key])}">`;
-    const upload = f.key === 'image'
-      ? `<label for="projectsHeroUpload">Upload Hero Image</label><input id="projectsHeroUpload" type="file" accept="image/*" onchange="uploadImage(event, 'projects.image')"><img class="preview" id="preview.projects.image" alt="Projects hero image preview"><p class="muted">Choose an image, then save or preview your changes. Publish to Live when ready.</p>`
-      : '';
-    return `<label for="${id}">${escapeHtml(f.label)}</label>${control}${upload}`;
-  }).join('');
+  const fields = [...extra, ...data.projectFields];
+  const groups = [
+    {target:'projectsHeroFields', title:'Hero', keys:['eyebrow','title','intro','image']},
+    {target:'projectsServicesFields', title:'Services', keys:[0,1,2,3].flatMap(i=>['service'+i+'Title','service'+i+'Text'])},
+    {target:'projectsContactFields', title:'Contact', keys:['contactTitle','contactIntro','formTitle','formAction','note','location','availability']},
+    {target:'projectsSocialFields', title:'Social & Links', keys:['connectTitle','connectIntro',...[0,1,2].flatMap(i=>['connect'+i+'Text','connect'+i+'Href'])]},
+    {target:'projectsFooterFields', title:'Footer', keys:['quote','quoteBy']}
+  ];
+  // Keep every control mounted so changing tabs preserves unsaved edits.
+  for (const group of groups) {
+    const groupedFields = group.keys.map(key=>fields.find(f=>f.key===key)).filter(Boolean);
+    if (group.target === 'projectsFooterFields') {
+      groupedFields.push(...fields.filter(f=>!groups.some(g=>g.keys.includes(f.key))));
+    }
+    byId(group.target).innerHTML = '<div class="card"><h2>'+escapeHtml(group.title)+'</h2>'+groupedFields.map(f => {
+      const id = 'projects.' + f.key;
+      const control = f.multi
+        ? `<textarea id="${id}">${escapeHtml(data.projects[f.key])}</textarea>`
+        : `<input id="${id}" value="${escapeAttr(data.projects[f.key])}">`;
+      const upload = f.key === 'image'
+        ? `<label for="projectsHeroUpload">Upload Hero Image</label><input id="projectsHeroUpload" type="file" accept="image/*" onchange="uploadImage(event, 'projects.image')"><img class="preview" id="preview.projects.image" alt="Projects hero image preview"><p class="muted">Choose an image, then save or preview your changes. Publish to Live when ready.</p>`
+        : '';
+      return `<label for="${id}">${escapeHtml(f.label)}</label>${control}${upload}`;
+    }).join('')+'</div>';
+  }
   byId('projects.image').addEventListener('input', () => updatePreview('projects.image'));
   updatePreview('projects.image');
 }
 
+function refreshFeaturedCTAHref() {
+ const input=byId('cinema.ctaHref');const automatic=byId('cinema.ctaUseFilmLink').checked;
+ input.readOnly=automatic;
+ if(automatic)input.value=data.episodes[Number(byId('cinema.featuredIndex').value)]?.href||'';
+}
 function renderFeaturedOptions() {
   const select = byId('cinema.featuredIndex');
   const selected = select.value === '' ? data.cinema.featuredIndex : Number(select.value);
   select.innerHTML = '<option value="-1">No featured film</option>' + data.episodes.map((ep,i)=>`<option value="${i}">${escapeHtml(ep.eyebrow)} — ${escapeHtml(ep.title)}</option>`).join('');
   select.value = String(selected >= data.episodes.length ? data.episodes.length - 1 : selected);
+  refreshFeaturedCTAHref();
 }
 
 function renderSectionTones() {
@@ -563,12 +597,12 @@ function collectData() {
   data.websiteIcon = {path:getField('websiteIcon.path')};
   ['home','projects','aboutPage'].forEach(page => data.toneSections[page].forEach(s => {data.sectionTones[page][s.key]=getField('tones.'+page+'.'+s.key);}));
   Object.keys(data.aboutPage).forEach(key => {data.aboutPage[key]=getField('aboutPage.'+key);});
-  data.branding = {logoText:getField('branding.logoText')};
+  data.branding = {logoText:getField('branding.logoText'),logoImage:getField('branding.logoImage')};
   ['home','projects','aboutPage'].forEach(page => ['title','description','socialImage'].forEach(key => { data.pages[page][key]=getField('pages.'+page+'.'+key); }));
-  data.cinema = {aboutTone:getField('cinema.aboutTone'),featuredIndex:Number(byId('cinema.featuredIndex').value),headline:getField('cinema.headline'),intro:getField('cinema.intro'),portrait:getField('cinema.portrait'),eyebrow:getField('cinema.eyebrow'),ctaText:getField('cinema.ctaText')};
+  data.cinema = {aboutTone:getField('cinema.aboutTone'),featuredIndex:Number(byId('cinema.featuredIndex').value),portrait:getField('cinema.portrait'),eyebrow:getField('cinema.eyebrow'),ctaText:getField('cinema.ctaText'),ctaHref:byId('cinema.ctaUseFilmLink').checked?'':getField('cinema.ctaHref').trim()};
   Object.keys(data.projects).forEach(key => { data.projects[key] = getField('projects.' + key); });
   data.appearance = { theme: byId('siteTheme').value };
-  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','latest.viewAllText','latest.viewAllHref','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
+  ['hero.image','hero.eyebrow','hero.title','hero.subtitle','hero.buttonText','hero.buttonHref','latest.title','about.title','about.lead','about.text','about.cta','about.href','contact.title','contact.text','contact.buttonText','contact.ctaText','contact.ctaHref','footer.copyright'].forEach(path => {
     const [group, key] = path.split('.');
     data[group][key] = getField(path);
   });
@@ -665,6 +699,25 @@ async function uploadWebsiteIcon(event) {
   status.textContent='Icon selected. Use Preview Changes to save, then publish when ready.';
  }catch(error){status.textContent=error.message;}finally{event.target.value='';}
 }
+function updateBrandLogoPreview() {
+ const value=getField('branding.logoImage');const image=byId('preview.branding.logoImage');
+ image.hidden=!value;byId('removeBrandLogo').disabled=!value;
+ if(value)image.src='/'+value;else image.removeAttribute('src');
+}
+function removeBrandLogo() {
+ setField('branding.logoImage','');byId('brandingLogoUpload').value='';updateBrandLogoPreview();
+ byId('status').textContent='Text logo selected. Save or preview, then publish when ready.';
+}
+async function uploadBrandLogo(event) {
+ try {
+  const file=event.target.files[0];if(!file)return;
+  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||! /\.(png|jpe?g|webp)$/i.test(file.name))throw Error('Choose a PNG, JPG or WebP logo.');
+  if(file.size>5*1024*1024)throw Error('Choose a logo image under 5 MB.');
+  const path=await uploadFile(file);if(!path)throw Error('Logo upload failed. Please try again.');
+  setField('branding.logoImage',path);updateBrandLogoPreview();
+  byId('status').textContent='Logo image selected. Save or preview, then publish when ready.';
+ } catch(error) {byId('status').textContent=error.message;} finally {event.target.value='';}
+}
 async function uploadImage(event, fieldId) {
   const path = await uploadFile(event.target.files[0]);
   if (!path) return;
@@ -692,8 +745,9 @@ async function uploadFile(file) {
 }
 
 function fileToBase64(file) {
-  return new Promise(resolve => {
+  return new Promise((resolve,reject) => {
     const reader = new FileReader();
+    reader.onerror = () => reject(Error('Could not read the selected image. Please choose it again.'));
     reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.readAsDataURL(file);
   });
@@ -725,5 +779,797 @@ async function uploadHeroSlides(event){const files=[...event.target.files];if(da
 loadContent();
 </script>
 <script src="/studio-deliveries.js"></script>
+<script src="/studio-pages.js"></script>
+<!-- studio-refresh:start -->
+<style id="studio-refresh-css">
+/* ===== by JDG Website Studio — refreshed interface =====
+   Layered over the original styles. Field ids, saving and publishing are unchanged. */
+body.hx{--ink:#1c1b19;--ink2:#3d3a35;--muted:#6b675f;--faint:#8a857c;--line:#e6e3dd;--line2:#dcd8d0;--soft:#f1efea;--paper:#f6f5f2;--card:#fff;--gold:#c9a96e;--ok:#2f6145;--okbg:#e9f3ec;--warn:#8a5a12;--warnbg:#fdf3e2;--danger:#a1352a;
+ --text:var(--ink);--panel:#fff;--panel2:#fff;--accent:var(--ink);
+ background:var(--paper);color:var(--ink);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body.hx .shell{grid-template-columns:256px minmax(0,1fr)}
+body.hx :is(h1,h2,h3){font-family:Inter,system-ui,sans-serif;letter-spacing:0}
+
+/* Sidebar */
+body.hx aside{background:#fff;backdrop-filter:none;border-right:1px solid var(--line);padding:20px 14px;gap:0}
+body.hx .hx-brand{display:flex;align-items:center;gap:12px;padding:2px 8px 4px}
+body.hx .hx-mark{width:36px;height:36px;border-radius:9px;background:#0b0b0a;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+body.hx .hx-mark img{width:30px;height:28px;object-fit:contain}
+body.hx .hx-mark span{color:#f2eee7;font:500 15px "Cormorant Garamond",Georgia,serif}
+body.hx .brand{font:500 20px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:0;margin:0;color:var(--ink)}
+body.hx .studio-name{font-size:12px;letter-spacing:0;color:var(--muted);margin-top:3px}
+body.hx .studio-name span{vertical-align:1px}
+body.hx #cmsNav{margin-top:26px;gap:22px}
+body.hx .hx-group{display:flex;flex-direction:column;gap:2px}
+body.hx .hx-group-label{margin:0 0 6px;padding:0 10px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+body.hx #cmsNav button[data-destination]{border:0;border-left:0;border-radius:8px;padding:9px 10px;font:400 14px Inter,system-ui,sans-serif;color:var(--ink2);background:transparent;display:flex;align-items:center;gap:10px;width:100%;text-align:left}
+body.hx #cmsNav button[data-destination] svg{flex:none;color:currentColor}
+body.hx #cmsNav button[data-destination]:hover{background:var(--soft)}
+body.hx #cmsNav button[data-destination].active{background:var(--soft);font-weight:600;color:var(--ink)}
+body.hx #cmsNav .hx-count{margin-left:auto;font-size:12px;color:var(--faint);font-weight:400}
+body.hx #cmsNav .hx-row{display:flex;align-items:center;gap:4px}
+body.hx #cmsNav .hx-row>button[data-destination]{flex:1}
+body.hx #cmsNav .add-page-button{flex:0 0 30px;width:30px;height:30px;padding:0;border:1px solid var(--line2);border-radius:7px;background:#fff;color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+body.hx #cmsNav .add-page-button:hover{background:var(--soft)}
+body.hx .hx-bottom{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding-top:20px}
+body.hx .hx-sitecard{padding:12px;border:1px solid var(--line);border-radius:10px;background:#faf9f6}
+body.hx .hx-sitecard p{margin:0;font-size:12px}
+body.hx .hx-sitecard .hx-st{display:flex;align-items:center;gap:8px;font-weight:600}
+body.hx .hx-sitecard .hx-sub{margin-top:3px;color:var(--muted)}
+body.hx .hx-dot{width:8px;height:8px;border-radius:50%;background:#3f7d58;flex:none}
+body.hx .hx-dot.warn{background:#c98a1b}
+body.hx .settings-nav,body.hx .pages-nav-row,body.hx #sourcePath,body.hx .connection{display:contents}
+body.hx #sourcePath{display:none}
+body.hx .mobile-menu-toggle{font:500 13px Inter,sans-serif;border-radius:8px}
+
+/* Workspace + top bar */
+body.hx main{padding:0;display:flex;flex-direction:column;min-height:100vh}
+body.hx main>section{max-width:none;padding:24px 28px 48px}
+body.hx .workspace-heading{position:sticky;top:0;z-index:30;margin:0;padding:14px 28px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+body.hx #studioBreadcrumb,body.hx #workspaceDescription{display:none}
+body.hx .hx-titlewrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-width:0}
+body.hx #workspaceTitle{margin:0;font:500 30px/1.1 "Cormorant Garamond",Georgia,serif;letter-spacing:0}
+body.hx .hx-pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--okbg);color:var(--ok)}
+body.hx .hx-pill.warn{background:var(--warnbg);color:var(--warn)}
+body.hx .hx-pill.busy{background:var(--soft);color:var(--ink2)}
+body.hx .hx-pill .hx-dot{width:7px;height:7px}
+body.hx .hx-pill.warn .hx-dot{background:#c98a1b}
+body.hx .hx-msg{font-size:12px;color:var(--muted);max-width:420px}
+body.hx .hx-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+body.hx .hx-btn,body.hx .workspace-heading #workspacePreview{height:40px;padding:0 16px;border:1px solid var(--line2);background:#fff;border-radius:8px;font:500 14px Inter,system-ui,sans-serif;color:var(--ink);display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:none;transform:none}
+body.hx .hx-btn:hover,body.hx .workspace-heading #workspacePreview:hover{background:var(--soft);transform:none}
+body.hx .hx-btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+body.hx .hx-btn.dark:hover{background:#000}
+body.hx .hx-btn.small{height:32px;padding:0 12px;font-size:12px}
+body.hx .hx-btn:disabled{opacity:.55;cursor:default}
+body.hx .toolbar{display:none!important}
+
+/* Shared form + card styles (all screens) */
+body.hx .card,body.hx .episode-card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:none;backdrop-filter:none;padding:20px}
+body.hx h2{font:600 16px/1.3 Inter,system-ui,sans-serif;margin:24px 0 12px}
+body.hx main>section>h2{font:500 24px/1.2 "Cormorant Garamond",Georgia,serif}
+body.hx .card h2{font-size:15px}
+body.hx label{font:500 13px/1.4 Inter,system-ui,sans-serif;color:var(--ink);margin:16px 0 6px;letter-spacing:0;text-transform:none}
+body.hx :is(input,textarea,select){font:14px/1.5 Inter,system-ui,sans-serif;background:#fff;border:1px solid var(--line2);border-radius:8px;color:var(--ink);padding:9px 12px}
+body.hx :is(input,select){min-height:40px}
+body.hx :is(input,textarea,select):focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(28,27,25,.08);outline:none}
+body.hx input[type=checkbox],body.hx input[type=radio]{width:auto;min-height:0;accent-color:var(--ink)}
+body.hx input[type=file]{border:0;padding:0;min-height:0;background:transparent}
+body.hx input[type=file]::file-selector-button{font:500 13px Inter,sans-serif;border:1px solid var(--line2);background:#fff;border-radius:7px;padding:7px 12px;margin-right:10px;color:var(--ink);cursor:pointer}
+body.hx .muted{color:var(--muted);font-size:12.5px}
+body.hx :is(.primary,.secondary,.danger,.beta-btn,.live-btn){font:500 13px Inter,system-ui,sans-serif;border-radius:8px;padding:9px 14px;box-shadow:none;transform:none}
+body.hx .secondary{background:#fff;border:1px solid var(--line2);color:var(--ink)}
+body.hx .secondary:hover{background:var(--soft)}
+body.hx .primary{background:var(--ink);border-color:var(--ink);color:#fff}
+body.hx .danger{background:#fff;border:1px solid #ecc9c4;color:var(--danger)}
+body.hx img.preview{border-radius:8px;border:1px solid var(--line)}
+body.hx .section-navigation{gap:6px;border-bottom:0;margin:0 0 18px}
+body.hx .section-tab{padding:7px 14px;border:1px solid var(--line2);border-radius:999px;background:#fff;color:var(--ink2);font:500 13px Inter,sans-serif}
+body.hx .section-tab.active{background:var(--ink);border-color:var(--ink);color:#fff}
+body.hx .section-tab:hover{color:var(--ink);background:var(--soft)}
+body.hx .section-tab.active:hover{background:#000;color:#fff}
+body.hx :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Homepage editor */
+body.hx #homeEditor{padding:0}
+body.hx .hx-split{display:flex;flex-wrap:wrap;align-items:flex-start}
+body.hx .hx-list{flex:1 1 440px;max-width:580px;min-width:0;padding:22px 24px 48px 28px;display:flex;flex-direction:column;gap:12px}
+body.hx .hx-lead{margin:0 0 2px;font-size:13px;color:var(--muted)}
+body.hx .hx-item{background:#fff;border:1px solid var(--line);border-radius:12px}
+body.hx .hx-item.open{border-color:#d1cbc0;box-shadow:0 1px 2px rgba(28,27,25,.05)}
+body.hx .hx-head{width:100%;display:flex;align-items:center;gap:12px;padding:13px 16px;background:none;border:0;cursor:pointer;font:inherit;color:inherit;text-align:left;border-radius:12px}
+body.hx .hx-item.open .hx-head{border-bottom:1px solid #eeebe5;border-radius:12px 12px 0 0}
+body.hx .hx-num{width:26px;height:26px;border-radius:7px;background:var(--soft);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+body.hx .hx-item.open .hx-num{background:var(--ink);color:#fff}
+body.hx .hx-thumb{width:44px;height:30px;object-fit:cover;border-radius:4px;flex:none}
+body.hx .hx-thumb.round{width:30px;border-radius:50%}
+body.hx .hx-text{flex:1;min-width:0}
+body.hx .hx-text b{display:block;font-weight:600}
+body.hx .hx-text small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.hx .hx-tone{font-size:12px;color:var(--muted);white-space:nowrap}
+body.hx .hx-chev{flex:none;transition:transform .2s}
+body.hx .hx-item.open .hx-chev{transform:rotate(180deg)}
+body.hx .hx-body{padding:4px 16px 18px}
+body.hx .hx-body section{display:block!important;max-width:none;padding:0;margin:0}
+body.hx .hx-body section>h2{display:none}
+body.hx .hx-body .card{border:0;padding:0;margin:0;background:transparent;border-radius:0}
+body.hx .hx-body .card>h2{margin:18px 0 0;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+body.hx .hx-body .hero-editor{display:block}
+body.hx .hx-body .hero-image-card{margin-top:8px}
+body.hx .hx-body .hero-image-card img.preview{aspect-ratio:16/9;margin:6px 0 10px}
+body.hx .hx-body .row{gap:12px}
+body.hx .hx-body textarea{min-height:76px}
+body.hx .hx-hint{font-weight:400;color:var(--faint)}
+body.hx .hx-help{margin:6px 0 0;font-size:12px;color:var(--muted)}
+body.hx .hx-tonefield{margin-top:18px;padding-top:14px;border-top:1px solid #eeebe5}
+body.hx .hx-film{display:flex;align-items:center;gap:14px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#faf9f6}
+body.hx .hx-film img{width:96px;height:54px;object-fit:cover;border-radius:6px}
+body.hx .hx-film p{margin:0}
+body.hx .hx-film .hx-filmt{font-weight:600}
+body.hx .hx-film .hx-films{font-size:12px;color:var(--muted)}
+body.hx .hx-film .hx-btn{margin-left:auto}
+/* Hide raw file-path boxes and options that moved */
+body.hx :is([for="hero.image"],[id="hero.image"],[id="cinema.portrait"],[for="cinema.featuredIndex"],[id="cinema.featuredIndex"]){display:none!important}
+body.hx .hx-body .hero-image-card>p.muted:last-child,body.hx #hxBody-latest .card>p.muted:first-child{display:none}
+body.hx .hx-body .hero-slide-editor{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;align-items:start;margin:10px 0;padding:10px 0}
+body.hx .hx-body .hero-slide-editor img{grid-row:span 3;width:120px;height:72px}
+body.hx .hx-body .hero-slide-editor label{margin:0}
+body.hx .hx-body .hero-slide-editor input{display:none}
+body.hx .hx-body .hero-slide-editor .buttons{margin-top:4px}
+
+/* Preview */
+body.hx .hx-preview{flex:999 1 420px;min-width:0;position:sticky;top:69px;padding:22px 28px 24px 4px;display:flex;flex-direction:column;gap:10px;height:calc(100vh - 69px);box-sizing:border-box}
+body.hx .hx-prevhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+body.hx .hx-prevhead p{margin:0;font-size:13px;font-weight:600}
+body.hx .hx-prevhead p span{font-weight:400;color:var(--muted)}
+body.hx .hx-seg{display:inline-flex;padding:3px;background:#ebe8e2;border-radius:8px}
+body.hx .hx-seg button{height:30px;padding:0 12px;border:0;border-radius:6px;background:transparent;font:500 12px Inter,sans-serif;color:#4a463f;cursor:pointer}
+body.hx .hx-seg button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+body.hx .hx-frame{flex:1;min-height:360px;border-radius:12px;overflow:hidden;border:1px solid #d9d4ca;background:#0b0b0a;box-shadow:0 12px 32px rgba(28,27,25,.12);display:flex;flex-direction:column}
+body.hx .hx-chrome{height:30px;flex:none;background:#1d1c1a;display:flex;align-items:center;gap:6px;padding:0 12px}
+body.hx .hx-chrome i{width:9px;height:9px;border-radius:50%;background:#4a4844}
+body.hx .hx-chrome span{margin-left:10px;font-size:11px;color:#a39d92}
+body.hx .hx-viewport{position:relative;flex:1;overflow:hidden;background:#0b0b0a}
+body.hx .hx-viewport iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0;background:#0b0b0a}
+body.hx .hx-note{margin:0;font-size:12px;color:var(--muted)}
+
+/* Films */
+body.hx #filmsEditor{padding:0}
+body.hx .fx-wrap{display:flex;flex-wrap:wrap;align-items:stretch;min-height:calc(100vh - 69px)}
+body.hx .fx-main{flex:999 1 480px;min-width:0;padding:22px 28px 48px}
+body.hx .fx-intro{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+body.hx .fx-intro p{margin:0;max-width:540px;font-size:13px;color:var(--muted)}
+body.hx .fx-intro b{color:var(--ink);font-weight:600}
+body.hx .fx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px}
+body.hx .fx-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,border-color .2s}
+body.hx .fx-card:hover{border-color:#cfc9be;box-shadow:0 6px 18px rgba(28,27,25,.08)}
+body.hx .fx-card.is-sel{border:2px solid var(--ink);box-shadow:0 6px 18px rgba(28,27,25,.1)}
+body.hx .fx-card.drag-over{outline:2px dashed var(--gold);outline-offset:3px}
+body.hx .fx-card.dragging{opacity:.4}
+body.hx .fx-thumb{position:relative;background:var(--soft)}
+body.hx .fx-thumb img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+body.hx .fx-badge{position:absolute;left:10px;top:10px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.92);color:var(--ink2);font-size:11px;font-weight:600}
+body.hx .fx-card.is-feat .fx-badge{background:var(--gold);color:var(--ink)}
+body.hx .fx-grip{position:absolute;right:10px;top:10px;width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:grab}
+body.hx .fx-meta{padding:12px 14px 14px}
+body.hx .fx-meta p{margin:0}
+body.hx .fx-eye{font-size:11px;color:var(--muted)}
+body.hx .fx-title{margin-top:3px!important;font-weight:600;line-height:1.3}
+body.hx .fx-add{border:1.5px dashed #c9c3b8;border-radius:12px;background:#faf9f6;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font:500 14px Inter,sans-serif;cursor:pointer}
+body.hx .fx-add:hover{background:#f3f1ec;color:var(--ink)}
+body.hx .fx-add i{width:40px;height:40px;border-radius:50%;border:1px solid #c9c3b8;display:flex;align-items:center;justify-content:center;font-size:22px;font-style:normal}
+body.hx .fx-panel{flex:1 1 360px;max-width:420px;min-width:0;background:#fff;border-left:1px solid var(--line);padding:20px 22px;display:flex;flex-direction:column;gap:2px;position:sticky;top:69px;height:calc(100vh - 69px);overflow:auto;box-sizing:border-box}
+body.hx .fx-panel[hidden]{display:none!important}
+body.hx .fx-phead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+body.hx .fx-phead h2{margin:0;font-size:16px}
+body.hx .fx-x{width:32px;height:32px;border:0;background:var(--soft);border-radius:8px;cursor:pointer;color:var(--ink2);font-size:18px;line-height:1}
+body.hx .fx-photo{position:relative;border-radius:10px;overflow:hidden;background:var(--soft)}
+body.hx .fx-photo img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+body.hx .fx-photo .fx-pact{position:absolute;left:0;right:0;bottom:0;padding:10px;display:flex;gap:8px;background:linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,0))}
+body.hx .fx-upl{position:relative;display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:6px;background:rgba(255,255,255,.95);font:500 12px Inter,sans-serif;color:var(--ink);cursor:pointer;margin:0}
+body.hx .fx-upl input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;min-height:0}
+body.hx .fx-upl:focus-within{outline:2px solid #fff;outline-offset:2px}
+body.hx .fx-two{display:flex;gap:12px;flex-wrap:wrap}
+body.hx .fx-two>div{flex:1 1 140px;min-width:0}
+body.hx .fx-lblrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+body.hx .fx-lblrow span{font-size:12px;color:var(--muted)}
+body.hx .fx-ok{color:var(--ok)!important}
+body.hx .fx-bad{color:var(--danger)!important}
+body.hx .fx-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#faf9f6;cursor:pointer;position:relative}
+body.hx .fx-switch b{display:block;font-size:13px;font-weight:600}
+body.hx .fx-switch small{display:block;font-size:12px;color:var(--muted);font-weight:400}
+body.hx .fx-switch input{position:absolute;opacity:0;width:1px;height:1px}
+body.hx .fx-track{flex:none;width:40px;height:24px;border-radius:999px;background:#cfc9be;position:relative;transition:background .2s}
+body.hx .fx-track::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+body.hx .fx-switch input:checked+.fx-track{background:var(--ink)}
+body.hx .fx-switch input:checked+.fx-track::after{transform:translateX(16px)}
+body.hx .fx-switch:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+body.hx .fx-move{display:flex;gap:8px;margin-top:12px}
+body.hx .fx-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;border-top:1px solid #eeebe5}
+body.hx .fx-remove{height:40px;padding:0 4px;border:0;background:none;color:var(--danger);font:500 14px Inter,sans-serif;cursor:pointer}
+
+/* Publish dialog + toast */
+body.hx .px-back{position:fixed;inset:0;z-index:100;background:rgba(28,27,25,.55);display:flex;align-items:center;justify-content:center;padding:24px}
+body.hx .px-back[hidden]{display:none!important}
+body.hx .px-dialog{width:100%;max-width:560px;max-height:calc(100vh - 48px);overflow:auto;background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.35)}
+body.hx .px-top{padding:24px 28px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+body.hx .px-top h2{margin:0;font:500 30px/1.1 "Cormorant Garamond",Georgia,serif}
+body.hx .px-top p{margin:6px 0 0;color:var(--muted)}
+body.hx .px-sec{padding:14px 28px 0}
+body.hx .px-label{margin:0 0 8px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+body.hx .px-list{margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:10px}
+body.hx .px-list li{padding:10px 14px;border-bottom:1px solid #eeebe5;font-weight:600}
+body.hx .px-list li:last-child{border-bottom:0}
+body.hx .px-list li.none{font-weight:400;color:var(--muted)}
+body.hx .px-sec fieldset{margin:0;padding:0;border:0;display:flex;flex-direction:column;gap:10px}
+body.hx .px-opt{display:flex;gap:14px;padding:14px 16px;border:1px solid var(--line2);border-radius:12px;cursor:pointer;margin:0;font-weight:400}
+body.hx .px-opt:has(input:checked){border:2px solid var(--ink);background:#faf9f6;padding:13px 15px}
+body.hx .px-opt input{margin:3px 0 0;width:18px;height:18px;flex:none}
+body.hx .px-opt b{display:flex;align-items:center;gap:8px;font-weight:600}
+body.hx .px-opt small{display:block;color:var(--muted);font-size:13px}
+body.hx .px-tag{padding:2px 8px;border-radius:999px;background:#eef2f8;color:#2c4a73;font-size:11px;font-weight:600}
+body.hx .px-foot{margin-top:22px;padding:16px 28px;background:#faf9f6;border-top:1px solid #eeebe5;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+body.hx .px-foot p{margin:0;font-size:12px;color:var(--muted);max-width:260px}
+body.hx .px-result{margin:0;padding:0 28px 18px;font-size:13px}
+body.hx .px-result:empty{display:none}
+body.hx .hx-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:120;padding:10px 16px;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+body.hx .hx-toast[hidden]{display:none}
+
+@media(max-width:1100px){body.hx .hx-list{max-width:none}body.hx .hx-preview{position:static;height:560px;padding:0 24px 32px 28px}}
+@media(max-width:800px){
+ body.hx .shell{display:block}
+ body.hx aside{padding:14px 18px}
+ body.hx .hx-bottom{display:none}
+ body.hx #cmsNav{display:none}
+ body.hx #cmsNav.open{display:flex}
+ body.hx .workspace-heading{padding:12px 18px}
+ body.hx .hx-list,body.hx .fx-main{padding:18px}
+ body.hx .hx-preview{display:none}
+ body.hx .fx-panel{position:fixed;inset:0;max-width:none;height:auto;z-index:90}
+ body.hx main>section{padding:18px}
+}
+body.hx #cmsNav button span.hx-l{display:inline;width:auto;font-size:14px;color:inherit;place-items:initial;white-space:nowrap}
+body.hx #cmsNav button span.hx-count{display:inline;width:auto;font-size:12px;color:var(--faint)}
+body.hx .fx-panel>*{flex-shrink:0}
+/* Field alignment: side-by-side fields share one baseline, labels never wrap */
+body.hx .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;align-items:end}
+body.hx .row>div{min-width:0;display:flex;flex-direction:column}
+body.hx .row>div>label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.hx .row>div>:is(input,select,textarea){width:100%}
+body.hx :is(input:not([type=checkbox]):not([type=radio]):not([type=file]),select){height:40px;box-sizing:border-box}
+body.hx textarea{box-sizing:border-box;width:100%}
+body.hx .hx-body label:first-child,body.hx .card>label:first-child{margin-top:4px}
+body.hx label:has(>input[type=checkbox]){display:flex;align-items:center;gap:10px;font-weight:400}
+body.hx label:has(>input[type=checkbox])>input{margin:0}
+@media(max-width:560px){body.hx .row{grid-template-columns:minmax(0,1fr)}}
+/* Side preview for About + Collaborate */
+body.hx #hxSidePreview{display:none}
+body.hx main.hx-pv>#hxSidePreview{display:flex;position:fixed;top:69px;right:0;bottom:0;left:calc(256px + 580px);height:auto;padding:22px 28px 24px 8px;z-index:5}
+body.hx main.hx-pv>section{max-width:580px}
+body.hx main.hx-pv>.section-navigation{max-width:580px}
+body.hx :is([id="projects.image"],[for="projects.image"],[id="aboutPage.portrait"]){display:none!important}
+@media(max-width:1180px){body.hx main.hx-pv>#hxSidePreview{display:none}}
+/* Section lists on every page editor */
+body.hx main>section.hx-editor{padding:0}
+body.hx :is(#aboutEditor,#projectsEditor) .hx-body .card>h2:first-child{display:none}
+body.hx :is(#aboutEditor,#projectsEditor) .hx-body .card>label:nth-child(2){margin-top:4px}
+
+</style>
+<script id="studio-refresh-js">
+/* ===== by JDG Website Studio — refreshed interface =====
+   Works on top of the original Studio: same `data` object, same field ids, same saveHtml().
+   Nothing here writes to the website except through the Studio's own save/publish calls. */
+(function(){
+'use strict';
+var d=document;
+function $(s,r){return (r||d).querySelector(s)}
+function $$(s,r){return [].slice.call((r||d).querySelectorAll(s))}
+function h(html){var t=d.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
+function esc(s){return escapeHtml(s==null?'':String(s))}
+function imgSrc(p){p=String(p||'');return /^https?:\/\//i.test(p)||p.startsWith('/')?p:'/'+p}
+var I={
+ home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ about:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+ collab:'<path d="M4 7h16v12H4z"/><path d="M9 7V5h6v2"/>',
+ pages:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>',
+ films:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>',
+ box:'<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+ eye:'<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>'
+};
+function svg(name,size,sw){return '<svg aria-hidden="true" width="'+(size||18)+'" height="'+(size||18)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.7)+'" stroke-linecap="round" stroke-linejoin="round">'+I[name]+'</svg>'}
+
+/* ---------- 1. Destinations & names ---------- */
+var D=studioDestinations;
+D.home.tabs=[['homeEditor','Sections']];
+D.films={title:'Films',description:'',tabs:[['filmsEditor','Films']]};
+D.aboutPage.title='About page';
+D.projects.title='Collaborate page';
+D.customPages.title='Extra pages';
+D.deliveries.title='Client deliveries';
+D.settings.title='Site settings';
+studioLastTab.home='homeEditor';
+studioLastTab.films='filmsEditor';
+D.aboutPage.tabs=[['aboutEditor','Sections']];studioLastTab.aboutPage='aboutEditor';
+D.projects.tabs=[['projectsEditor','Sections']];studioLastTab.projects='projectsEditor';
+var main=$('main'), toolbar=$('.toolbar');
+
+/* ---------- 2. Sidebar ---------- */
+function buildSidebar(){
+ var nav=byId('cmsNav'), aside=$('aside');
+ var b=function(dest){return nav.querySelector('[data-destination="'+dest+'"]')};
+ var add=nav.querySelector('.add-page-button');
+ var label=function(btn,icon,text){btn.innerHTML=svg(icon)+'<span class="hx-l">'+text+'</span>';return btn};
+ var films=h('<button type="button" data-destination="films"></button>');films.addEventListener('click',function(){showDestination('films')});
+ var pagesBtn=label(b('customPages'),'pages','Extra pages');
+ var settingsBtn=label(b('settings'),'gear','Site settings');
+ var groups=[
+  ['Pages',[label(b('home'),'home','Homepage'),label(b('aboutPage'),'about','About'),label(b('projects'),'collab','Collaborate'),'pages']],
+  ['Content',[label(films,'films','Films')]],
+  ['Clients',[label(b('deliveries'),'box','Client deliveries')]]
+ ];
+ nav.innerHTML='';
+ groups.forEach(function(g){
+  var wrap=h('<div class="hx-group"><p class="hx-group-label">'+g[0]+'</p></div>');
+  g[1].forEach(function(item){
+   if(item==='pages'){var row=h('<div class="hx-row"></div>');row.appendChild(pagesBtn);if(add){add.setAttribute('aria-label','Add a new page');add.title='Add a new page';row.appendChild(add)}wrap.appendChild(row)}
+   else wrap.appendChild(item);
+  });
+  nav.appendChild(wrap);
+ });
+ var bottom=h('<div class="hx-bottom"><div class="hx-group"></div><div class="hx-sitecard" aria-live="polite"><p class="hx-st"><span class="hx-dot"></span><span id="hxSiteState">Everything is saved</span></p><p class="hx-sub" id="hxSiteSub">Publish when you’re ready</p></div></div>');
+ bottom.firstElementChild.appendChild(settingsBtn);
+ nav.appendChild(bottom);
+ var brand=$('.brand'),studio=$('.studio-name');
+ var head=h('<div class="hx-brand"><div class="hx-mark" id="hxMark"><span>J</span></div><div></div></div>');
+ aside.insertBefore(head,brand);head.lastElementChild.appendChild(brand);head.lastElementChild.appendChild(studio);
+ if(studio.firstChild&&studio.firstChild.nodeType===3)studio.firstChild.textContent='Website Studio ';
+}
+
+/* ---------- 3. Top bar ---------- */
+var pill,msg;
+function buildTopbar(){
+ var wh=$('.workspace-heading'),left=wh.firstElementChild,prev=byId('workspacePreview');
+ var tw=h('<div class="hx-titlewrap"></div>');left.insertBefore(tw,byId('workspaceTitle'));tw.appendChild(byId('workspaceTitle'));
+ pill=h('<span class="hx-pill" id="hxPill"><span class="hx-dot"></span><span>All changes saved</span></span>');tw.appendChild(pill);
+ msg=byId('status');msg.className='hx-msg';msg.setAttribute('role','status');tw.appendChild(msg);
+ /* The original Studio writes routine notes here ("Loaded from index.html", "Preview ready"); keep only useful ones. */
+ new MutationObserver(function(){if(/^(Loaded from|Preview ready|Saving preview)/.test(msg.textContent))msg.textContent=''}).observe(msg,{childList:true,characterData:true,subtree:true});
+ var act=h('<div class="hx-actions"></div>');wh.appendChild(act);
+ prev.innerHTML=svg('eye',16,1.8)+'Open full preview';prev.className='hx-btn';prev.onclick=openFullPreview;act.appendChild(prev);
+ var save=h('<button type="button" class="hx-btn" id="hxSave">Save</button>');save.onclick=function(){doSave()};act.appendChild(save);
+ var pub=h('<button type="button" class="hx-btn dark" id="hxPublish">Publish…</button>');pub.onclick=openPublish;act.appendChild(pub);
+ d.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='s'){e.preventDefault();doSave()}});
+}
+async function openFullPreview(){
+ var page=studioDestination==='aboutPage'?'/about.html':studioDestination==='projects'?'/projects.html':'/preview';
+ if(dirty.size){var ok=await doSave();if(!ok)return}
+ window.open(page,'_blank');
+}
+
+/* ---------- 4. Unsaved-change tracking ---------- */
+var dirty=new Set(), sessionEdits=new Set(), snapshot='', saving=false;
+var EXCLUDE='#deliveries,#customPages,.px-back';
+function areaName(){return (D[studioDestination]||{}).title||'Website'}
+function markDirty(key,area){dirty.add(key);sessionEdits.add(area||areaName());paint()}
+function paint(){
+ if(!pill)return;
+ var n=dirty.size,txt=pill.lastElementChild;
+ pill.className='hx-pill'+(saving?' busy':n?' warn':'');
+ txt.textContent=saving?'Saving…':n?(n===1?'1 unsaved change':n+' unsaved changes'):'All changes saved';
+ var st=byId('hxSiteState'),sub=byId('hxSiteSub'),dot=st.previousElementSibling;
+ if(n){st.textContent='Unsaved changes';sub.textContent='Click Save to keep them';dot.className='hx-dot warn'}
+ else if(sessionEdits.size){st.textContent='Saved, not published';sub.textContent='Publish to update your website';dot.className='hx-dot warn'}
+ else{st.textContent='Everything is saved';sub.textContent='Publish when you’re ready';dot.className='hx-dot'}
+ byId('hxSave').disabled=!n||saving;
+}
+function watch(){
+ var on=function(e){var t=e.target;if(!t.matches||!t.matches('input,textarea,select')||t.closest(EXCLUDE)||t.dataset.hxIgnore)return;markDirty(t.id||t.name||('field'+dirty.size))};
+ main.addEventListener('input',on,true);main.addEventListener('change',on,true);
+ /* buttons inside sections that change data (add/remove/move links and slides) */
+ main.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.closest(EXCLUDE)||b.closest('.workspace-heading,.hx-head,.hx-seg,#filmsEditor,.hx-film,.section-navigation'))return;var oc=b.getAttribute('onclick')||'';if(/splice|push|move|add|remove/i.test(oc+b.textContent))markDirty('click:'+oc.slice(0,40)+b.textContent)},true);
+}
+async function doSave(){
+ if(saving)return false;saving=true;paint();
+ try{
+  var r=await saveHtml();
+  if(!r.ok)throw Error(r.error||'Save failed');
+  dirty.clear();msg.textContent='';
+  snapshot=await fetchSnapshot();
+  reloadPreview();
+  return true;
+ }catch(e){msg.textContent='Couldn’t save: '+e.message;return false}
+ finally{saving=false;paint()}
+}
+async function fetchSnapshot(){try{var r=await fetch('/api/content',{cache:'no-store'});return await r.text()}catch(e){return ''}}
+/* If the website files changed while nothing is unsaved here (another window, an earlier save),
+   load the latest version so an old screen can never save over newer work. */
+async function refreshIfStale(){
+ if(dirty.size||saving||!snapshot)return;
+ var now=await fetchSnapshot();
+ if(now&&now!==snapshot&&!dirty.size){await loadContent();snapshot=now;afterLoad();reloadPreview();toast('Loaded the latest saved version of your website.')}
+}
+var toastEl;function toast(t){toastEl.textContent=t;toastEl.hidden=false;clearTimeout(toastEl._t);toastEl._t=setTimeout(function(){toastEl.hidden=true},3600)}
+
+/* ---------- 5. Plain-language labels ---------- */
+function labelFor(id){var el=byId(id);if(!el)return null;var l=d.querySelector('label[for="'+id+'"]');if(l)return l;var p=el.previousElementSibling;return p&&p.tagName==='LABEL'?p:null}
+function relabel(id,text,hint,help){var l=labelFor(id);if(!l)return;l.innerHTML=esc(text)+(hint?' <span class="hx-hint">— '+esc(hint)+'</span>':'');l.htmlFor=id;
+ if(help){var el=byId(id),n=el.nextElementSibling;if(!(n&&n.classList.contains('hx-help')))el.insertAdjacentElement('afterend',h('<p class="hx-help">'+esc(help)+'</p>'))}}
+function relabelAll(){
+ relabel('hero.eyebrow','Small label','above the headline');
+ relabel('hero.title','Headline',null,'The last word is shown in italics automatically.');
+ relabel('hero.subtitle','Intro sentence');
+ relabel('hero.buttonText','Button text');
+ relabel('hero.buttonHref','Button link');
+ relabel('hero.mode','Background');
+ var hm=byId('hero.mode');if(hm&&hm.options.length>1){hm.options[0].text='One photo';hm.options[1].text='Rotating photos (slideshow)'}
+ relabel('hero.interval','Seconds per photo');
+ relabel('cinema.eyebrow','Small label','above the film');
+ relabel('cinema.ctaText','Button text');
+ relabel('cinema.ctaHref','Button link');
+ relabel('latest.title','Small label','above the film grid');
+ relabel('about.title','Small label','above the headline');
+ relabel('about.lead','Headline',null,'The second sentence is shown in italics automatically.');
+ relabel('about.text','Paragraph');
+ relabel('about.cta','Link text');
+ relabel('about.href','Link goes to');
+ relabel('contact.title','Headline',null,'The last word is shown in italics automatically.');
+ relabel('contact.text','Intro sentence');
+ relabel('contact.buttonText','Email button text');
+ relabel('contact.ctaText','Link text');
+ relabel('contact.ctaHref','Link goes to');
+ var hc=$('#hero .hero-editor .card h2');if(hc)hc.textContent='Text';
+ var hi=$('#hero .hero-image-card h2');if(hi)hi.textContent='Photos';
+ var pl=labelFor('cinema.portrait');if(pl)pl.textContent='Portrait photo';
+ var ul=$('#hero .upload-label');if(ul&&ul.firstChild&&ul.firstChild.nodeType===3)ul.firstChild.textContent='Replace photo';
+ $$('#hero .hero-image-card > label').forEach(function(l){if(/static image/i.test(l.textContent))l.textContent='Main photo (also used when motion is turned off)'});
+ /* About + Collaborate editors: plain names, no raw file paths */
+ var PLAIN=[[/^Hero Eyebrow$/,'Small label'],[/^Eyebrow$/,'Small label'],[/^Hero Title.*$/,'Headline'],[/^Hero Description$/,'Intro sentence'],[/^Upload Hero Image$/,'Hero photo'],
+  [/^Contact Heading$/,'Small label (services)'],[/^Contact Introduction$/,'Intro'],[/^Form Heading$/,'Small label (form)'],[/^Form Note$/,'Note under the form'],[/^Message Form Destination \(HTTPS\)$/,'Form sends to'],
+  [/^Social Heading$/,'Small label (social)'],[/^Social Introduction$/,'Intro (social)'],[/^Contact Link (\d) Address$/,'Link $1 goes to'],[/^Contact Link (\d) Text$/,'Link $1 text'],
+  [/^Portrait image$/,'Portrait photo'],[/^Image description$/,'Photo description (for screen readers)'],[/^Paragraphs$/,'Paragraphs']];
+ $$('#aboutIntroduction label,#aboutStory label,#aboutShare label,#aboutContact label,#projects label,#projectsServices label,#projectsContact label,#projectsSocial label,#projectsFooter label').forEach(function(l){
+  var t=l.textContent.trim();for(var k=0;k<PLAIN.length;k++)if(PLAIN[k][0].test(t)){l.textContent=t.replace(PLAIN[k][0],PLAIN[k][1]);break}
+ });
+ var cb=byId('cinema.ctaUseFilmLink');if(cb&&cb.parentElement&&cb.parentElement.tagName==='LABEL'){var tn=[].find.call(cb.parentElement.childNodes,function(n){return n.nodeType===3&&n.nodeValue.trim()});if(tn)tn.nodeValue=' Button opens the featured film'}
+}
+
+/* ---------- 6. Homepage section list ---------- */
+var TONES=[['theme','Match website'],['stone','Warm stone'],['taupe','Soft taupe'],['charcoal','Smoked charcoal']];
+function toneName(v){for(var i=0;i<TONES.length;i++)if(TONES[i][0]===v)return TONES[i][1];return 'Match website'}
+function featIndex(){var s=byId('cinema.featuredIndex');return s&&s.value!==''?Number(s.value):-1}
+function firstLine(s){return String(s||'').split('\n').filter(Boolean).join(' ')}
+var HOME_ROWS=[
+ {key:'hero',title:'Top banner',tone:null,body:function(){return [byId('hero')]},sum:function(){return getField('hero.title')||'The first thing visitors see'}},
+ {key:'latest',title:'Latest film',tone:'tones.home.featured',body:function(){return [byId('cinema').querySelector('.card')]},film:'latest',
+  sum:function(){var ep=data.episodes[featIndex()];return ep?ep.title+' · picked in Films':'No film featured — pick one in Films'},
+  thumb:function(){var ep=data.episodes[featIndex()];return ep?imgSrc(ep.image):''}},
+ {key:'more',title:'More films',tone:'tones.home.collection',body:function(){return [byId('episodes').querySelector('.card')]},film:'more',
+  sum:function(){var n=data.episodes.length-(featIndex()>=0?1:0);return (getField('latest.title')||'Film grid')+' · '+n+(n===1?' film':' films')}},
+ {key:'about',title:'About you',tone:'cinema.aboutTone',body:function(){return [byId('about')]},sum:function(){return getField('about.lead')||getField('about.title')},
+  thumb:function(){var p=getField('cinema.portrait');return p?imgSrc(p):''},round:true},
+ {key:'contact',title:'Contact',tone:'tones.home.contact',body:function(){return [byId('contact')]},sum:function(){return getField('contact.title')}}
+];
+var ABOUT_ROWS=[
+ {key:'intro',title:'Introduction',tone:'tones.aboutPage.introduction',body:function(){return [byId('aboutIntroduction')]},sum:function(){return firstLine(getField('aboutPage.introTitle'))||'Your portrait and hello'},
+  thumb:function(){var p=getField('aboutPage.portrait');return p?imgSrc(p):''},round:true},
+ {key:'story',title:'My story',tone:'tones.aboutPage.story',body:function(){return [byId('aboutStory')]},sum:function(){return firstLine(getField('aboutPage.storyTitle'))}},
+ {key:'share',title:'What I share',tone:'tones.aboutPage.share',body:function(){return [byId('aboutShare')]},sum:function(){return firstLine(getField('aboutPage.shareTitle'))}},
+ {key:'contact',title:'Contact',tone:'tones.aboutPage.contact',body:function(){return [byId('aboutContact')]},sum:function(){return firstLine(getField('aboutPage.contactTitle'))}}
+];
+var PROJECT_ROWS=[
+ {key:'hero',title:'Top banner',tone:null,body:function(){return [byId('projects')]},sum:function(){return firstLine(getField('projects.title'))},
+  thumb:function(){var p=getField('projects.image');return p?imgSrc(p):''}},
+ {key:'services',title:'Services',tone:'tones.projects.contact',body:function(){return [byId('projectsServices')]},
+  sum:function(){return [0,1,2,3].map(function(i){return getField('projects.service'+i+'Title')}).filter(Boolean).join(' · ')}},
+ {key:'form',title:'Message form',tone:'tones.projects.contact',body:function(){return [byId('projectsContact')]},sum:function(){return firstLine(getField('projects.contactIntro'))||'Where inquiries arrive'}},
+ {key:'social',title:'Social & links',tone:'tones.projects.connect',body:function(){return [byId('projectsSocial')]},
+  sum:function(){var n=[0,1,2].map(function(i){return getField('projects.connect'+i+'Text')}).filter(Boolean);return n.length?n.join(' · '):'Email and social links'}},
+ {key:'quote',title:'Quote',tone:'tones.projects.quote',body:function(){return [byId('projectsFooter')]},sum:function(){return firstLine(getField('projects.quote'))}}
+];
+var EDITORS={};
+function buildEditor(cfg){
+ var sec=h('<section id="'+cfg.id+'" class="hx-editor"><div class="hx-split"><div class="hx-list"><p class="hx-lead">'+cfg.lead+'</p></div></div></section>');
+ main.insertBefore(sec,toolbar);cfg.sec=sec;cfg.open=cfg.rows[0].key;
+ var list=$('.hx-list',sec);
+ cfg.rows.forEach(function(r,i){
+  var bid='hxBody-'+cfg.dest+'-'+r.key;
+  var item=h('<div class="hx-item" data-key="'+r.key+'"><button type="button" class="hx-head" aria-expanded="false" aria-controls="'+bid+'"><span class="hx-num">'+(i+1)+'</span><span class="hx-thumbslot"></span><span class="hx-text"><b>'+r.title+'</b><small></small></span><span class="hx-tone"></span><span class="hx-chev">'+svg('chev',16,2)+'</span></button><div class="hx-body" id="'+bid+'" hidden></div></div>');
+  var body=item.querySelector('.hx-body');
+  r.body().forEach(function(n){if(n)body.appendChild(n)});
+  if(r.film)body.appendChild(h('<div class="hx-film" data-film-for="'+r.film+'"></div>'));
+  if(r.tone){
+   var id='hxTone-'+cfg.dest+'-'+r.key;
+   var tf=h('<div class="hx-tonefield"><label for="'+id+'">Background color</label><select id="'+id+'" data-hx-ignore="1">'+TONES.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>'}).join('')+'</select><p class="hx-help">“Match website” uses your site’s normal dark background.</p></div>');
+   tf.querySelector('select').addEventListener('change',function(){var o=byId(r.tone);if(o){o.value=this.value;markDirty(r.tone,D[cfg.dest].title)}paintRows()});
+   body.appendChild(tf);
+  }
+  item.firstElementChild.addEventListener('click',function(){cfg.open=(cfg.open===r.key)?null:r.key;paintEditor(cfg,true)});
+  list.appendChild(item);
+ });
+ cfg.pv=makePreview(cfg.id+'Preview',cfg.url,cfg.label,cfg.map);
+ $('.hx-split',sec).appendChild(cfg.pv.root);
+ EDITORS[cfg.dest]=cfg;
+}
+function buildEditors(){
+ buildEditor({dest:'home',id:'homeEditor',url:'/preview',label:'Homepage',map:HOME_MAP,rows:HOME_ROWS,lead:'Sections appear in the same order as on your homepage. Click one to edit it.'});
+ buildEditor({dest:'aboutPage',id:'aboutEditor',url:'/about.html',label:'About page',map:ABOUT_MAP,rows:ABOUT_ROWS,lead:'Sections appear in the same order as on your About page. Click one to edit it.'});
+ buildEditor({dest:'projects',id:'projectsEditor',url:'/projects.html',label:'Collaborate page',map:PROJECT_MAP,rows:PROJECT_ROWS,lead:'Sections appear in the same order as on your Collaborate page. Click one to edit it.'});
+}
+function paintEditor(cfg,scroll){
+ if(!data||!data.episodes||!cfg.sec)return;
+ cfg.rows.forEach(function(r){
+  var item=$('.hx-item[data-key="'+r.key+'"]',cfg.sec);if(!item)return;
+  var open=cfg.open===r.key;
+  item.classList.toggle('open',open);item.firstElementChild.setAttribute('aria-expanded',String(open));item.querySelector('.hx-body').hidden=!open;
+  var s='';try{s=r.sum()||''}catch(e){}
+  item.querySelector('small').textContent=s;
+  var slot=item.querySelector('.hx-thumbslot'),src='';try{src=r.thumb?r.thumb():''}catch(e){}
+  slot.innerHTML=src?'<img class="hx-thumb'+(r.round?' round':'')+'" src="'+esc(src)+'" alt="">':'';
+  var tone=item.querySelector('.hx-tone');
+  if(r.tone){var o=byId(r.tone),v=o&&o.value?o.value:'theme';tone.textContent=toneName(v);var sel_=byId('hxTone-'+cfg.dest+'-'+r.key);if(sel_)sel_.value=v}else tone.textContent='';
+ });
+ $$('.hx-film',cfg.sec).forEach(function(box){
+  var f=featIndex(),ep=data.episodes[f];
+  if(box.dataset.filmFor==='latest'){
+   box.innerHTML=(ep?'<img src="'+esc(imgSrc(ep.image))+'" alt=""><div><p class="hx-filmt">'+esc(ep.title)+'</p><p class="hx-films">'+esc(ep.eyebrow)+'</p></div>':'<div><p class="hx-filmt">No film is featured</p><p class="hx-films">Star a film in Films to show it here.</p></div>')+'<button type="button" class="hx-btn small">Change in Films</button>';
+  }else{
+   var n=data.episodes.length-(f>=0?1:0);
+   box.innerHTML='<div><p class="hx-filmt">'+n+(n===1?' film':' films')+' in the grid</p><p class="hx-films">Add, reorder or edit them in Films.</p></div><button type="button" class="hx-btn small">Open Films</button>';
+  }
+  box.querySelector('button').onclick=function(){showDestination('films')};
+ });
+ if(scroll&&cfg.open){var it=$('.hx-item[data-key="'+cfg.open+'"]',cfg.sec);if(it&&it.getBoundingClientRect().top<70)it.scrollIntoView({block:'start',behavior:'smooth'})}
+}
+function paintRows(scroll){Object.keys(EDITORS).forEach(function(k){paintEditor(EDITORS[k],scroll&&k===studioDestination)})}
+
+/* ---------- 7. Live previews (Homepage, About, Collaborate) ---------- */
+var previews=[];
+function PROJECT_MAP(id){var k=/^projects\.(.+)$/.exec(id||'');if(!k||/^(image|formAction|connect\dHref)$/.test(k[1]))return null;return ['[data-project-field="'+k[1]+'"]',k[1]==='title'?'last':'lines']}
+function makePreview(id,url,label,map){
+ var root=h('<div class="hx-preview" id="'+id+'"><div class="hx-prevhead"><p>Preview <span>— updates as you type</span></p><div class="hx-seg" role="group" aria-label="Preview size"><button type="button" data-dev="desktop" aria-pressed="true">Desktop</button><button type="button" data-dev="phone" aria-pressed="false">Phone</button></div></div>'+
+  '<div class="hx-frame"><div class="hx-chrome"><i></i><i></i><i></i><span>byjdg.com</span></div><div class="hx-viewport"><iframe title="'+label+' preview" tabindex="-1"></iframe></div></div>'+
+  '<p class="hx-note">The dashed outline shows the part you’re editing. Photos and layout refresh when you save.</p></div>');
+ var p={root:root,vp:$('.hx-viewport',root),frame:$('iframe',root),device:'desktop',url:url,map:typeof map==='function'?map:function(i){return map[i]}};
+ $$('.hx-seg button',root).forEach(function(b){b.addEventListener('click',function(){p.device=b.dataset.dev;$$('.hx-seg button',root).forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});fit(p)})});
+ p.frame.addEventListener('load',function(){pushAll(p);fit(p)});
+ if(window.ResizeObserver)new ResizeObserver(function(){fit(p)}).observe(p.vp);
+ p.frame.src=url;previews.push(p);return p;
+}
+function fit(p){
+ if(!p)return;var vp=p.vp,fr=p.frame;if(!vp.clientWidth)return;
+ var W=vp.clientWidth,H=vp.clientHeight,base=p.device==='phone'?390:1280,s=Math.min(1,W/base);
+ if(p.device==='phone')s=Math.min(1,H/760,W/390);
+ fr.style.width=base+'px';fr.style.height=(H/s)+'px';fr.style.transform='scale('+s+')';
+ fr.style.left=p.device==='phone'?Math.max(0,(W-base*s)/2)+'px':'0px';
+}
+function fitPreview(){previews.forEach(fit)}
+function reloadPreview(){previews.forEach(function(p){try{p.frame.contentWindow.location.reload()}catch(e){p.frame.src=p.url}})}
+function activePreview(){var e=EDITORS[studioDestination];return e?e.pv:null}
+var ABOUT_MAP={
+ 'aboutPage.helloEyebrow':['.ab-intro .ab-eyebrow'],'aboutPage.introTitle':['.ab-intro h1','last'],'aboutPage.introText':['.ab-intro .ab-copy','paras'],
+ 'aboutPage.storyEyebrow':['.ab-story .ab-eyebrow'],'aboutPage.storyTitle':['.ab-story h2','last'],'aboutPage.storyText':['.ab-story .ab-prose','paras'],
+ 'aboutPage.shareEyebrow':['.ab-share .ab-eyebrow'],'aboutPage.shareTitle':['.ab-share h2','last'],'aboutPage.shareText':['.ab-share .ab-copy > p:not(.ab-eyebrow)'],'aboutPage.youtubeLabel':['.ab-share .ab-link','text'],
+ 'aboutPage.contactEyebrow':['.ab-contact .ab-eyebrow'],'aboutPage.contactTitle':['.ab-contact h2','last'],'aboutPage.contactText':['.ab-contact-copy > p:not(.ab-collaboration)'],'aboutPage.contactLabel':['.ab-contact .ab-link','text'],
+ 'aboutPage.collaborationText':['.ab-collaboration','text'],'aboutPage.collaborationLabel':['.ab-collaboration a']
+};
+var HOME_MAP={
+ 'hero.eyebrow':['#top .hero .eyebrow'],'hero.title':['#top .hero h1','last'],'hero.subtitle':['#top .hero-subtitle'],'hero.buttonText':['#top .hero .button','text'],
+ 'cinema.eyebrow':['#featured .refined-head .cinema-eyebrow'],'cinema.ctaText':['#featured .feature-caption .button','text'],
+ 'latest.title':['#latest .section-title'],
+ 'about.title':['#about > h2'],'about.lead':['#about .lead','sentence'],'about.text':['#about > p:not(.lead)'],'about.cta':['#about .small-link'],
+ 'contact.title':['#top .contact h2','last'],'contact.text':['#top .contact p']
+};
+function frameDoc(p){try{return p.frame.contentDocument}catch(e){return null}}
+function addLines(el,text){var doc=el.ownerDocument;String(text).split('\n').forEach(function(line,i){if(i)el.appendChild(doc.createElement('br'));el.appendChild(doc.createTextNode(line))})}
+function setText(el,val,mode){
+ var doc=el.ownerDocument;val=String(val==null?'':val);
+ if(mode==='last'||mode==='sentence'){
+  var t=val.trim(),i=mode==='sentence'?t.lastIndexOf('. ',t.length-2):-1,a,b;
+  if(i>0){a=t.slice(0,i+1);b=t.slice(i+2)}else{var j=Math.max(t.lastIndexOf(' '),t.lastIndexOf('\n'));if(j<0){el.textContent=t;return}a=t.slice(0,j);b=t.slice(j+1);if(t.charAt(j)==='\n'){el.textContent='';addLines(el,a);el.appendChild(doc.createElement('br'));var e1=doc.createElement('em');e1.textContent=b;el.appendChild(e1);return}}
+  el.textContent='';addLines(el,a);el.appendChild(mode==='sentence'&&i>0?doc.createElement('br'):doc.createTextNode(' '));var em=doc.createElement('em');em.textContent=b;el.appendChild(em);return;
+ }
+ if(mode==='lines'){el.textContent='';addLines(el,val);return}
+ if(mode==='paras'){
+  [].slice.call(el.children).forEach(function(c){if(c.tagName==='P'&&!c.classList.contains('ab-eyebrow'))c.remove()});
+  val.split(/\n\s*\n/).map(function(s){return s.trim()}).filter(Boolean).forEach(function(s){var p=doc.createElement('p');p.textContent=s;el.appendChild(p)});return;
+ }
+ if(mode==='text'){var nodes=[].filter.call(el.childNodes,function(n){return n.nodeType===3&&n.nodeValue.trim()});if(nodes.length){nodes[0].nodeValue=val+' ';return}}
+ el.textContent=val;
+}
+function push(p,id){var m=p&&p.map(id),doc=p&&frameDoc(p);if(!m||!doc)return;var el=doc.querySelector(m[0]);if(el)setText(el,getField(id),m[1])}
+function pushAll(p){if(!dirty.size)return;$$('main input[id],main textarea[id]').forEach(function(x){if(p.map(x.id))push(p,x.id)})}
+function highlight(id,on){
+ var p=activePreview(),m=p&&p.map(id),doc=p&&frameDoc(p);if(!m||!doc)return;var el=doc.querySelector(m[0]);if(!el)return;
+ el.style.outline=on?'2px dashed rgba(201,169,110,.95)':'';el.style.outlineOffset=on?'8px':'';
+ if(on)el.scrollIntoView({block:'center'});
+}
+function previewEvents(){
+ main.addEventListener('input',function(e){var p=activePreview();if(p&&e.target.id&&p.map(e.target.id))push(p,e.target.id);if(EDITORS[studioDestination])paintRows()});
+ main.addEventListener('focusin',function(e){highlight(e.target.id,true)});
+ main.addEventListener('focusout',function(e){highlight(e.target.id,false)});
+ window.addEventListener('resize',fitPreview);
+}
+
+/* ---------- 8. Films ---------- */
+var sel=-1,dragFrom=-1;
+function buildFilms(){
+ var sec=h('<section id="filmsEditor"><div class="fx-wrap"><div class="fx-main"><div class="fx-intro"><p>All your films in one place. The <b>★ Latest</b> film is featured large on your homepage; the others appear below it in this order. Drag a film to reorder.</p><button type="button" class="hx-btn dark" id="fxAddTop">+ Add a film</button></div><div class="fx-grid" id="fxGrid"></div></div><aside class="fx-panel" id="fxPanel" aria-label="Edit film" hidden></aside></div></section>');
+ main.insertBefore(sec,toolbar);
+ byId('fxAddTop').onclick=addFilm;
+}
+function featuredObj(){return data.episodes[featIndex()]}
+function setFeatured(i){var s=byId('cinema.featuredIndex');s.value=String(i);data.cinema.featuredIndex=i;refreshFeaturedCTAHref()}
+function renderFilms(){
+ var grid=byId('fxGrid');if(!grid||!data||!data.episodes)return;
+ var f=featIndex(),n=1;
+ grid.innerHTML=data.episodes.map(function(ep,i){
+  var badge=i===f?'★ Latest':String(++n).padStart(2,'0');
+  return '<article class="fx-card'+(i===f?' is-feat':'')+(i===sel?' is-sel':'')+'" draggable="true" data-i="'+i+'" tabindex="0" role="button" aria-label="Edit '+esc(ep.title)+'">'+
+   '<div class="fx-thumb"><img src="'+esc(imgSrc(ep.image))+'" alt="" loading="lazy"><span class="fx-badge">'+badge+'</span><span class="fx-grip" title="Drag to reorder" aria-hidden="true">⋮⋮</span></div>'+
+   '<div class="fx-meta"><p class="fx-eye">'+esc(ep.eyebrow)+'</p><p class="fx-title">'+esc(ep.title)+'</p></div></article>';
+ }).join('')+'<button type="button" class="fx-add" id="fxAddCard"><i aria-hidden="true">+</i>Add a film</button>';
+ byId('fxAddCard').onclick=addFilm;
+ $$('.fx-card',grid).forEach(function(c){
+  var i=+c.dataset.i;
+  c.addEventListener('click',function(){openFilm(i)});
+  c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openFilm(i)}});
+  c.addEventListener('dragstart',function(e){dragFrom=i;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',String(i))}catch(x){}});
+  c.addEventListener('dragend',function(){c.classList.remove('dragging');$$('.drag-over',grid).forEach(function(x){x.classList.remove('drag-over')})});
+  c.addEventListener('dragover',function(e){e.preventDefault();c.classList.add('drag-over')});
+  c.addEventListener('dragleave',function(){c.classList.remove('drag-over')});
+  c.addEventListener('drop',function(e){e.preventDefault();moveFilm(dragFrom,i)});
+ });
+ var fb=$('#cmsNav [data-destination="films"]');
+ if(fb){var cnt=fb.querySelector('.hx-count');if(!cnt){cnt=h('<span class="hx-count"></span>');fb.appendChild(cnt)}cnt.textContent=data.episodes.length}
+}
+function moveFilm(from,to){
+ if(from<0||to<0||from===to||from>=data.episodes.length||to>=data.episodes.length)return;
+ var fObj=featuredObj(),sObj=data.episodes[sel];
+ var item=data.episodes.splice(from,1)[0];data.episodes.splice(to,0,item);
+ renderFeaturedOptions();setFeatured(fObj?data.episodes.indexOf(fObj):-1);
+ sel=sObj?data.episodes.indexOf(sObj):-1;
+ markDirty('films:order','Films');renderEpisodes();if(sel>=0)openFilm(sel,true);
+}
+function addFilm(){
+ addEpisode();
+ var ep=data.episodes[data.episodes.length-1];
+ ep.title='New film';ep.eyebrow='Place · Year';ep.text='';ep.cta='Watch film →';ep.href='';
+ markDirty('films:add:'+data.episodes.length,'Films');renderEpisodes();openFilm(data.episodes.length-1);
+ var t=byId('fx-title');if(t){t.focus();t.select()}
+}
+function ytOk(u){return /^https?:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(String(u||'').trim())}
+function openFilm(i,keepFocus){
+ sel=i;var ep=data.episodes[i],panel=byId('fxPanel');if(!ep){closeFilm();return}
+ var f=featIndex(),len=(ep.text||'').length;
+ panel.innerHTML='<div class="fx-phead"><h2>Edit film</h2><button type="button" class="fx-x" aria-label="Close">×</button></div>'+
+  '<div class="fx-photo"><img src="'+esc(imgSrc(ep.image))+'" alt="Photo for this film"><div class="fx-pact"><label class="fx-upl">Replace photo<input type="file" accept="image/*" data-hx-ignore="1"></label></div></div>'+
+  '<p class="hx-help">Use a still with no text on it. Shown wide when featured, tall in the grid.</p>'+
+  '<label for="fx-title">Title</label><input id="fx-title" data-k="title" data-hx-ignore="1" value="'+escapeAttr(ep.title)+'">'+
+  '<label for="fx-eyebrow">Place &amp; year</label><input id="fx-eyebrow" data-k="eyebrow" data-hx-ignore="1" value="'+escapeAttr(ep.eyebrow)+'" placeholder="Mallorca · 2026">'+
+  '<div class="fx-lblrow"><label for="fx-text">Short description</label><span id="fx-count">'+len+' / 160</span></div><textarea id="fx-text" data-k="text" data-hx-ignore="1" rows="3">'+esc(ep.text)+'</textarea>'+
+  '<label for="fx-href">YouTube link</label><input id="fx-href" data-k="href" data-hx-ignore="1" type="url" value="'+escapeAttr(ep.href)+'" placeholder="https://youtu.be/…"><p class="hx-help" id="fx-hrefmsg"></p>'+
+  '<label for="fx-cta">Link text</label><input id="fx-cta" data-k="cta" data-hx-ignore="1" value="'+escapeAttr(ep.cta)+'">'+
+  '<label class="fx-switch"><span><b>Feature as latest film</b><small>Shown large on the homepage. Only one at a time.</small></span><input type="checkbox" id="fx-feat" data-hx-ignore="1"'+(i===f?' checked':'')+'><span class="fx-track" aria-hidden="true"></span></label>'+
+  '<div class="fx-move"><button type="button" class="hx-btn small" id="fx-up"'+(i===0?' disabled':'')+'>Move earlier</button><button type="button" class="hx-btn small" id="fx-down"'+(i===data.episodes.length-1?' disabled':'')+'>Move later</button></div>'+
+  '<div class="fx-foot"><button type="button" class="fx-remove" id="fx-remove">Remove film…</button><button type="button" class="hx-btn dark" id="fx-done">Done</button></div>';
+ panel.hidden=false;
+ var hrefMsg=function(){var v=byId('fx-href').value,m=byId('fx-hrefmsg');if(!v){m.textContent='Paste the link to this film on YouTube.';m.className='hx-help'}else if(ytOk(v)){m.textContent='✓ Looks like a YouTube link';m.className='hx-help fx-ok'}else{m.textContent='This doesn’t look like a YouTube link. Check it before publishing.';m.className='hx-help fx-bad'}};
+ hrefMsg();
+ var c0=byId('fx-count');if(len>160)c0.className='fx-bad';
+ $$('[data-k]',panel).forEach(function(inp){inp.addEventListener('input',function(){
+  var k=inp.dataset.k;data.episodes[sel][k]=inp.value;markDirty('films:'+sel+':'+k,'Films');
+  if(k==='text'){var c=byId('fx-count');c.textContent=inp.value.length+' / 160';c.className=inp.value.length>160?'fx-bad':''}
+  if(k==='href'){hrefMsg();refreshFeaturedCTAHref()}
+  if(k==='title'||k==='eyebrow'){renderFeaturedOptions();var card=$('.fx-card[data-i="'+sel+'"]');if(card)card.querySelector(k==='title'?'.fx-title':'.fx-eye').textContent=inp.value}
+ })});
+ panel.querySelector('.fx-x').onclick=closeFilm;byId('fx-done').onclick=closeFilm;
+ panel.querySelector('input[type=file]').addEventListener('change',async function(e){
+  var file=e.target.files[0];if(!file)return;msg.textContent='Uploading photo…';
+  var path=await uploadFile(file);if(!path){msg.textContent='Photo upload failed. Please try again.';return}
+  data.episodes[sel].image=path;msg.textContent='';markDirty('films:'+sel+':image','Films');renderFilms();openFilm(sel,true);
+ });
+ byId('fx-feat').addEventListener('change',function(){setFeatured(this.checked?sel:-1);markDirty('films:featured','Films');renderFilms();paintRows()});
+ byId('fx-up').onclick=function(){moveFilm(sel,sel-1)};
+ byId('fx-down').onclick=function(){moveFilm(sel,sel+1)};
+ byId('fx-remove').onclick=function(){
+  var t=data.episodes[sel].title||'this film';
+  if(!window.confirm('Remove “'+t+'” from your website?\n\nIt disappears from the Studio now, and from your website the next time you save and publish.'))return;
+  deleteEpisode(sel);markDirty('films:remove:'+Date.now(),'Films');closeFilm();
+ };
+ $$('.fx-card').forEach(function(c){c.classList.toggle('is-sel',+c.dataset.i===sel)});
+ if(!keepFocus)byId('fx-title').focus({preventScroll:true});
+}
+function closeFilm(){sel=-1;var p=byId('fxPanel');p.hidden=true;p.innerHTML='';renderFilms();paintRows()}
+
+/* ---------- 9. Publish ---------- */
+var pxEl,lastFocus;
+function buildPublish(){
+ pxEl=h('<div class="px-back" hidden><div class="px-dialog" role="dialog" aria-modal="true" aria-labelledby="pxTitle">'+
+  '<div class="px-top"><div><h2 id="pxTitle">Publish your changes</h2><p id="pxLead"></p></div><button type="button" class="fx-x" id="pxClose" aria-label="Close">×</button></div>'+
+  '<div class="px-sec"><p class="px-label">Edited since you opened the Studio</p><ul class="px-list" id="pxList"></ul></div>'+
+  '<div class="px-sec"><fieldset><legend class="px-label">Send to</legend>'+
+  '<label class="px-opt"><input type="radio" name="pxDest" value="beta" checked><span><b>Test site <span class="px-tag">Recommended first</span></b><small>beta.byjdg.com — check it on your phone and laptop before it goes public.</small></span></label>'+
+  '<label class="px-opt"><input type="radio" name="pxDest" value="live"><span><b>Live website</b><small>byjdg.com — everyone sees these changes within a minute or two.</small></span></label>'+
+  '</fieldset></div>'+
+  '<div class="px-foot"><p>Your changes are saved first, and a backup of each page is kept automatically.</p><div class="hx-actions"><button type="button" class="hx-btn" id="pxCancel">Cancel</button><button type="button" class="hx-btn dark" id="pxGo">Publish to test site</button></div></div>'+
+  '<p class="px-result" id="pxResult" role="status"></p></div></div>');
+ d.body.appendChild(pxEl);
+ byId('pxClose').onclick=closePublish;byId('pxCancel').onclick=closePublish;
+ pxEl.addEventListener('click',function(e){if(e.target===pxEl)closePublish()});
+ pxEl.addEventListener('keydown',function(e){if(e.key==='Escape')closePublish();if(e.key==='Tab')trap(e)});
+ $$('input[name=pxDest]',pxEl).forEach(function(r){r.addEventListener('change',goLabel)});
+ byId('pxGo').onclick=runPublish;
+}
+function goLabel(){var v=$('input[name=pxDest]:checked',pxEl).value,g=byId('pxGo');g.textContent=v==='live'?'Publish to live website':'Publish to test site';g.onclick=runPublish}
+function trap(e){var f=$$('button,input',pxEl).filter(function(x){return !x.disabled&&x.offsetParent});var a=f[0],z=f[f.length-1];if(e.shiftKey&&d.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&d.activeElement===z){e.preventDefault();a.focus()}}
+function openPublish(){
+ lastFocus=d.activeElement;
+ byId('pxLead').textContent=dirty.size?'You have unsaved changes — they’ll be saved first.':'Everything is saved. Choose where it should go.';
+ var items=Array.from(sessionEdits);
+ byId('pxList').innerHTML=items.length?items.map(function(t){return '<li>'+esc(t)+'</li>'}).join(''):'<li class="none">No edits yet in this session — publishing sends your last saved version.</li>';
+ byId('pxResult').textContent='';byId('pxGo').disabled=false;goLabel();
+ pxEl.hidden=false;$('input[name=pxDest]:checked',pxEl).focus();
+}
+function closePublish(){pxEl.hidden=true;if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+async function runPublish(){
+ var dest=$('input[name=pxDest]:checked',pxEl).value,go=byId('pxGo'),out=byId('pxResult');
+ go.disabled=true;out.textContent='Saving…';
+ if(dirty.size){var ok=await doSave();if(!ok){out.textContent='Couldn’t save, so nothing was published. '+msg.textContent;go.disabled=false;return}}
+ out.textContent=dest==='live'?'Publishing to byjdg.com…':'Publishing to the test site…';
+ try{
+  var r=await fetch(dest==='live'?'/api/publish-live':'/api/publish-beta',{method:'POST'}).then(function(x){return x.json()});
+  if(!r.ok)throw Error(r.error||'Publish failed');
+  out.textContent='✓ '+(r.message||'Published.');
+  if(dest==='live'){sessionEdits.clear();paint()}
+  go.textContent='Done';go.disabled=false;go.onclick=closePublish;
+ }catch(e){out.textContent='Publish failed: '+e.message;go.disabled=false}
+}
+
+/* ---------- 10. Wiring ---------- */
+var origShowTab=window.showTab;
+window.showTab=function(id){
+ origShowTab(id);
+ if(EDITORS[studioDestination]){paintRows();setTimeout(fitPreview,30)}
+ if(studioDestination==='films')renderFilms();
+ var own=['deliveries','customPages'].indexOf(studioDestination)>=0;
+ ['hxSave','hxPublish'].forEach(function(id){var b=byId(id);if(b)b.hidden=own});if(pill)pill.hidden=own;
+ window.scrollTo(0,0);
+};
+var origShowDestination=window.showDestination;
+window.showDestination=function(dest){origShowDestination(dest);if(msg&&/^Loaded from/.test(msg.textContent))msg.textContent=''};
+var origRenderEpisodes=window.renderEpisodes;
+window.renderEpisodes=function(){origRenderEpisodes();renderFilms();paintRows()};
+function afterLoad(){
+ relabelAll();paintRows();renderFilms();
+ if(msg&&/^Loaded from/.test(msg.textContent))msg.textContent='';
+ var mark=byId('hxMark'),logo=data&&data.branding&&data.branding.logoImage;
+ if(mark&&logo)mark.innerHTML='<img src="'+esc(imgSrc(logo))+'" alt="">';
+ d.title=((data&&data.branding&&data.branding.logoText)||'by JDG')+' Website Studio'+(/TEST/.test(($('.studio-name')||{}).textContent||'')?' — TEST':'');
+}
+function init(){
+ d.body.classList.add('hx');
+ d.head.appendChild(h('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&display=swap">'));
+ toastEl=h('<div class="hx-toast" role="status" hidden></div>');d.body.appendChild(toastEl);
+ buildSidebar();buildTopbar();buildEditors();buildFilms();buildPublish();watch();previewEvents();
+ var el=byId('episodeList');if(el)el.hidden=true;
+ $$('#episodes > button').forEach(function(b){b.hidden=true});
+ var tries=0,wait=setInterval(async function(){
+  tries++;
+  var s=byId('cinema.featuredIndex');
+  if((!data||!data.episodes||!s||!s.options.length)&&tries<200)return;
+  clearInterval(wait);afterLoad();snapshot=await fetchSnapshot();paint();
+  showDestination(studioDestination||'home');
+ },60);
+ window.addEventListener('focus',refreshIfStale);
+ d.addEventListener('visibilitychange',function(){if(!d.hidden)refreshIfStale()});
+ paint();
+}
+init();
+})();
+
+</script>
+<!-- studio-refresh:end -->
 </body>
 </html>

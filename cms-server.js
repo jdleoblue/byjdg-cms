@@ -27,6 +27,8 @@ function readAbout(){ return fs.readFileSync(ABOUT_PATH, 'utf8'); }
 
 const deliveryManager = require('./deliveries').create({ iconSource: INDEX_PATH, dataDir: process.env.BYJDG_DELIVERY_DATA_DIR || path.join(require('os').homedir(), 'Library/Application Support/ByJDG Website Studio/client-deliveries'), liveDir: process.env.BYJDG_DELIVERY_LIVE_DIR || '/Users/jdg/Documents/ByJDG Website/Active/live-site' });
 
+const customPages = require('./custom-pages').create({dataDir:process.env.BYJDG_PAGES_DATA_DIR || path.join(require('os').homedir(), 'Library/Application Support/ByJDG Website Studio/custom-pages'),liveDir:process.env.BYJDG_PAGES_LIVE_DIR || '/Users/jdg/Documents/GitHub/ByJDG/home',images:IMAGES_DIR,template:ABOUT_PATH});
+
 function readProjects() { return fs.readFileSync(PROJECTS_PATH, 'utf8'); }
 
 function readIndex() {
@@ -64,7 +66,6 @@ function parseContent(html) {
   const heroBlock = matchOne(html, /<section class="hero">([\s\S]*?)<\/section>/i, '');
   const heroButton = heroBlock.match(/<a class="button"([^>]*)>[\s\S]*?<span class="play">[\s\S]*?<\/span>\s*([^<]+)\s*<\/a>/i);
   const latestHeader = matchOne(html, /<h2 class="section-title">([\s\S]*?)<\/h2>/i, 'Latest Films');
-  const latestLinkTag = html.match(/<a class="small-link" href="([^"]*)"[^>]*>\s*([^<]*View All Episodes[^<]*)\s*<\/a>/i);
 
   const episodeMatches = [...html.matchAll(/<article class="film-card" style="--image: url\(['"]([^'"]+)['"]\);">[\s\S]*?<div class="episode">([\s\S]*?)<\/div>[\s\S]*?<h3>([\s\S]*?)<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<a class="watch-link" href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<\/article>/gi)];
 
@@ -108,9 +109,7 @@ function parseContent(html) {
       buttonHref: heroButton ? extractAttr(heroButton[1], 'href') : ''
     },
     latest: {
-      title: latestHeader,
-      viewAllText: latestLinkTag ? unescapeHtml(latestLinkTag[2].trim()) : 'View All Episodes →',
-      viewAllHref: latestLinkTag ? latestLinkTag[1] : 'https://www.youtube.com/@by-jdg'
+      title: latestHeader
     },
     episodes: episodeMatches.map(m => ({
       image: m[1],
@@ -133,8 +132,7 @@ function parseContent(html) {
       text: matchOne(html, /<section class="contact"[\s\S]*?<p>([\s\S]*?)<\/p>/i, '')
     },
     footer: {
-      brand: matchOne(html, /<div class="footer-brand">([\s\S]*?)<\/div>/i, 'ByJDG'),
-      copyright: matchOne(html, /<footer class="footer">[\s\S]*?<div class="footer-brand">[\s\S]*?<\/div>\s*<div>([\s\S]*?)<\/div>/i, '© 2026 ByJDG. All rights reserved.'),
+      copyright: siteBranding.parseCopyright(html),
       links: footerLinks
     }
   };
@@ -190,7 +188,8 @@ function updateHtml(data) {
   html = html.replace(/(<a class="button" href=")[^"]*(" target="_blank" rel="noopener">[\s\S]*?<span class="play">[\s\S]*?<\/span>\s*)([^<]+)(\s*<\/a>)/i, `$1${escapeHtml(data.hero.buttonHref)}$2${escapeHtml(data.hero.buttonText)}$4`);
 
   html = html.replace(/(<h2 class="section-title">)([\s\S]*?)(<\/h2>)/i, `$1${escapeHtml(data.latest.title)}$3`);
-  html = html.replace(/<a class="small-link" href="[^"]*" target="_blank" rel="noopener">\s*[^<]*View All Episodes[^<]*\s*<\/a>/i, `<a class="small-link" href="${escapeHtml(data.latest.viewAllHref)}" target="_blank" rel="noopener">${escapeHtml(data.latest.viewAllText)}</a>`);
+  // The collection has a title only; remove legacy header CTAs on every save.
+  html = html.replace(/(<section\b[^>]*id="latest"[^>]*>[\s\S]*?<div class="section-header">)([\s\S]*?)(<\/div>)/i, (_,start,header,end) => start + header.replace(/\s*<a\b[^>]*>[\s\S]*?<\/a>/gi, '') + end);
 
   const episodesBlock = data.episodes.map(episodeHtml).join('\n\n');
   html = html.replace(/<div class="film-grid">[\s\S]*?<\/div>\s*<\/section>/i, `<div class="film-grid">\n${episodesBlock}\n        </div>\n      </section>`);
@@ -204,15 +203,15 @@ function updateHtml(data) {
   html = html.replace(/(<section class="contact" id="contact">[\s\S]*?<h2>)([\s\S]*?)(<\/h2>)/i, `$1${escapeHtml(data.contact.title)}$3`);
   html = html.replace(/(<section class="contact" id="contact">[\s\S]*?<h2>[\s\S]*?<\/h2>\s*<p>)([\s\S]*?)(<\/p>)/i, `$1${escapeHtml(data.contact.text)}$3`);
 
-  html = html.replace(/(<div class="footer-brand">)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.footer.brand)}$3`);
-  html = html.replace(/(<footer class="footer">[\s\S]*?<div class="footer-brand">[\s\S]*?<\/div>\s*<div>)([\s\S]*?)(<\/div>)/i, `$1${escapeHtml(data.footer.copyright)}$3`);
+  html = siteBranding.renderCopyright(html, data.footer.copyright);
   html = html.replace(/<div class="footer-links">[\s\S]*?<\/div>\s*<\/footer>/i, `<div class="footer-links">\n${data.footer.links.map(footerLinkHtml).join('\n')}\n      </div>\n    </footer>`);
 
   html = contactControls.render(html, data.contact);
   html = heroRotation.render(html, data.hero);
   html = cinemaCMS.render(html, data.cinema || {}, data.episodes);
   html = pageMeta.render(html, data.pages?.home);
-  const branding = data.branding || siteBranding.parse(readIndex());
+  const branding = siteBranding.validate(data.branding || siteBranding.parse(readIndex()));
+  if (branding.logoImage && !fs.existsSync(path.join(WEBSITE_DIR,branding.logoImage))) throw Error('The selected logo image is missing. Please upload it again.');
   html = siteNavigation.render(siteBranding.render(html, branding), navigation, 'index.html');
   html = sectionTones.render(html,data.sectionTones?.home,'home');
   const projectHtml = siteNavigation.render(sectionTones.render(siteBranding.render(pageMeta.render(projectsCMS.render(readProjects(), data.projects || {}, theme), data.pages?.projects), branding), data.sectionTones?.projects, 'projects'), navigation, 'projects.html');
@@ -281,6 +280,8 @@ function readBody(req) {
 
 const server = http.createServer(async (req, res) => {
   try {
+    if (await customPages.handle(req, res)) return;
+    if (req.method === 'GET' && req.url === '/studio-pages.js') { send(res,200,fs.readFileSync(path.join(ROOT,'studio-pages.js'),'utf8'),'application/javascript'); return; }
     if (await deliveryManager.handle(req, res)) return;
     if (req.method === 'GET' && req.url === '/studio-deliveries.js') {
       send(res, 200, fs.readFileSync(path.join(ROOT, 'studio-deliveries.js'), 'utf8'), 'application/javascript');

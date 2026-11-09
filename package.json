@@ -1,7 +1,7 @@
 {
   "name": "byjdg-website-studio",
   "productName": "by JDG Website Studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Desktop website studio for ByJDG",
   "main": "main.js",
   "author": "JDG",
@@ -41,7 +41,10 @@
       "contact-controls.js",
       "about.html",
       "about-cms.js",
-      "site-icon.js"
+      "site-icon.js",
+      "custom-pages.js",
+      "studio-pages.js",
+      "site-typography.js"
     ]
   },
   "devDependencies": {

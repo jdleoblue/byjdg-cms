@@ -29,7 +29,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 const decode = v => v.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 function parse(html) {
  const value = (key, fallback) => {const m=html.match(new RegExp(`data-cinema-${key}="([^"]*)"`));return m?decode(m[1]):fallback;};
- return {aboutTone:html.match(/<html\b[^>]*data-about-tone="([^"]*)"/i)?.[1] || 'theme',ctaText:value('cta','Watch Film'),eyebrow:value('eyebrow','Selected from the journal'),featuredIndex:Number(value('index','3')),headline:value('headline','Two minutes. A thousand little moments.'),intro:value('intro','Old streets, live music, train rides, good food, and time by the sea.'),portrait:value('portrait','images/hero-image-ef811527.jpg')};
+ return {aboutTone:html.match(/<html\b[^>]*data-about-tone="([^"]*)"/i)?.[1] || 'theme',ctaText:value('cta','Watch Film'),ctaHref:value('cta-href',''),eyebrow:value('eyebrow','Selected from the journal'),featuredIndex:Number(value('index','3')),portrait:value('portrait','images/hero-image-ef811527.jpg')};
 }
 function render(html, settings, episodes) {
  const c={...parse(html),...settings};
@@ -38,11 +38,13 @@ function render(html, settings, episodes) {
  if(!/^(images\/[a-z0-9_./-]+|https:\/\/[^\s'"()<>]+)$/i.test(c.portrait))throw new Error('About image must use an images/ path or HTTPS address.');
  if(typeof c.ctaText !== 'string' || typeof c.eyebrow !== 'string') throw new Error('Featured CTA and eyebrow must be text.');
  if(!['theme','stone','taupe','charcoal'].includes(c.aboutTone)) throw new Error('Choose a valid About section tone.');
+ if(typeof c.ctaHref!=='string')throw Error('Enter a valid CTA URL.');
+ if(c.ctaHref){try{const url=new URL(c.ctaHref);if(url.protocol!=='https:'||/[\s<>"']/.test(c.ctaHref))throw Error();}catch{throw Error('Enter a complete HTTPS address for the featured CTA.');}}
  const ep=episodes[c.featuredIndex];
- const block=`<section class="featured-film" id="featured" data-cinema-index="${c.featuredIndex}" data-cinema-cta="${esc(c.ctaText)}" data-cinema-eyebrow="${esc(c.eyebrow)}" data-cinema-headline="${esc(c.headline)}" data-cinema-intro="${esc(c.intro)}" data-cinema-portrait="${esc(c.portrait)}"${ep?'':' hidden'}>
-${ep?`<div class="feature-lead"><div><p class="cinema-eyebrow">Featured film / ${esc(ep.eyebrow)}</p><h2>${esc(c.headline)}</h2></div><p class="feature-intro">${esc(c.intro)}</p></div>
+ const block=`<section class="featured-film" id="featured" data-cinema-index="${c.featuredIndex}" data-cinema-cta="${esc(c.ctaText)}" data-cinema-cta-href="${esc(c.ctaHref)}" data-cinema-eyebrow="${esc(c.eyebrow)}" data-cinema-portrait="${esc(c.portrait)}"${ep?'':' hidden'}>
+${ep?`
 <a class="feature-image" href="${esc(ep.href)}" target="_blank" rel="noopener" aria-label="Watch ${esc(ep.title)}"><img src="${esc(ep.image)}" alt="${esc(ep.title)}" width="1920" height="1080" loading="lazy"></a>
-<div class="feature-caption"><div><p class="cinema-eyebrow">${esc(c.eyebrow)}</p><h3>${esc(ep.title)}</h3></div><a class="button" href="${esc(ep.href)}" target="_blank" rel="noopener">${esc(c.ctaText)} <span aria-hidden="true"><svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></span></a></div>`:''}
+<div class="feature-caption"><div><p class="cinema-eyebrow">${esc(c.eyebrow)}</p><h3>${esc(ep.title)}</h3></div><a class="button" href="${esc(c.ctaHref||ep.href)}" target="_blank" rel="noopener">${esc(c.ctaText)} <span aria-hidden="true"><svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg></span></a></div>`:''}
 </section>`;
  html=html.replace(/<section class="featured-film"[\s\S]*?<\/section>/,()=>block);
  html=html.replace(/(<img class="about-portrait" src=")[^"]*"/,(_,p)=>p+esc(c.portrait)+'"');

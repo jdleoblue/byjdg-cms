@@ -10,7 +10,7 @@ function render(html,settings,page){
   html=html.replace(/<html\b[^>]*>/i,tag=>tag.replace(new RegExp(`\\s${attr}="[^"]*"`,'g'),'').replace(/>$/,` ${attr}="${tones[key]}">`));
   for(const [tone,p] of Object.entries(palettes)){
    const scope=`html[${attr}="${tone}"] ${selector}`;
-   const vars=`--text:${p.text};--muted:${p.muted};--accent:${p.accent};--cinema-accent:${p.accent};--line:${p.line};--panel:${p.panel};`;
+   const vars=`--site-label-accent:${p.accent};--text:${p.text};--muted:${p.muted};--accent:${p.accent};--cinema-accent:${p.accent};--line:${p.line};--panel:${p.panel};`;
    css+=`${scope},${scope} .film-card{${vars}color:var(--text);}\n`;
    css+=`${scope}{background:${p.surface};border-color:var(--line);}\n`;
    css+=`${scope} p,${scope} .feature-intro,${scope} .episode{color:var(--muted);}\n`;
@@ -23,6 +23,6 @@ function render(html,settings,page){
   }
  }
  html=html.replace(/\s*<style id="byjdg-section-tones">[\s\S]*?<\/style>/i,'');
- return html.replace(/<\/head>/i,()=>`<style id="byjdg-section-tones">\n${css}</style>\n</head>`);
+ return require('./site-typography').apply(html.replace(/<\/head>/i,()=>`<style id="byjdg-section-tones">\n${css}</style>\n</head>`));
 }
 module.exports={sections,parse,render};
