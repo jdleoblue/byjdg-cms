@@ -1360,6 +1360,34 @@ html[data-theme] body .film-card::before,html[data-theme] body #top .film-card::
  html[data-theme] body #top .hero-rotation-pause{bottom:28px}
 }
 @media(prefers-reduced-motion:reduce){html[data-theme] body #top :is(.feature-image img,.feature-image::before,.film-card::before){transition:none}}
+
+/* in-page film player */
+html[data-theme] body #top .feature-player{cursor:default}
+html[data-theme] body #top .feature-player::before,html[data-theme] body #top .feature-player::after{display:none}
+.feature-player iframe,.film-modal-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+html[data-theme] body #latest .film-card.is-playable{cursor:pointer}
+html.film-modal-open,html.film-modal-open body{overflow:hidden}
+.film-modal{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,56px);background:rgba(6,6,5,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:filmFade .35s ease both}
+.film-modal-inner{position:relative;width:min(1200px,100%,calc((100vh - 160px) * 16 / 9));display:flex;flex-direction:column;gap:14px}
+.film-modal-inner.is-vertical{width:min(420px,100%,calc((100vh - 160px) * 9 / 16))}
+.film-modal-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.film-modal-inner.is-vertical .film-modal-frame{aspect-ratio:9/16}
+.film-modal-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;color:#f2eee7}
+.film-modal-title{margin:0;font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(20px,2.4vw,28px);font-weight:500;line-height:1.2}
+.film-modal-yt{flex:none;color:#f2eee7;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;opacity:.8}
+.film-modal-yt:hover{opacity:1}
+.film-modal-close{position:absolute;right:0;top:-48px;width:40px;height:40px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:transparent;color:#fff;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .3s ease}
+.film-modal-close:hover{background:rgba(255,255,255,.12)}
+.film-modal-close:focus-visible,.film-modal-yt:focus-visible{outline:2px solid #f2eee7;outline-offset:3px}
+.player-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:#0b0b0a;color:#f2eee7}
+.player-fallback p{margin:0;font-size:15px;opacity:.85}
+.player-fallback a{color:#f2eee7;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+@keyframes filmFade{from{opacity:0}to{opacity:1}}
+@media(max-width:640px){.film-modal{padding:16px}.film-modal-inner{width:100%}.film-modal-bar{flex-direction:column;align-items:flex-start;gap:8px}}
+@media(prefers-reduced-motion:reduce){.film-modal{animation:none}}
+
+/* featured Watch now matches the film cards */
+html[data-theme] body #top .featured-film .feature-caption .feature-watch{flex:none;align-self:flex-end;margin:0 0 10px;padding:4px 0 0;border:0;background:none;font-family:var(--font-sans);font-size:.72rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;line-height:1.6;color:var(--text);text-decoration:none}
 </style>
 </head>
 <body><div class="page"><header class="nav">
@@ -1403,7 +1431,7 @@ function run(){
  italic(d.querySelector('html:is([data-tone-projects-contact],[data-static-page]) main>.hero h1'));
  italic(d.querySelector('.policy-content h1'));
  var btn=d.querySelector('#top .hero .button');
- if(btn){var row=el('div','hero-actions');btn.parentNode.insertBefore(row,btn);row.appendChild(btn);row.appendChild(arrowLink('hero-secondary','#latest','Browse all films'))}
+ if(btn){var row=el('div','hero-actions');btn.parentNode.insertBefore(row,btn);row.appendChild(btn)}
  var cards=[].slice.call(d.querySelectorAll('#latest .film-card'));
  var feat=d.getElementById('featured');
  if(feat&&!feat.hidden){var idx=+feat.getAttribute('data-cinema-index'),card=cards[idx],cap=feat.querySelector('.feature-caption>div');
@@ -1413,6 +1441,8 @@ function run(){
   if(card&&cap){var h3=cap.querySelector('h3'),ep=card.querySelector('.episode'),p=card.querySelector('.film-content p');
    if(ep&&h3)cap.insertBefore(el('p','refined-meta',ep.textContent.trim()),h3);
    if(p&&h3)h3.insertAdjacentElement('afterend',el('p','refined-desc',p.textContent.trim()))}}
+ var fb=d.querySelector('#featured .feature-caption a.button');
+ if(fb){var lbl=(fb.textContent||'').replace(/\s+/g,' ').trim()||'Watch now';fb.className='watch-link jdg-motion-cta feature-watch';fb.textContent=lbl+' ';var ar=el('span','jdg-cta-arrow','\u2192');ar.setAttribute('aria-hidden','true');fb.appendChild(ar)}
  var sh=d.querySelector('#latest .section-header'),st=sh&&sh.querySelector('.section-title');
  if(sh&&st){sh.classList.add('refined-head');var left=el('div');sh.insertBefore(left,st);left.appendChild(st);left.appendChild(el('p','refined-title','More from the road'));
   var yt=d.querySelector('.footer-links a[href*="youtube.com"],.nav-links a[href*="youtube.com"]');
@@ -1441,6 +1471,46 @@ function run(){
  window.byjdgPhotoPositions=photos;photos();
  window.addEventListener('resize',photosSoon);window.addEventListener('load',photos);
  if(window.MutationObserver)new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var t=ms[i].target;if(ms[i].type==='childList'||(t.classList&&t.classList.contains('hero-slide'))||(t.tagName==='IMG'&&ms[i].attributeName==='src')){photosSoon();return}}}).observe(d.body,{subtree:true,childList:true,attributes:true,attributeFilter:['src','style']});
+ /* In-page film player: plays YouTube films on the site instead of leaving it */
+ var ytId=function(u){var m=String(u||'').match(/^https?:\/\/(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/i);return m?m[1]:''};
+ var ytStart=function(u){var m=String(u||'').match(/[?&]t=(\d+)/);return m?m[1]:''};
+ var ytSrc=function(u){var id=ytId(u),s=ytStart(u);return 'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1'+(s?'&start='+s:'')+'&origin='+encodeURIComponent(location.origin)};
+ var ytFrame=function(u,title){var f=d.createElement('iframe');f.src=ytSrc(u);f.title=title||'Film';f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; fullscreen');f.setAttribute('allowfullscreen','');f.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+  f.addEventListener('load',function(){try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:1,channel:'widget'}),'*')}catch(e){}});return f};
+ var blocked=function(box,u){box.classList.add('player-blocked');box.innerHTML='';var w=el('div','player-fallback');w.appendChild(el('p','','This film can only be watched on YouTube.'));var a=arrowLink('player-yt',u,'Watch on YouTube');a.target='_blank';a.rel='noopener';w.appendChild(a);box.appendChild(w)};
+ window.addEventListener('message',function(e){if(!/^https:\/\/(www\.)?youtube(-nocookie)?\.com$/.test(String(e.origin)))return;var data;try{data=typeof e.data==='string'?JSON.parse(e.data):e.data}catch(x){return}
+  if(!data||data.event!=='onError')return;[].forEach.call(d.querySelectorAll('.feature-player iframe,.film-modal iframe'),function(f){if(f.contentWindow===e.source){var box=f.parentNode;blocked(box,box.getAttribute('data-yt'))}})});
+ var modal=null,lastFocus=null;
+ var closeModal=function(){if(!modal)return;modal.remove();modal=null;d.documentElement.classList.remove('film-modal-open');if(lastFocus&&lastFocus.focus)lastFocus.focus()};
+ var openModal=function(u,title){
+  closeModal();lastFocus=d.activeElement;
+  modal=el('div','film-modal');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',title||'Film');
+  var inner=el('div','film-modal-inner'),box=el('div','film-modal-frame'),bar=el('div','film-modal-bar');
+  if(/\/shorts\//i.test(u))inner.classList.add('is-vertical');
+  box.setAttribute('data-yt',u);box.appendChild(ytFrame(u,title));
+  var x=el('button','film-modal-close');x.type='button';x.setAttribute('aria-label','Close film');x.innerHTML='<span aria-hidden="true">&times;</span>';x.addEventListener('click',closeModal);
+  bar.appendChild(el('p','film-modal-title',title||''));var yt=arrowLink('film-modal-yt',u,'Watch on YouTube');yt.target='_blank';yt.rel='noopener';bar.appendChild(yt);
+  inner.appendChild(x);inner.appendChild(box);inner.appendChild(bar);modal.appendChild(inner);
+  modal.addEventListener('click',function(e){if(e.target===modal)closeModal()});
+  modal.addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefault();closeModal()}else if(e.key==='Tab'){var f=[].slice.call(modal.querySelectorAll('button,a[href],iframe'));var a=f[0],z=f[f.length-1];if(e.shiftKey&&d.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&d.activeElement===z){e.preventDefault();a.focus()}}});
+  d.body.appendChild(modal);d.documentElement.classList.add('film-modal-open');x.focus();
+ };
+ var playFeature=function(a){
+  var u=a.href,box=el('div','feature-image feature-player');box.setAttribute('data-yt',u);box.appendChild(ytFrame(u,a.getAttribute('aria-label')||'Film'));
+  a.parentNode.replaceChild(box,a);
+ };
+ var plain=function(e){return !(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)};
+ d.addEventListener('click',function(e){
+  if(!plain(e))return;var t=e.target;
+  var fa=t.closest&&t.closest('a.feature-image');
+  if(fa&&ytId(fa.href)){e.preventDefault();playFeature(fa);return}
+  var card=t.closest&&t.closest('#latest .film-card');
+  if(card){var link=card.querySelector('.watch-link');var other=t.closest('a');if(other&&other!==link)return;
+   if(link&&ytId(link.href)){e.preventDefault();var h=card.querySelector('h3');openModal(link.href,h?h.textContent.trim():'');return}}
+  var hb=t.closest&&t.closest('#top .hero .button');
+  if(hb&&ytId(hb.href)){e.preventDefault();var ttl='Latest film',hid=ytId(hb.href);[].forEach.call(d.querySelectorAll('#latest .film-card'),function(c){var l=c.querySelector('.watch-link'),h=c.querySelector('h3');if(l&&h&&ytId(l.href)===hid)ttl=h.textContent.trim()});openModal(hb.href,ttl)}
+ });
+ [].forEach.call(d.querySelectorAll('#latest .film-card'),function(c){var l=c.querySelector('.watch-link');if(l&&ytId(l.href))c.classList.add('is-playable')});
  var nav=d.querySelector('.nav');
  if(nav){var on=function(){nav.classList.toggle('is-scrolled',window.scrollY>40)};on();window.addEventListener('scroll',on,{passive:true})}
 }
