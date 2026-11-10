@@ -1105,9 +1105,9 @@ html[data-theme] body .film-card::before,html[data-theme] body #top .film-card::
 
         <form data-project-action="formAction" class="contact-form" action="https://formspree.io/f/maqvrlrz" method="POST">
           <div class="form-grid">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <input class="full" type="text" name="company" placeholder="Company / Brand (Optional)">
+            <input type="text" name="name" placeholder="Your Name" autocomplete="name" required>
+            <input type="email" name="email" placeholder="Email Address" autocomplete="email" autocapitalize="off" spellcheck="false" required>
+            <input class="full" type="text" name="company" placeholder="Company / Brand (Optional)" autocomplete="organization">
 
             <select class="full" name="project_type" required>
               <option value="" disabled selected>Project Type</option>
@@ -1118,7 +1118,7 @@ html[data-theme] body .film-card::before,html[data-theme] body #top .film-card::
               <option value="General Inquiry">General Inquiry</option>
             </select>
 
-            <textarea class="full" name="message" placeholder="Tell me about your project" required></textarea>
+            <textarea class="full" name="message" placeholder="Tell me about your project" autocomplete="off" required></textarea>
 
             <button class="button full" type="submit">Send Message →</button>
           </div>
